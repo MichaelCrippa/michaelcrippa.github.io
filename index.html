@@ -3,17 +3,53 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Jukebox Audio Player - Animazioni 3D Straordinarie</title>
+  <title>Michael Crippa - Introduzione e Intrattenimento</title>
   <!-- Inclusione del font Poppins -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
-    /* Stile base per il body */
+    /* Stile base */
     body {
       font-family: 'Poppins', sans-serif;
       margin: 0;
-      padding: 20px;
-      background: #000; /* Sfondo scuro */
-      overflow: hidden;
+      padding-top: 60px; /* Spazio per la navbar fissa */
+      background: #000;
+      color: #fff;
+      overflow-x: hidden;
+    }
+    /* Navbar migliorata con gradiente e design responsive */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: linear-gradient(90deg, #0ff, #f0f);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      z-index: 4000;
+      padding: 10px 0;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 0;
+      padding: 0;
+    }
+    nav ul li {
+      margin: 0 15px;
+    }
+    nav ul li a {
+      color: #000;
+      text-decoration: none;
+      font-size: 1em;
+      font-weight: bold;
+      padding: 8px 16px;
+      border-radius: 5px;
+      transition: background 0.3s, color 0.3s;
+    }
+    nav ul li a:hover {
+      background: rgba(255,255,255,0.7);
+      color: #000;
     }
     /* Background interattivo con particelle */
     #particles-js {
@@ -22,13 +58,55 @@
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: 0;
+      z-index: -1;
       background: #000;
     }
-    /* Pulsante per mostrare/nascondere il Player (fisso in alto a destra) */
+    /* Sezioni (senza riquadri di sfondo) */
+    section {
+      padding: 40px 20px;
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    /* Animazioni differenti per i titoli delle sezioni */
+    #bio-section h2 {
+      animation: moveAndGlow1 4s ease-in-out infinite;
+    }
+    #tic-tac-toe-section h2 {
+      animation: moveAndGlow2 4s ease-in-out infinite;
+    }
+    #card-game-section h2 {
+      animation: moveAndGlow3 4s ease-in-out infinite;
+    }
+    @keyframes moveAndGlow1 {
+      0%   { transform: translateX(0); color: #fff; text-shadow: 0 0 5px #fff; }
+      25%  { transform: translateX(5px); color: #0ff; text-shadow: 0 0 15px #0ff; }
+      50%  { transform: translateX(0); color: #ff0; text-shadow: 0 0 15px #ff0; }
+      75%  { transform: translateX(-5px); color: #f0f; text-shadow: 0 0 15px #f0f; }
+      100% { transform: translateX(0); color: #fff; text-shadow: 0 0 5px #fff; }
+    }
+    @keyframes moveAndGlow2 {
+      0%   { transform: translateX(0); color: #fff; text-shadow: 0 0 5px #fff; }
+      25%  { transform: translateX(5px); color: #ff1493; text-shadow: 0 0 15px #ff1493; }  /* Deep Pink */
+      50%  { transform: translateX(0); color: #00ff7f; text-shadow: 0 0 15px #00ff7f; }  /* Spring Green */
+      75%  { transform: translateX(-5px); color: #1e90ff; text-shadow: 0 0 15px #1e90ff; }  /* Dodger Blue */
+      100% { transform: translateX(0); color: #fff; text-shadow: 0 0 5px #fff; }
+    }
+    @keyframes moveAndGlow3 {
+      0%   { transform: translateX(0); color: #fff; text-shadow: 0 0 5px #fff; }
+      25%  { transform: translateX(5px); color: #adff2f; text-shadow: 0 0 15px #adff2f; } /* Green Yellow */
+      50%  { transform: translateX(0); color: #ff4500; text-shadow: 0 0 15px #ff4500; } /* Orange Red */
+      75%  { transform: translateX(-5px); color: #8a2be2; text-shadow: 0 0 15px #8a2be2; } /* Blue Violet */
+      100% { transform: translateX(0); color: #fff; text-shadow: 0 0 5px #fff; }
+    }
+    section p {
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+    /* Jukebox e controlli */
     .toggle-player {
       position: fixed;
-      top: 10px;
+      top: 70px;
       right: 10px;
       z-index: 3000;
       padding: 8px 12px;
@@ -38,10 +116,8 @@
       border-radius: 5px;
       cursor: pointer;
       font-size: 0.9em;
-      /* Animazione per attirare l'attenzione (durata rallentata a 3s) */
       animation: tremble 3s ease-in-out infinite;
     }
-    /* Keyframes per l'animazione tremble */
     @keyframes tremble {
       0%   { transform: translate(0, 0); }
       25%  { transform: translate(-3px, 3px); }
@@ -49,17 +125,16 @@
       75%  { transform: translate(-3px, 3px); }
       100% { transform: translate(0, 0); }
     }
-    /* Contenitore del Jukebox: inizialmente nascosto */
     .jukebox-container {
       position: fixed;
-      top: 50px;
+      top: 110px;
       right: 10px;
       width: 476px;
       aspect-ratio: 1/1;
       background: url('jukebox.png') no-repeat center center;
       background-size: contain;
       z-index: 1000;
-      display: none; /* Nascondi il jukebox all'avvio */
+      display: none;
     }
     @media (max-width: 500px) {
       .jukebox-container {
@@ -67,7 +142,6 @@
         right: 5%;
       }
     }
-    /* Elementi interattivi (pulsanti) posizionati in percentuale rispetto a 476×476 */
     .control-element {
       position: absolute;
       background: transparent;
@@ -75,7 +149,7 @@
       cursor: pointer;
       opacity: 0;
     }
-    /* Riquadro per il testo della canzone (visibile) */
+    /* Il titolo della canzone deve essere in nero (oppure in fluo se preferisci) */
     .title-display {
       left: 30%;
       top: 43.1%;
@@ -87,16 +161,14 @@
       align-items: center;
       justify-content: center;
       font-size: 0.9em;
-      color: #000;
+      color: #000 !important;
     }
-    /* Pulsanti invisibili (Play, Pause, Mute, Unmute, Select, Restart) */
     .play-button    { left: 34.5%; top: 53.2%; width: 10.7%; height: 4.0%; }
     .pause-button   { left: 34.5%; top: 58.6%; width: 10.5%; height: 4.2%; }
     .mute-button    { left: 46.6%; top: 53.2%; width: 10.5%; height: 4.2%; }
     .unmute-button  { left: 46.6%; top: 58.8%; width: 10.5%; height: 4.0%; }
     .select-button  { left: 58.8%; top: 53.4%; width: 10.5%; height: 4.0%; }
     .restart-button { left: 58.8%; top: 59.0%; width: 10.5%; height: 3.8%; }
-    /* Lista dei brani (dropdown) */
     .track-list {
       position: absolute;
       top: 320px;
@@ -117,11 +189,11 @@
       list-style: none;
       padding: 5px;
       cursor: pointer;
+      color: #000;
     }
     .track-list li:hover {
       background: #eee;
     }
-    /* Slider per la regolazione del volume, posizionato in basso al centro del container */
     .volume-slider-container {
       position: absolute;
       bottom: 10px;
@@ -141,8 +213,7 @@
     .volume-slider-container input[type="range"] {
       width: 150px;
     }
-    /* DEFINIZIONE DELLE ANIMAZIONI 3D STRAORDINARIE (con durata maggiore per rallentare l'effetto) */
-    /* Animazione complex3D: variazioni di rotazioni e scale con opacità */
+    /* Animazioni 3D per il jukebox */
     @keyframes complex3D {
       0% {
         transform: perspective(800px) rotateX(0deg) rotateY(0deg) scale(1);
@@ -165,19 +236,16 @@
         opacity: 0.6;
       }
     }
-    /* Animazione rotate3D: rotazione completa su entrambi gli assi */
     @keyframes rotate3D {
       0% { transform: perspective(800px) rotateX(0deg) rotateY(0deg); }
       50% { transform: perspective(800px) rotateX(360deg) rotateY(360deg); }
       100% { transform: perspective(800px) rotateX(0deg) rotateY(0deg); }
     }
-    /* Animazione flip3D: effetto flip sull'asse X */
     @keyframes flip3D {
       0% { transform: perspective(800px) rotateX(0deg); }
       50% { transform: perspective(800px) rotateX(180deg); }
       100% { transform: perspective(800px) rotateX(360deg); }
     }
-    /* Animazione spectacular3D: effetto ultra dinamico con trasformazioni, traslazioni e filtri */
     @keyframes spectacular3D {
       0% {
         transform: perspective(800px) rotateX(0deg) rotateY(0deg) scale(1) translateY(0);
@@ -210,103 +278,163 @@
         opacity: 1;
       }
     }
-    /* Classi per applicare ciascuna animazione 3D (durata aumentata a 6s per le prime tre e 6s per spectacular3D) */
     .complex3D { animation: complex3D 6s ease-in-out infinite; }
     .rotate3D  { animation: rotate3D 6s ease-in-out infinite; }
     .flip3D    { animation: flip3D 6s ease-in-out infinite; }
     .spectacular3D { animation: spectacular3D 6s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite; }
+    
+    /* Sezione Introduzione (ex-Biografia) senza riquadro */
+    #bio-section {
+      padding: 40px 20px;
+      text-align: center;
+    }
+    
+    /* Sezione Gioco Tris (Tic Tac Toe) senza riquadro */
+    #tic-tac-toe-section {
+      padding: 40px 20px;
+      text-align: center;
+    }
+    
+    /* Sezione Gioco di Carte (placeholder) senza riquadro */
+    #card-game-section {
+      padding: 40px 20px;
+      text-align: center;
+    }
+    
+    /* Stili per il gioco Tris (Tic Tac Toe) */
+    #tic-tac-toe-board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-gap: 10px;
+      justify-content: center;
+      margin: 0 auto 20px auto;
+    }
+    .tic-cell {
+      width: 100px;
+      height: 100px;
+      background: #007BFF;
+      border: 2px solid #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2em;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 5px;
+      user-select: none;
+    }
+    #tic-tac-toe-status {
+      font-size: 1.2em;
+      margin-bottom: 10px;
+    }
+    #tic-tac-toe-restart {
+      padding: 8px 16px;
+      background: #007BFF;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
-  <!-- Div per il background interattivo con particelle -->
+  <!-- Background interattivo -->
   <div id="particles-js"></div>
-  
-  <!-- Pulsante per mostrare/nascondere il Player -->
-  <button id="toggle-player" class="toggle-player">Show Player</button>
-  
-  <!-- Contenitore del Jukebox -->
-  <div class="jukebox-container" id="jukebox-container">
-    <!-- Riquadro visibile per il testo della canzone -->
-    <div class="control-element title-display" id="song-display">
-      Peggy Suave - Enemy Like Me
-    </div>
-    <!-- Controlli interattivi (invisibili) -->
-    <button class="control-element play-button" id="play-button">Play</button>
-    <button class="control-element pause-button" id="pause-button">Pause</button>
-    <button class="control-element mute-button" id="mute-button">Mute</button>
-    <button class="control-element unmute-button" id="unmute-button">Unmute</button>
-    <button class="control-element select-button" id="select-button">Select</button>
-    <button class="control-element restart-button" id="restart-button">Restart</button>
-    
-    <!-- Lista dei brani (dropdown) -->
-    <ul class="track-list" id="track-list">
-      <!-- Gli elementi verranno creati dinamicamente -->
+
+  <!-- Navbar di navigazione -->
+  <nav>
+    <ul>
+      <li><a href="#bio-section">Introduzione</a></li>
+      <li><a href="#tic-tac-toe-section">Tris</a></li>
+      <li><a href="#card-game-section">Gioco di Carte</a></li>
     </ul>
-    
-    <!-- Slider per la regolazione del volume -->
-    <div class="volume-slider-container">
-      <label for="volume-slider">Volume</label>
-      <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.2">
+  </nav>
+
+  <!-- Sezione Jukebox -->
+  <section id="jukebox-section">
+    <!-- Pulsante per mostrare/nascondere il Player -->
+    <button id="toggle-player" class="toggle-player">Show Player</button>
+    <!-- Contenitore del Jukebox -->
+    <div class="jukebox-container" id="jukebox-container">
+      <!-- Riquadro per il testo della canzone -->
+      <div class="control-element title-display" id="song-display">
+        Peggy Suave - Enemy Like Me
+      </div>
+      <!-- Controlli invisibili -->
+      <button class="control-element play-button" id="play-button">Play</button>
+      <button class="control-element pause-button" id="pause-button">Pause</button>
+      <button class="control-element mute-button" id="mute-button">Mute</button>
+      <button class="control-element unmute-button" id="unmute-button">Unmute</button>
+      <button class="control-element select-button" id="select-button">Select</button>
+      <button class="control-element restart-button" id="restart-button">Restart</button>
+      <!-- Lista dei brani (dropdown) -->
+      <ul class="track-list" id="track-list"></ul>
+      <!-- Slider per la regolazione del volume -->
+      <div class="volume-slider-container">
+        <label for="volume-slider">Volume</label>
+        <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.2">
+      </div>
     </div>
-  </div>
-  
-  <!-- Elemento audio -->
-  <audio id="audio-player" src="sottofondo.mp3" loop></audio>
-  
-  <!-- Includiamo la libreria Particles.js tramite CDN -->
+    <!-- Elemento audio -->
+    <audio id="audio-player" src="sottofondo.mp3" loop></audio>
+  </section>
+
+  <!-- Sezione Introduzione -->
+  <section id="bio-section">
+    <h2>Introduzione</h2>
+    <p>
+      Che c'è? Hmm, lasciami indovinare. Non sai perché tu abbia cliccato questo link eh? Beh non c'è bisogno di farsi troppe domande, ti trovi semplicemente su un sito creato per puro svago senza particolare scopo. Cosa? Vuoi andartene? DI già... (┬┬﹏┬┬) Io non sono nessuno per tratteneerti ma che ne dici di fare una partitina a Tris? Giusto qualche secondo!
+    </p>
+  </section>
+
+  <!-- Sezione Gioco Tris (Tic Tac Toe) -->
+  <section id="tic-tac-toe-section">
+    <h2>Gioco: Tris</h2>
+    <p id="tic-tac-toe-status">Turno: X</p>
+    <div id="tic-tac-toe-board">
+      <div class="tic-cell" data-index="0"></div>
+      <div class="tic-cell" data-index="1"></div>
+      <div class="tic-cell" data-index="2"></div>
+      <div class="tic-cell" data-index="3"></div>
+      <div class="tic-cell" data-index="4"></div>
+      <div class="tic-cell" data-index="5"></div>
+      <div class="tic-cell" data-index="6"></div>
+      <div class="tic-cell" data-index="7"></div>
+      <div class="tic-cell" data-index="8"></div>
+    </div>
+    <button id="tic-tac-toe-restart">Riavvia Gioco</button>
+  </section>
+
+  <!-- Sezione Gioco di Carte (placeholder) -->
+  <section id="card-game-section">
+    <h2>Gioco di Carte</h2>
+    <p>Il gioco di carte è in fase di sviluppo. Torna presto per scoprire le nuove funzionalità!</p>
+  </section>
+
+  <!-- Inclusione della libreria Particles.js tramite CDN -->
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-  
+  <!-- Script per Jukebox e altre interazioni -->
   <script>
-    /* Inizializza Particles.js per il background interattivo */
+    /* Inizializzazione Particles.js per il background */
     particlesJS("particles-js", {
       "particles": {
-        "number": {
-          "value": 50,
-          "density": {
-            "enable": true,
-            "value_area": 800
-          }
-        },
+        "number": { "value": 50, "density": { "enable": true, "value_area": 800 } },
         "color": { "value": "#ffffff" },
-        "shape": {
-          "type": "circle",
-          "stroke": { "width": 0, "color": "#000000" },
-          "polygon": { "nb_sides": 5 }
-        },
+        "shape": { "type": "circle", "stroke": { "width": 0, "color": "#000000" }, "polygon": { "nb_sides": 5 } },
         "opacity": { "value": 0.5, "random": false },
         "size": { "value": 3, "random": true },
-        "line_linked": {
-          "enable": true,
-          "distance": 150,
-          "color": "#ffffff",
-          "opacity": 0.4,
-          "width": 1
-        },
-        "move": {
-          "enable": true,
-          "speed": 6,
-          "direction": "none",
-          "random": false,
-          "straight": false,
-          "out_mode": "out"
-        }
+        "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.4, "width": 1 },
+        "move": { "enable": true, "speed": 6, "direction": "none", "random": false, "straight": false, "out_mode": "out" }
       },
       "interactivity": {
         "detect_on": "canvas",
-        "events": {
-          "onhover": { "enable": true, "mode": "repulse" },
-          "onclick": { "enable": true, "mode": "push" },
-          "resize": true
-        },
-        "modes": {
-          "repulse": { "distance": 200, "duration": 0.4 },
-          "push": { "particles_nb": 4 }
-        }
+        "events": { "onhover": { "enable": true, "mode": "repulse" }, "onclick": { "enable": true, "mode": "push" }, "resize": true },
+        "modes": { "repulse": { "distance": 200, "duration": 0.4 }, "push": { "particles_nb": 4 } }
       },
       "retina_detect": true
     });
     
-    /* --- Gestione dell'Audio e Animazioni 3D del Jukebox --- */
+    /* --- Gestione Jukebox Musicale --- */
     const audio = document.getElementById('audio-player');
     const playBtn = document.getElementById('play-button');
     const pauseBtn = document.getElementById('pause-button');
@@ -320,10 +448,8 @@
     const jukeboxContainer = document.getElementById('jukebox-container');
     const toggleBtn = document.getElementById('toggle-player');
     
-    // Imposta il volume iniziale
     audio.volume = volumeSlider.value;
     
-    // Array dei brani
     const tracks = [
       { name: "Grumpy Shark - Absurd Extravaganza", file: "track3.mp3" },
       { name: "Peggy Suave - Tellin' & Posin'", file: "track2.mp3" },
@@ -331,7 +457,6 @@
       { name: "Wreck-It Ralph - Royal Raceway", file: "Wreck-It Ralph OST - 12 - Royal Raceway.mp3" }
     ];
     
-    // Popola la lista dei brani
     function populateTrackList() {
       trackList.innerHTML = "";
       tracks.forEach(track => {
@@ -351,7 +476,6 @@
     }
     populateTrackList();
     
-    // Aggiorna lo stato dei pulsanti
     function updateButtons() {
       if (audio.paused) {
         playBtn.style.pointerEvents = "auto";
@@ -369,7 +493,6 @@
       }
     }
     
-    // Funzione per aggiornare l'animazione 3D casuale del jukebox (solo animazioni 3D)
     function updateAnimation() {
       const animations = ['complex3D', 'rotate3D', 'flip3D', 'spectacular3D'];
       animations.forEach(anim => jukeboxContainer.classList.remove(anim));
@@ -379,30 +502,25 @@
       }
     }
     
-    // Eventi per i controlli
     playBtn.addEventListener('click', () => {
       audio.play().then(() => {
         updateButtons();
         updateAnimation();
       }).catch(error => console.error("Errore durante la riproduzione:", error));
     });
-    
     pauseBtn.addEventListener('click', () => {
       audio.pause();
       updateButtons();
       updateAnimation();
     });
-    
     muteBtn.addEventListener('click', () => {
       audio.muted = true;
       updateButtons();
     });
-    
     unmuteBtn.addEventListener('click', () => {
       audio.muted = false;
       updateButtons();
     });
-    
     restartBtn.addEventListener('click', () => {
       audio.currentTime = 0;
       audio.play().then(() => {
@@ -410,17 +528,13 @@
         updateAnimation();
       }).catch(error => console.error("Errore durante il riavvio:", error));
     });
-    
     selectBtn.addEventListener('click', () => {
       trackList.style.display = (trackList.style.display === "none" || trackList.style.display === "") ? "block" : "none";
     });
-    
     volumeSlider.addEventListener('input', () => {
       audio.volume = volumeSlider.value;
     });
-    
     toggleBtn.addEventListener('click', () => {
-      // Verifica la visualizzazione attuale tramite getComputedStyle
       if (getComputedStyle(jukeboxContainer).display === "none") {
         jukeboxContainer.style.display = "block";
         toggleBtn.textContent = "Hide Player";
@@ -430,7 +544,6 @@
       }
     });
     
-    // Gestione della visibilità della pagina
     let wasPlaying = false;
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) {
@@ -445,6 +558,58 @@
         }).catch(error => console.error("Errore durante il ripristino della riproduzione:", error));
       }
     });
+    
+    /* --- Gioco Tris (Tic Tac Toe) --- */
+    const ticCells = document.querySelectorAll('.tic-cell');
+    const statusEl = document.getElementById('tic-tac-toe-status');
+    const restartTicBtn = document.getElementById('tic-tac-toe-restart');
+    let currentPlayer = 'X';
+    let board = Array(9).fill('');
+    let gameActive = true;
+    
+    const winningConditions = [
+      [0,1,2], [3,4,5], [6,7,8],
+      [0,3,6], [1,4,7], [2,5,8],
+      [0,4,8], [2,4,6]
+    ];
+    
+    function handleCellClick(e) {
+      const index = e.target.getAttribute('data-index');
+      if (board[index] !== '' || !gameActive) return;
+      
+      board[index] = currentPlayer;
+      e.target.textContent = currentPlayer;
+      
+      if (checkWin()) {
+        statusEl.textContent = `Vince: ${currentPlayer}`;
+        gameActive = false;
+        return;
+      }
+      if (!board.includes('')) {
+        statusEl.textContent = "Pareggio!";
+        gameActive = false;
+        return;
+      }
+      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+      statusEl.textContent = `Turno: ${currentPlayer}`;
+    }
+    
+    function checkWin() {
+      return winningConditions.some(condition => {
+        return condition.every(index => board[index] === currentPlayer);
+      });
+    }
+    
+    function restartTicTacToe() {
+      board = Array(9).fill('');
+      currentPlayer = 'X';
+      gameActive = true;
+      statusEl.textContent = `Turno: ${currentPlayer}`;
+      ticCells.forEach(cell => cell.textContent = '');
+    }
+    
+    ticCells.forEach(cell => cell.addEventListener('click', handleCellClick));
+    restartTicBtn.addEventListener('click', restartTicTacToe);
   </script>
 </body>
 </html>
