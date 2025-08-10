@@ -1,615 +1,313 @@
 <!DOCTYPE html>
-<html lang="it">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Michael Crippa - Introduzione e Intrattenimento</title>
-  <!-- Inclusione del font Poppins -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <style>
-    /* Stile base */
-    body {
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-      padding-top: 60px; /* Spazio per la navbar fissa */
-      background: #000;
-      color: #fff;
-      overflow-x: hidden;
-    }
-    /* Navbar migliorata con gradiente e design responsive */
-    nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background: linear-gradient(90deg, #0ff, #f0f);
-      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-      z-index: 4000;
-      padding: 10px 0;
-    }
-    nav ul {
-      list-style: none;
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin: 0;
-      padding: 0;
-    }
-    nav ul li {
-      margin: 0 15px;
-    }
-    nav ul li a {
-      color: #000;
-      text-decoration: none;
-      font-size: 1em;
-      font-weight: bold;
-      padding: 8px 16px;
-      border-radius: 5px;
-      transition: background 0.3s, color 0.3s;
-    }
-    nav ul li a:hover {
-      background: rgba(255,255,255,0.7);
-      color: #000;
-    }
-    /* Background interattivo con particelle */
-    #particles-js {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      background: #000;
-    }
-    /* Sezioni (senza riquadri di sfondo) */
-    section {
-      padding: 40px 20px;
-      max-width: 900px;
-      margin: 0 auto;
-      text-align: center;
-    }
-    /* Animazioni differenti per i titoli delle sezioni */
-    #bio-section h2 {
-      animation: moveAndGlow1 4s ease-in-out infinite;
-    }
-    #tic-tac-toe-section h2 {
-      animation: moveAndGlow2 4s ease-in-out infinite;
-    }
-    #card-game-section h2 {
-      animation: moveAndGlow3 4s ease-in-out infinite;
-    }
-    @keyframes moveAndGlow1 {
-      0%   { transform: translateX(0); color: #fff; text-shadow: 0 0 5px #fff; }
-      25%  { transform: translateX(5px); color: #0ff; text-shadow: 0 0 15px #0ff; }
-      50%  { transform: translateX(0); color: #ff0; text-shadow: 0 0 15px #ff0; }
-      75%  { transform: translateX(-5px); color: #f0f; text-shadow: 0 0 15px #f0f; }
-      100% { transform: translateX(0); color: #fff; text-shadow: 0 0 5px #fff; }
-    }
-    @keyframes moveAndGlow2 {
-      0%   { transform: translateX(0); color: #fff; text-shadow: 0 0 5px #fff; }
-      25%  { transform: translateX(5px); color: #ff1493; text-shadow: 0 0 15px #ff1493; }  /* Deep Pink */
-      50%  { transform: translateX(0); color: #00ff7f; text-shadow: 0 0 15px #00ff7f; }  /* Spring Green */
-      75%  { transform: translateX(-5px); color: #1e90ff; text-shadow: 0 0 15px #1e90ff; }  /* Dodger Blue */
-      100% { transform: translateX(0); color: #fff; text-shadow: 0 0 5px #fff; }
-    }
-    @keyframes moveAndGlow3 {
-      0%   { transform: translateX(0); color: #fff; text-shadow: 0 0 5px #fff; }
-      25%  { transform: translateX(5px); color: #adff2f; text-shadow: 0 0 15px #adff2f; } /* Green Yellow */
-      50%  { transform: translateX(0); color: #ff4500; text-shadow: 0 0 15px #ff4500; } /* Orange Red */
-      75%  { transform: translateX(-5px); color: #8a2be2; text-shadow: 0 0 15px #8a2be2; } /* Blue Violet */
-      100% { transform: translateX(0); color: #fff; text-shadow: 0 0 5px #fff; }
-    }
-    section p {
-      line-height: 1.6;
-      margin-bottom: 15px;
-    }
-    /* Jukebox e controlli */
-    .toggle-player {
-      position: fixed;
-      top: 70px;
-      right: 10px;
-      z-index: 3000;
-      padding: 8px 12px;
-      background: #007BFF;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 0.9em;
-      animation: tremble 3s ease-in-out infinite;
-    }
-    @keyframes tremble {
-      0%   { transform: translate(0, 0); }
-      25%  { transform: translate(-3px, 3px); }
-      50%  { transform: translate(3px, -3px); }
-      75%  { transform: translate(-3px, 3px); }
-      100% { transform: translate(0, 0); }
-    }
-    .jukebox-container {
-      position: fixed;
-      top: 110px;
-      right: 10px;
-      width: 476px;
-      aspect-ratio: 1/1;
-      background: url('jukebox.png') no-repeat center center;
-      background-size: contain;
-      z-index: 1000;
-      display: none;
-    }
-    @media (max-width: 500px) {
-      .jukebox-container {
-        width: 90%;
-        right: 5%;
-      }
-    }
-    .control-element {
-      position: absolute;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      opacity: 0;
-    }
-    /* Il titolo della canzone deve essere in nero (oppure in fluo se preferisci) */
-    .title-display {
-      left: 30%;
-      top: 43.1%;
-      width: 43.3%;
-      height: 6.9%;
-      opacity: 1 !important;
-      pointer-events: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.9em;
-      color: #000 !important;
-    }
-    .play-button    { left: 34.5%; top: 53.2%; width: 10.7%; height: 4.0%; }
-    .pause-button   { left: 34.5%; top: 58.6%; width: 10.5%; height: 4.2%; }
-    .mute-button    { left: 46.6%; top: 53.2%; width: 10.5%; height: 4.2%; }
-    .unmute-button  { left: 46.6%; top: 58.8%; width: 10.5%; height: 4.0%; }
-    .select-button  { left: 58.8%; top: 53.4%; width: 10.5%; height: 4.0%; }
-    .restart-button { left: 58.8%; top: 59.0%; width: 10.5%; height: 3.8%; }
-    .track-list {
-      position: absolute;
-      top: 320px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #fff;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      padding: 5px;
-      z-index: 2000;
-      max-height: 150px;
-      overflow-y: auto;
-      display: none;
-      width: 80%;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-    }
-    .track-list li {
-      list-style: none;
-      padding: 5px;
-      cursor: pointer;
-      color: #000;
-    }
-    .track-list li:hover {
-      background: #eee;
-    }
-    .volume-slider-container {
-      position: absolute;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      text-align: center;
-      z-index: 1500;
-      background: rgba(255,255,255,0.7);
-      padding: 5px 10px;
-      border-radius: 5px;
-    }
-    .volume-slider-container label {
-      font-size: 0.9em;
-      color: #000;
-      margin-right: 5px;
-    }
-    .volume-slider-container input[type="range"] {
-      width: 150px;
-    }
-    /* Animazioni 3D per il jukebox */
-    @keyframes complex3D {
-      0% {
-        transform: perspective(800px) rotateX(0deg) rotateY(0deg) scale(1);
-        opacity: 0.6;
-      }
-      30% {
-        transform: perspective(800px) rotateX(20deg) rotateY(15deg) scale(1.1);
-        opacity: 1;
-      }
-      50% {
-        transform: perspective(800px) rotateX(-20deg) rotateY(-15deg) scale(0.95);
-        opacity: 0.8;
-      }
-      70% {
-        transform: perspective(800px) rotateX(15deg) rotateY(20deg) scale(1.05);
-        opacity: 1;
-      }
-      100% {
-        transform: perspective(800px) rotateX(0deg) rotateY(0deg) scale(1);
-        opacity: 0.6;
-      }
-    }
-    @keyframes rotate3D {
-      0% { transform: perspective(800px) rotateX(0deg) rotateY(0deg); }
-      50% { transform: perspective(800px) rotateX(360deg) rotateY(360deg); }
-      100% { transform: perspective(800px) rotateX(0deg) rotateY(0deg); }
-    }
-    @keyframes flip3D {
-      0% { transform: perspective(800px) rotateX(0deg); }
-      50% { transform: perspective(800px) rotateX(180deg); }
-      100% { transform: perspective(800px) rotateX(360deg); }
-    }
-    @keyframes spectacular3D {
-      0% {
-        transform: perspective(800px) rotateX(0deg) rotateY(0deg) scale(1) translateY(0);
-        filter: brightness(1) blur(0px);
-        opacity: 1;
-      }
-      20% {
-        transform: perspective(800px) rotateX(10deg) rotateY(-10deg) scale(1.1) translateY(-10px);
-        filter: brightness(1.2) blur(0px);
-        opacity: 1;
-      }
-      40% {
-        transform: perspective(800px) rotateX(-15deg) rotateY(15deg) scale(0.9) translateY(5px);
-        filter: brightness(0.8) blur(1px);
-        opacity: 0.9;
-      }
-      60% {
-        transform: perspective(800px) rotateX(5deg) rotateY(5deg) scale(1.05) translateY(-5px);
-        filter: brightness(1.1) blur(0.5px);
-        opacity: 1;
-      }
-      80% {
-        transform: perspective(800px) rotateX(-5deg) rotateY(-5deg) scale(1) translateY(0);
-        filter: brightness(1) blur(0px);
-        opacity: 1;
-      }
-      100% {
-        transform: perspective(800px) rotateX(0deg) rotateY(0deg) scale(1) translateY(0);
-        filter: brightness(1) blur(0px);
-        opacity: 1;
-      }
-    }
-    .complex3D { animation: complex3D 6s ease-in-out infinite; }
-    .rotate3D  { animation: rotate3D 6s ease-in-out infinite; }
-    .flip3D    { animation: flip3D 6s ease-in-out infinite; }
-    .spectacular3D { animation: spectacular3D 6s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite; }
-    
-    /* Sezione Introduzione (ex-Biografia) senza riquadro */
-    #bio-section {
-      padding: 40px 20px;
-      text-align: center;
-    }
-    
-    /* Sezione Gioco Tris (Tic Tac Toe) senza riquadro */
-    #tic-tac-toe-section {
-      padding: 40px 20px;
-      text-align: center;
-    }
-    
-    /* Sezione Gioco di Carte (placeholder) senza riquadro */
-    #card-game-section {
-      padding: 40px 20px;
-      text-align: center;
-    }
-    
-    /* Stili per il gioco Tris (Tic Tac Toe) */
-    #tic-tac-toe-board {
-      display: grid;
-      grid-template-columns: repeat(3, 100px);
-      grid-gap: 10px;
-      justify-content: center;
-      margin: 0 auto 20px auto;
-    }
-    .tic-cell {
-      width: 100px;
-      height: 100px;
-      background: #007BFF;
-      border: 2px solid #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2em;
-      font-weight: bold;
-      cursor: pointer;
-      border-radius: 5px;
-      user-select: none;
-    }
-    #tic-tac-toe-status {
-      font-size: 1.2em;
-      margin-bottom: 10px;
-    }
-    #tic-tac-toe-restart {
-      padding: 8px 16px;
-      background: #007BFF;
-      border: none;
-      border-radius: 5px;
-      color: #fff;
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
-  <!-- Background interattivo -->
-  <div id="particles-js"></div>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Michael – Full‑Stack Developer</title>
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Roboto:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      integrity="sha512-vZ0FgsBhmK0fCh6N0waNYd+NVN5iwfUOHjiic5LLUVjZZkNl5PYg8nFQXAbNm/foK69U3P99PAeML4YwICGf1A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <!-- Styles -->
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <!-- Canvas per forme neon fluttuanti su tutta la pagina -->
+    <canvas id="floating-shapes" class="floating-shapes-canvas"></canvas>
 
-  <!-- Navbar di navigazione -->
-  <nav>
-    <ul>
-      <li><a href="#bio-section">Introduzione</a></li>
-      <li><a href="#tic-tac-toe-section">Tris</a></li>
-      <li><a href="#card-game-section">Gioco di Carte</a></li>
-    </ul>
-  </nav>
-
-  <!-- Sezione Jukebox -->
-  <section id="jukebox-section">
-    <!-- Pulsante per mostrare/nascondere il Player -->
-    <button id="toggle-player" class="toggle-player">Show Player</button>
-    <!-- Contenitore del Jukebox -->
-    <div class="jukebox-container" id="jukebox-container">
-      <!-- Riquadro per il testo della canzone -->
-      <div class="control-element title-display" id="song-display">
-        Peggy Suave - Enemy Like Me
-      </div>
-      <!-- Controlli invisibili -->
-      <button class="control-element play-button" id="play-button">Play</button>
-      <button class="control-element pause-button" id="pause-button">Pause</button>
-      <button class="control-element mute-button" id="mute-button">Mute</button>
-      <button class="control-element unmute-button" id="unmute-button">Unmute</button>
-      <button class="control-element select-button" id="select-button">Select</button>
-      <button class="control-element restart-button" id="restart-button">Restart</button>
-      <!-- Lista dei brani (dropdown) -->
-      <ul class="track-list" id="track-list"></ul>
-      <!-- Slider per la regolazione del volume -->
-      <div class="volume-slider-container">
-        <label for="volume-slider">Volume</label>
-        <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.2">
-      </div>
+    <!-- Preloader -->
+    <div id="preloader">
+      <div class="spinner"></div>
     </div>
-    <!-- Elemento audio -->
-    <audio id="audio-player" src="sottofondo.mp3" loop></audio>
-  </section>
 
-  <!-- Sezione Introduzione -->
-  <section id="bio-section">
-    <h2>Introduzione</h2>
-    <p>
-      Che c'è? Hmm, lasciami indovinare. Non sai perché tu abbia cliccato questo link eh? Beh non c'è bisogno di farsi troppe domande, ti trovi semplicemente su un sito creato per puro svago senza particolare scopo. Cosa? Vuoi andartene? DI già... (┬┬﹏┬┬) Io non sono nessuno per tratteneerti ma che ne dici di fare una partitina a Tris? Giusto qualche secondo!
-    </p>
-  </section>
+    <!-- Header / Navigation -->
+    <header class="site-header">
+      <div class="container">
+        <div class="logo">Michael<span class="accent">Dev</span></div>
+        <nav class="nav">
+          <ul>
+            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="portfolio.html">Portfolio</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
 
-  <!-- Sezione Gioco Tris (Tic Tac Toe) -->
-  <section id="tic-tac-toe-section">
-    <h2>Gioco: Tris</h2>
-    <p id="tic-tac-toe-status">Turno: X</p>
-    <div id="tic-tac-toe-board">
-      <div class="tic-cell" data-index="0"></div>
-      <div class="tic-cell" data-index="1"></div>
-      <div class="tic-cell" data-index="2"></div>
-      <div class="tic-cell" data-index="3"></div>
-      <div class="tic-cell" data-index="4"></div>
-      <div class="tic-cell" data-index="5"></div>
-      <div class="tic-cell" data-index="6"></div>
-      <div class="tic-cell" data-index="7"></div>
-      <div class="tic-cell" data-index="8"></div>
-    </div>
-    <button id="tic-tac-toe-restart">Riavvia Gioco</button>
-  </section>
+    <!-- Hero Section -->
+    <section id="hero" class="section-hero parallax-bg" style="background-image: url('./images/cyberpunk-city-1.png');">
+      <!-- Three.js canvas for 3D object -->
+      <canvas id="hero-canvas"></canvas>
+      <div class="hero-overlay"></div>
+      <div class="hero-content container">
+        <h1>Hi, I’m <span class="accent">Michael</span></h1>
+        <h2>Full‑Stack Developer</h2>
+        <p class="hero-tagline">
+          <!-- Testo digitale digitato dinamicamente -->
+          <span id="typed-text"></span>
+        </p>
+        <a href="portfolio.html" class="btn primary-btn">Scopri il mio lavoro</a>
+      </div>
+    </section>
 
-  <!-- Sezione Gioco di Carte (placeholder) -->
-  <section id="card-game-section">
-    <h2>Gioco di Carte</h2>
-    <p>Il gioco di carte è in fase di sviluppo. Torna presto per scoprire le nuove funzionalità!</p>
-  </section>
+    <!-- Timeline Section -->
+    <section id="timeline" class="section-timeline">
+      <div class="container">
+        <h2 class="section-title">Percorso Professionale</h2>
+        <div class="timeline">
+          <div class="timeline-item">
+            <h3>2022 – Progetto Innovativo</h3>
+            <p>Ho guidato lo sviluppo di un sistema di realtà aumentata per un'azienda fintech, integrando interfacce 3D e streaming dati in tempo reale.</p>
+          </div>
+          <div class="timeline-item">
+            <h3>2023 – Espansione Cloud</h3>
+            <p>Ho migrato un'infrastruttura monolitica su microservizi, implementando pipeline CI/CD e containerizzazione con Kubernetes.</p>
+          </div>
+          <div class="timeline-item">
+            <h3>2024 – AI e Generative Art</h3>
+            <p>Ho creato una piattaforma full‑stack per generare arte algoritmica usando reti neurali, integrando un editor in tempo reale per gli utenti.</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  <!-- Inclusione della libreria Particles.js tramite CDN -->
-  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-  <!-- Script per Jukebox e altre interazioni -->
-  <script>
-    /* Inizializzazione Particles.js per il background */
-    particlesJS("particles-js", {
-      "particles": {
-        "number": { "value": 50, "density": { "enable": true, "value_area": 800 } },
-        "color": { "value": "#ffffff" },
-        "shape": { "type": "circle", "stroke": { "width": 0, "color": "#000000" }, "polygon": { "nb_sides": 5 } },
-        "opacity": { "value": 0.5, "random": false },
-        "size": { "value": 3, "random": true },
-        "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.4, "width": 1 },
-        "move": { "enable": true, "speed": 6, "direction": "none", "random": false, "straight": false, "out_mode": "out" }
-      },
-      "interactivity": {
-        "detect_on": "canvas",
-        "events": { "onhover": { "enable": true, "mode": "repulse" }, "onclick": { "enable": true, "mode": "push" }, "resize": true },
-        "modes": { "repulse": { "distance": 200, "duration": 0.4 }, "push": { "particles_nb": 4 } }
-      },
-      "retina_detect": true
-    });
-    
-    /* --- Gestione Jukebox Musicale --- */
-    const audio = document.getElementById('audio-player');
-    const playBtn = document.getElementById('play-button');
-    const pauseBtn = document.getElementById('pause-button');
-    const muteBtn = document.getElementById('mute-button');
-    const unmuteBtn = document.getElementById('unmute-button');
-    const restartBtn = document.getElementById('restart-button');
-    const selectBtn = document.getElementById('select-button');
-    const songDisplay = document.getElementById('song-display');
-    const trackList = document.getElementById('track-list');
-    const volumeSlider = document.getElementById('volume-slider');
-    const jukeboxContainer = document.getElementById('jukebox-container');
-    const toggleBtn = document.getElementById('toggle-player');
-    
-    audio.volume = volumeSlider.value;
-    
-    const tracks = [
-      { name: "Grumpy Shark - Absurd Extravaganza", file: "track3.mp3" },
-      { name: "Peggy Suave - Tellin' & Posin'", file: "track2.mp3" },
-      { name: "Peggy Suave - Enemy Like Me", file: "sottofondo.mp3" },
-      { name: "Wreck-It Ralph - Royal Raceway", file: "Wreck-It Ralph OST - 12 - Royal Raceway.mp3" }
-    ];
-    
-    function populateTrackList() {
-      trackList.innerHTML = "";
-      tracks.forEach(track => {
-        const li = document.createElement('li');
-        li.textContent = track.name;
-        li.addEventListener('click', () => {
-          audio.src = track.file;
-          songDisplay.textContent = track.name;
-          trackList.style.display = "none";
-          audio.play().then(() => {
-            updateButtons();
-            updateAnimation();
-          }).catch(error => console.error("Errore durante la riproduzione:", error));
-        });
-        trackList.appendChild(li);
-      });
-    }
-    populateTrackList();
-    
-    function updateButtons() {
-      if (audio.paused) {
-        playBtn.style.pointerEvents = "auto";
-        pauseBtn.style.pointerEvents = "none";
-      } else {
-        playBtn.style.pointerEvents = "none";
-        pauseBtn.style.pointerEvents = "auto";
-      }
-      if (audio.muted) {
-        muteBtn.style.pointerEvents = "none";
-        unmuteBtn.style.pointerEvents = "auto";
-      } else {
-        muteBtn.style.pointerEvents = "auto";
-        unmuteBtn.style.pointerEvents = "none";
-      }
-    }
-    
-    function updateAnimation() {
-      const animations = ['complex3D', 'rotate3D', 'flip3D', 'spectacular3D'];
-      animations.forEach(anim => jukeboxContainer.classList.remove(anim));
-      if (!audio.paused) {
-        const randomAnimation = animations[Math.floor(Math.random() * animations.length)];
-        jukeboxContainer.classList.add(randomAnimation);
-      }
-    }
-    
-    playBtn.addEventListener('click', () => {
-      audio.play().then(() => {
-        updateButtons();
-        updateAnimation();
-      }).catch(error => console.error("Errore durante la riproduzione:", error));
-    });
-    pauseBtn.addEventListener('click', () => {
-      audio.pause();
-      updateButtons();
-      updateAnimation();
-    });
-    muteBtn.addEventListener('click', () => {
-      audio.muted = true;
-      updateButtons();
-    });
-    unmuteBtn.addEventListener('click', () => {
-      audio.muted = false;
-      updateButtons();
-    });
-    restartBtn.addEventListener('click', () => {
-      audio.currentTime = 0;
-      audio.play().then(() => {
-        updateButtons();
-        updateAnimation();
-      }).catch(error => console.error("Errore durante il riavvio:", error));
-    });
-    selectBtn.addEventListener('click', () => {
-      trackList.style.display = (trackList.style.display === "none" || trackList.style.display === "") ? "block" : "none";
-    });
-    volumeSlider.addEventListener('input', () => {
-      audio.volume = volumeSlider.value;
-    });
-    toggleBtn.addEventListener('click', () => {
-      if (getComputedStyle(jukeboxContainer).display === "none") {
-        jukeboxContainer.style.display = "block";
-        toggleBtn.textContent = "Hide Player";
-      } else {
-        jukeboxContainer.style.display = "none";
-        toggleBtn.textContent = "Show Player";
-      }
-    });
-    
-    let wasPlaying = false;
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) {
-        wasPlaying = !audio.paused;
-        audio.pause();
-        updateButtons();
-        updateAnimation();
-      } else if (wasPlaying) {
-        audio.play().then(() => {
-          updateButtons();
-          updateAnimation();
-        }).catch(error => console.error("Errore durante il ripristino della riproduzione:", error));
-      }
-    });
-    
-    /* --- Gioco Tris (Tic Tac Toe) --- */
-    const ticCells = document.querySelectorAll('.tic-cell');
-    const statusEl = document.getElementById('tic-tac-toe-status');
-    const restartTicBtn = document.getElementById('tic-tac-toe-restart');
-    let currentPlayer = 'X';
-    let board = Array(9).fill('');
-    let gameActive = true;
-    
-    const winningConditions = [
-      [0,1,2], [3,4,5], [6,7,8],
-      [0,3,6], [1,4,7], [2,5,8],
-      [0,4,8], [2,4,6]
-    ];
-    
-    function handleCellClick(e) {
-      const index = e.target.getAttribute('data-index');
-      if (board[index] !== '' || !gameActive) return;
-      
-      board[index] = currentPlayer;
-      e.target.textContent = currentPlayer;
-      
-      if (checkWin()) {
-        statusEl.textContent = `Vince: ${currentPlayer}`;
-        gameActive = false;
-        return;
-      }
-      if (!board.includes('')) {
-        statusEl.textContent = "Pareggio!";
-        gameActive = false;
-        return;
-      }
-      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-      statusEl.textContent = `Turno: ${currentPlayer}`;
-    }
-    
-    function checkWin() {
-      return winningConditions.some(condition => {
-        return condition.every(index => board[index] === currentPlayer);
-      });
-    }
-    
-    function restartTicTacToe() {
-      board = Array(9).fill('');
-      currentPlayer = 'X';
-      gameActive = true;
-      statusEl.textContent = `Turno: ${currentPlayer}`;
-      ticCells.forEach(cell => cell.textContent = '');
-    }
-    
-    ticCells.forEach(cell => cell.addEventListener('click', handleCellClick));
-    restartTicBtn.addEventListener('click', restartTicTacToe);
-  </script>
-</body>
+    <!-- Services Section -->
+    <section id="services" class="section-services">
+      <!-- Rete di particelle interattive come sfondo -->
+      <canvas id="services-network" class="network-canvas"></canvas>
+      <div class="container">
+        <h2 class="section-title">Cosa Posso Fare Per Te</h2>
+        <div class="services-grid">
+          <div class="service-card" data-tilt data-tilt-max="12" data-tilt-glare data-tilt-max-glare="0.35">
+            <i class="fas fa-desktop"></i>
+            <h3>Frontend Futuristico</h3>
+            <p>Interfacce immersive con animazioni WebGL, SPA, design responsive e performance ottimizzate.</p>
+          </div>
+          <div class="service-card" data-tilt data-tilt-max="12" data-tilt-glare data-tilt-max-glare="0.35">
+            <i class="fas fa-server"></i>
+            <h3>Backend &amp; API</h3>
+            <p>Sistemi scalabili con microservizi, database distribuiti, GraphQL e WebSocket in tempo reale.</p>
+          </div>
+          <div class="service-card" data-tilt data-tilt-max="12" data-tilt-glare data-tilt-max-glare="0.35">
+            <i class="fas fa-cloud"></i>
+            <h3>Cloud &amp; DevOps</h3>
+            <p>Distribuzioni su container Docker, CI/CD automatizzate e infrastruttura come codice su AWS e Kubernetes.</p>
+          </div>
+        </div>
+        <!-- Carousel delle tecnologie -->
+        <div class="tech-carousel">
+          <div class="carousel-track">
+            <!-- Prima serie di icone -->
+            <i class="fab fa-html5"></i>
+            <i class="fab fa-css3-alt"></i>
+            <i class="fab fa-js-square"></i>
+            <i class="fab fa-react"></i>
+            <i class="fab fa-node-js"></i>
+            <i class="fab fa-docker"></i>
+            <i class="fab fa-github"></i>
+            <i class="fab fa-git-alt"></i>
+            <!-- Duplicazione per scorrimento continuo -->
+            <i class="fab fa-html5"></i>
+            <i class="fab fa-css3-alt"></i>
+            <i class="fab fa-js-square"></i>
+            <i class="fab fa-react"></i>
+            <i class="fab fa-node-js"></i>
+            <i class="fab fa-docker"></i>
+            <i class="fab fa-github"></i>
+            <i class="fab fa-git-alt"></i>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section id="stats" class="section-stats">
+      <!-- Sfondo a rete di particelle per aggiungere movimento -->
+      <canvas id="stats-network" class="network-canvas"></canvas>
+      <div class="container">
+        <h2 class="section-title">I Numeri Parlano</h2>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <h3 class="count" data-target="15">0</h3>
+            <p>Progetti completati</p>
+          </div>
+          <div class="stat-item">
+            <h3 class="count" data-target="10">0</h3>
+            <p>Anni di esperienza</p>
+          </div>
+          <div class="stat-item">
+            <h3 class="count" data-target="7">0</h3>
+            <p>Lingue e framework</p>
+          </div>
+          <div class="stat-item">
+            <h3 class="count" data-target="100">0</h3>
+            <p>Linea di codice (k)</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Skills Chart Section -->
+    <section id="skills-chart" class="section-skills-chart">
+      <!-- Rete di particelle di sfondo per aggiungere movimento -->
+      <canvas id="skills-chart-bg" class="network-canvas"></canvas>
+      <div class="container">
+        <h2 class="section-title">Competenze Tecniche</h2>
+        <div class="chart-container">
+          <canvas id="skills-chart-canvas"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="section-testimonials">
+      <div class="container">
+        <h2 class="section-title">Testimonianze</h2>
+        <div class="testimonials-container">
+          <div class="testimonials-track">
+            <div class="testimonial-slide">
+              <h3>Innovazione senza limiti</h3>
+              <p>«Michael ha trasformato la nostra idea in una piattaforma interattiva sorprendente. Le sue competenze tecniche e creative sono fuori dal comune.»</p>
+              <div class="author">Sara B. – CEO, FinTech Co.</div>
+            </div>
+            <div class="testimonial-slide">
+              <h3>Un vero artista del codice</h3>
+              <p>«Collaborare con Michael è stato come lavorare con un artista. Ogni dettaglio del nostro progetto è stato curato con passione e precisione.»</p>
+              <div class="author">Luca M. – CTO, Startup VR</div>
+            </div>
+            <div class="testimonial-slide">
+              <h3>Progettazione futuristica</h3>
+              <p>«La visione di Michael ha portato il nostro prodotto su un altro livello. Le animazioni e l’interattività creano un’esperienza utente unica.»</p>
+              <div class="author">Giulia R. – Product Manager, ArtTech</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Terminal Section -->
+    <section id="terminal" class="section-terminal">
+      <!-- Canvas per rete di particelle dietro la terminale -->
+      <canvas id="terminal-background" class="network-canvas"></canvas>
+      <div class="container">
+        <h2 class="section-title">Console Interattiva</h2>
+        <div class="terminal-container">
+          <div id="terminal-output" class="terminal-output">
+            <div>Benvenuto nella console di Michael. Digita <strong>help</strong> per iniziare.</div>
+          </div>
+          <div class="terminal-input">
+            <label>&gt;</label>
+            <input id="terminal-input-field" type="text" autocomplete="off" placeholder="digita un comando e premi Invio" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="section-skills" style="background-image: url('./images/circuit-board.png');">
+      <!-- canvas per l'effetto spiralato sullo sfondo -->
+      <canvas id="skills-background" class="spiral-canvas"></canvas>
+      <div class="overlay"></div>
+      <div class="container">
+        <h2 class="section-title">Competenze Principali</h2>
+        <div class="skills-grid">
+          <div class="skill-card" data-tilt data-tilt-glare data-tilt-max-glare="0.45">
+            <i class="fab fa-html5"></i>
+            <h3>HTML5</h3>
+            <p>Markup semantico e accessibile per strutture robuste.</p>
+          </div>
+          <div class="skill-card" data-tilt data-tilt-glare data-tilt-max-glare="0.45">
+            <i class="fab fa-css3-alt"></i>
+            <h3>CSS3 &amp; SCSS</h3>
+            <p>Layout moderni con griglie, flexbox e animazioni.</p>
+          </div>
+          <div class="skill-card" data-tilt data-tilt-glare data-tilt-max-glare="0.45">
+            <i class="fab fa-js-square"></i>
+            <h3>JavaScript &amp; TypeScript</h3>
+            <p>Interattività avanzata, API, SPA con React e Vue.</p>
+          </div>
+          <div class="skill-card" data-tilt data-tilt-glare data-tilt-max-glare="0.45">
+            <i class="fab fa-node-js"></i>
+            <h3>Node.js</h3>
+            <p>Backend performanti, RESTful API e WebSocket.</p>
+          </div>
+          <div class="skill-card" data-tilt data-tilt-glare data-tilt-max-glare="0.45">
+            <i class="fab fa-docker"></i>
+            <h3>Docker &amp; DevOps</h3>
+            <p>Containerizzazione e pipeline di distribuzione continua.</p>
+          </div>
+          <div class="skill-card" data-tilt data-tilt-glare data-tilt-max-glare="0.45">
+            <i class="fas fa-database"></i>
+            <h3>Database</h3>
+            <p>Progettazione e ottimizzazione SQL/NoSQL.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Projects Section -->
+    <section id="featured" class="section-featured">
+      <!-- Canvas per griglia 3D animata -->
+      <canvas id="featured-canvas"></canvas>
+      <div class="container">
+        <h2 class="section-title">Progetti in Evidenza</h2>
+        <div class="projects-grid">
+          <div class="project-card" data-tilt data-tilt-max="10">
+            <div class="project-image" style="background-image: url('./images/city-grid.png');"></div>
+            <div class="project-content">
+              <h3>Interfaccia Immersiva</h3>
+              <p>Dashboard in realtà aumentata che combina grafici 3D e dati in tempo reale.</p>
+              <a href="portfolio.html#immersive" class="btn secondary-btn">Dettagli</a>
+            </div>
+          </div>
+          <div class="project-card" data-tilt data-tilt-max="10">
+            <div class="project-image" style="background-image: url('./images/digital-rain.png');"></div>
+            <div class="project-content">
+              <h3>Codice Dinamico</h3>
+              <p>Piattaforma di live coding con compilazione WebAssembly e streaming WebRTC.</p>
+              <a href="portfolio.html#dynamic" class="btn secondary-btn">Dettagli</a>
+            </div>
+          </div>
+          <div class="project-card" data-tilt data-tilt-max="10">
+            <div class="project-image" style="background-image: url('./images/cyberpunk-city-2.png');"></div>
+            <div class="project-content">
+              <h3>Città Virtuale</h3>
+              <p>Simulazione 3D interattiva di una metropoli cyberpunk, sviluppata con WebGL.</p>
+              <a href="portfolio.html#virtual" class="btn secondary-btn">Dettagli</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="container">
+        <p>&copy; 2025 Michael. Tutti i diritti riservati.</p>
+      </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="back-to-top"><i class="fas fa-chevron-up"></i></button>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.1/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.2/vanilla-tilt.min.js"></script>
+    <!-- Chart.js per grafico delle competenze -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Aggiungi un parametro di versione per forzare l'aggiornamento della cache -->
+    <script src="./js/script.js?v=10"></script>
+  </body>
 </html>

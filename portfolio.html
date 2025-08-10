@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Michael – Portfolio</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Roboto:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      integrity="sha512-vZ0FgsBhmK0fCh6N0waNYd+NVN5iwfUOHjiic5LLUVjZZkNl5PYg8nFQXAbNm/foK69U3P99PAeML4YwICGf1A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="site-header">
+      <div class="container">
+        <div class="logo">Michael<span class="accent">Dev</span></div>
+        <nav class="nav">
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="portfolio.html" class="active">Portfolio</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Portfolio Hero Section -->
+    <section class="portfolio-hero parallax-bg" style="background-image: url('./images/circuit-board.png');">
+      <!-- canvas 3D spiralato per sfondo animato -->
+      <canvas id="portfolio-background" class="spiral-canvas"></canvas>
+      <div class="overlay"></div>
+      <div class="container">
+        <h1 class="page-title">Portfolio</h1>
+        <p class="portfolio-intro">
+          Una selezione dei miei lavori più significativi. Progetti front-end,
+          back‑end e full‑stack che mettono in evidenza competenze versatili.
+        </p>
+        <div class="filters">
+          <button class="filter-btn active" data-filter="all">Tutti</button>
+          <button class="filter-btn" data-filter="frontend">Frontend</button>
+          <button class="filter-btn" data-filter="backend">Backend</button>
+          <button class="filter-btn" data-filter="fullstack">Full‑stack</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Portfolio List -->
+    <section class="portfolio-list">
+      <div class="container">
+        <div class="portfolio-grid">
+          <!-- Item 1 -->
+          <div class="portfolio-item" data-cat="frontend">
+            <div class="item-image" style="background-image: url('./images/cyberpunk-city-2.png');"></div>
+            <div class="item-content">
+              <h3>Interfaccia Olografica</h3>
+              <p>Dashboard reattiva con animazioni WebGL e controlli touch.</p>
+              <div class="tags"><span>Frontend</span><span>Full‑stack</span></div>
+            </div>
+          </div>
+          <!-- Item 2 -->
+          <div class="portfolio-item" data-cat="backend">
+            <div class="item-image" style="background-image: url('./images/city-grid.png');"></div>
+            <div class="item-content">
+              <h3>API Reattive</h3>
+              <p>Microservizi scalabili in Node.js con database distribuiti.</p>
+              <div class="tags"><span>Backend</span></div>
+            </div>
+          </div>
+          <!-- Item 3 -->
+          <div class="portfolio-item" data-cat="fullstack">
+            <div class="item-image" style="background-image: url('./images/cyberpunk-city-1.png');"></div>
+            <div class="item-content">
+              <h3>Simulatore Metaverso</h3>
+              <p>Esperienza immersiva VR con interazione in tempo reale.</p>
+              <div class="tags"><span>Full‑stack</span><span>Frontend</span></div>
+            </div>
+          </div>
+          <!-- Item 4 -->
+          <div class="portfolio-item" data-cat="frontend">
+            <div class="item-image" style="background-image: url('./images/digital-rain.png');"></div>
+            <div class="item-content">
+              <h3>Generatore di Codice</h3>
+              <p>Editor live con highlight sintetico e compilazione automatica.</p>
+              <div class="tags"><span>Frontend</span></div>
+            </div>
+          </div>
+          <!-- Item 5 -->
+          <div class="portfolio-item" data-cat="backend">
+            <div class="item-image" style="background-image: url('./images/city-hologram.png');"></div>
+            <div class="item-content">
+              <h3>Streaming Engine</h3>
+              <p>Motore di streaming a bassa latenza basato su WebRTC e Go.</p>
+              <div class="tags"><span>Backend</span><span>Full‑stack</span></div>
+            </div>
+          </div>
+          <!-- Item 6 -->
+          <div class="portfolio-item" data-cat="fullstack">
+            <div class="item-image" style="background-image: url('./images/circuit-board.png');"></div>
+            <div class="item-content">
+              <h3>Piattaforma AI</h3>
+              <p>Applicazione full‑stack per la generazione di arte generativa.</p>
+              <div class="tags"><span>Full‑stack</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Portfolio Modal Overlay -->
+    <div id="portfolio-modal" class="portfolio-modal">
+      <div class="modal-content">
+        <span class="modal-close">&times;</span>
+        <h3 id="modal-title"></h3>
+        <img id="modal-image" src="" alt="Anteprima progetto" />
+        <p id="modal-description"></p>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="container">
+        <p>&copy; 2025 Michael. Tutti i diritti riservati.</p>
+      </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="back-to-top"><i class="fas fa-chevron-up"></i></button>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.1/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.2/vanilla-tilt.min.js"></script>
+    <!-- Aggiorna versione per evitare cache degli script -->
+    <script src="./js/script.js?v=10"></script>
+    <script>
+      // Gestione filtri per la pagina portfolio
+      document.addEventListener('DOMContentLoaded', function () {
+        const buttons = document.querySelectorAll('.filter-btn');
+        const items = document.querySelectorAll('.portfolio-item');
+
+        buttons.forEach((btn) => {
+          btn.addEventListener('click', () => {
+            // aggiorna stato attivo del bottone
+            buttons.forEach((b) => b.classList.remove('active'));
+            btn.classList.add('active');
+            const filter = btn.getAttribute('data-filter');
+            items.forEach((item) => {
+              const category = item.getAttribute('data-cat');
+              if (filter === 'all' || category === filter) {
+                item.classList.remove('hidden');
+              } else {
+                item.classList.add('hidden');
+              }
+            });
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
