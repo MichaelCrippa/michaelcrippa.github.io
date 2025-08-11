@@ -1,0 +1,1429 @@
+/*
+ * Mega Cyberpunk Portfolio – Main Stylesheet
+ *
+ * Questa raccolta di regole CSS definisce l'aspetto generale del sito.
+ * Le variabili definiscono una palette neon ispirata al genere cyberpunk
+ * combinando blu elettrico, magenta e tonalità scure per lo sfondo.
+ */
+
+/* Reset generico per eliminare margini e padding predefiniti */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  font-family: 'Roboto', sans-serif;
+  background-color: #090016;
+  color: #e3f2fd;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+:root {
+  --primary: #00e5ff;
+  --secondary: #ff2d95;
+  --dark: #090016;
+  --light: #e3f2fd;
+  --accent-glow: 0 0 10px rgba(0, 229, 255, 0.8), 0 0 20px rgba(0, 229, 255, 0.6);
+  --card-bg: rgba(15, 10, 30, 0.8);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --transition: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+a:hover {
+  color: var(--secondary);
+}
+
+.container {
+  width: 90%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Preloader */
+#preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.6s ease, visibility 0.6s;
+}
+
+#preloader.loaded {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.spinner {
+  width: 60px;
+  height: 60px;
+  border: 5px solid rgba(255, 255, 255, 0.2);
+  border-top: 5px solid var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Header */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 1rem 0;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  background-color: rgba(9, 0, 22, 0.5);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.site-header .logo {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: 2px;
+}
+.site-header .logo .accent {
+  color: var(--secondary);
+}
+
+.nav ul {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+}
+
+.nav a {
+  position: relative;
+  padding: 0.3rem 0;
+  color: var(--light);
+}
+
+.nav a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 2px;
+  background: var(--secondary);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
+}
+
+.nav a:hover::after,
+.nav a.active::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Hero Section */
+.section-hero {
+  position: relative;
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  /* Pseudo-element for dynamic gradient overlay */
+  /* Un overlay animato che cambia lentamente i colori per dare vita alla hero */
+  /* La trasparenza bassa consente all'immagine sottostante di essere visibile */
+  /* Vedi definizione della keyframe gradientShift più sotto */
+}
+
+/* Gradient overlay animato per la sezione hero */
+.section-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, var(--primary), var(--secondary), #8338ec);
+  background-size: 200% 200%;
+  animation: gradientShift 25s ease infinite;
+  opacity: 0.25;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Animazione per spostare la posizione del gradiente nel tempo */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.section-hero .hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(9, 0, 22, 0.4) 0%, rgba(9, 0, 22, 0.9) 80%);
+  z-index: 1;
+}
+
+#hero-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  padding-top: 12rem;
+  padding-bottom: 6rem;
+  text-align: center;
+  color: var(--light);
+}
+
+.hero-content h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.hero-content h1 .accent {
+  color: var(--primary);
+  text-shadow: var(--accent-glow);
+}
+
+.hero-content h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--secondary);
+}
+
+.hero-tagline {
+  max-width: 700px;
+  margin: 0 auto 2rem auto;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: rgba(227, 242, 253, 0.8);
+  position: relative;
+}
+
+/* Stile per il testo digitato dinamicamente e cursore lampeggiante */
+#typed-text {
+  font-size: 1.1rem;
+  display: inline-block;
+  min-height: 1.2em;
+  position: relative;
+}
+#typed-text::after {
+  content: '';
+  position: absolute;
+  right: -3px;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  background: var(--primary);
+  animation: blink 0.7s steps(1) infinite;
+}
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  50.01%, 100% {
+    opacity: 0;
+  }
+}
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  padding: 0.8rem 1.8rem;
+  border-radius: 4px;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: var(--transition);
+}
+
+.primary-btn {
+  background: var(--primary);
+  color: var(--dark);
+  box-shadow: 0 0 8px var(--primary), 0 0 16px var(--primary);
+}
+
+.primary-btn:hover {
+  background: var(--secondary);
+  box-shadow: 0 0 8px var(--secondary), 0 0 16px var(--secondary);
+}
+
+.secondary-btn {
+  background: transparent;
+  border: 2px solid var(--primary);
+  color: var(--primary);
+}
+
+.secondary-btn:hover {
+  background: var(--primary);
+  color: var(--dark);
+}
+
+/* Skills Section */
+.section-skills {
+  position: relative;
+  padding: 6rem 0;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  color: var(--light);
+}
+
+.section-skills .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(9, 0, 22, 0.9);
+  backdrop-filter: blur(3px);
+  z-index: 0;
+}
+
+.section-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.4rem;
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+  color: var(--light);
+}
+
+.section-title::after {
+  content: '';
+  width: 80px;
+  height: 3px;
+  background: var(--secondary);
+  display: block;
+  margin: 1rem auto 0;
+  box-shadow: 0 0 10px var(--secondary), 0 0 20px var(--secondary);
+}
+
+.skills-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 2rem;
+}
+
+/* Canvas per l'effetto pioggia digitale nella sezione skills */
+/* Canvas spiralato utilizzato per sfondi animati (skills, portfolio hero ecc.) */
+.spiral-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Canvas per il reticolo di particelle nella sezione servizi */
+.network-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Services Section */
+.section-services {
+  position: relative;
+  padding: 6rem 0;
+  background: var(--dark);
+  overflow: hidden;
+  color: var(--light);
+}
+
+/* Stats Section */
+.section-stats {
+  position: relative;
+  padding: 6rem 0;
+  background: var(--dark);
+  color: var(--light);
+  overflow: hidden;
+}
+.stats-grid {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2.5rem;
+  margin-top: 3rem;
+}
+.stat-item {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 2rem 2.5rem;
+  text-align: center;
+  min-width: 200px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.stat-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 30px rgba(0, 229, 255, 0.5);
+}
+.stat-item h3 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 3rem;
+  color: var(--primary);
+  text-shadow: var(--accent-glow);
+}
+.stat-item p {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: rgba(227, 242, 253, 0.85);
+}
+
+/* Testimonials Section */
+.section-testimonials {
+  position: relative;
+  padding: 6rem 0;
+  background: var(--dark);
+  color: var(--light);
+  overflow: hidden;
+}
+.testimonials-container {
+  position: relative;
+  overflow: hidden;
+  margin-top: 3rem;
+}
+.testimonials-track {
+  display: flex;
+  width: 100%;
+  position: relative;
+}
+.testimonial-slide {
+  flex: 1 0 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 2.5rem 2rem;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+.testimonial-slide.active {
+  opacity: 1;
+  position: relative;
+}
+.testimonial-slide h3 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.6rem;
+  margin-bottom: 1rem;
+  color: var(--secondary);
+  text-shadow: var(--accent-glow);
+}
+.testimonial-slide p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(227, 242, 253, 0.85);
+  margin-bottom: 1rem;
+}
+.testimonial-slide .author {
+  font-size: 0.85rem;
+  color: var(--primary);
+}
+
+/* Terminal Section */
+.section-terminal {
+  position: relative;
+  padding: 6rem 0;
+  background: var(--dark);
+  color: var(--light);
+  overflow: hidden;
+}
+.terminal-container {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+  margin: 3rem auto 0 auto;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+  padding: 2rem;
+  font-family: 'Courier New', Courier, monospace;
+  color: var(--light);
+}
+.terminal-output {
+  min-height: 180px;
+  max-height: 260px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+.terminal-input {
+  display: flex;
+  align-items: center;
+}
+.terminal-input label {
+  margin-right: 0.5rem;
+  font-family: 'Courier New', Courier, monospace;
+  color: var(--primary);
+}
+.terminal-input input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: 'Courier New', Courier, monospace;
+  color: var(--primary);
+  font-size: 1rem;
+
+  /* Bordo inferiore per rendere visibile il campo di input */
+  border-bottom: 1px solid var(--primary);
+  padding-bottom: 0.3rem;
+}
+.terminal-input input::placeholder {
+  color: rgba(227, 242, 253, 0.5);
+}
+
+/* Delinea l'area di input con una sottolineatura e separa output e input */
+.terminal-input {
+  border-top: 1px solid var(--card-border);
+  padding-top: 0.5rem;
+}
+.terminal-input input {
+  width: 100%;
+}
+
+/* Floating Shapes Canvas */
+.floating-shapes-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+/* Skills Chart Section */
+.section-skills-chart {
+  position: relative;
+  padding: 6rem 0;
+  background: var(--dark);
+  color: var(--light);
+  overflow: hidden;
+}
+.section-skills-chart .chart-container {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  z-index: 1;
+}
+.section-skills-chart canvas {
+  width: 100% !important;
+  height: auto !important;
+}
+
+/* Wave canvas for contact form background */
+.wave-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.25;
+}
+
+/* Ensure contact form section can contain absolutely positioned elements */
+
+/* Back to Top button */
+.back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: var(--primary);
+  color: var(--dark);
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 0 8px var(--primary), 0 0 16px var(--primary);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s ease;
+  z-index: 1500;
+}
+.back-to-top.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.back-to-top:hover {
+  background: var(--secondary);
+  box-shadow: 0 0 8px var(--secondary), 0 0 16px var(--secondary);
+  color: var(--dark);
+}
+
+/* Portfolio Modal */
+.portfolio-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(9, 0, 22, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  z-index: 2000;
+}
+.portfolio-modal.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.modal-content {
+  position: relative;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 800px;
+  width: 90%;
+  box-shadow: 0 0 30px rgba(0, 229, 255, 0.5);
+  backdrop-filter: blur(8px);
+}
+.modal-content h3 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.6rem;
+  margin-bottom: 1rem;
+  color: var(--primary);
+  text-shadow: var(--accent-glow);
+}
+.modal-content p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(227, 242, 253, 0.85);
+  margin-top: 1rem;
+}
+.modal-content img {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+.modal-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.7rem;
+  font-size: 2rem;
+  cursor: pointer;
+  color: var(--secondary);
+  transition: color 0.3s;
+}
+.modal-close:hover {
+  color: var(--primary);
+}
+
+/* Glitch effect for text (contact email) */
+.glitch {
+  position: relative;
+  display: inline-block;
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.glitch::before {
+  clip: rect(0, 900px, 0, 0);
+  animation: glitchTop 2s infinite linear alternate-reverse;
+  color: var(--secondary);
+}
+.glitch::after {
+  clip: rect(0, 900px, 0, 0);
+  animation: glitchBottom 2s infinite linear alternate-reverse;
+  color: #00e5ff;
+}
+@keyframes glitchTop {
+  0% {
+    clip: rect(0, 9999px, 0, 0);
+    transform: translate(0, 0);
+  }
+  10% {
+    clip: rect(10px, 9999px, 50px, 0);
+    transform: translate(-2px, -2px);
+  }
+  20% {
+    clip: rect(30px, 9999px, 80px, 0);
+    transform: translate(2px, 2px);
+  }
+  30% {
+    clip: rect(60px, 9999px, 90px, 0);
+    transform: translate(-2px, 1px);
+  }
+  40% {
+    clip: rect(20px, 9999px, 70px, 0);
+    transform: translate(2px, -1px);
+  }
+  50% {
+    clip: rect(70px, 9999px, 100px, 0);
+    transform: translate(-1px, 1px);
+  }
+  60% {
+    clip: rect(40px, 9999px, 60px, 0);
+    transform: translate(1px, -2px);
+  }
+  70% {
+    clip: rect(20px, 9999px, 80px, 0);
+    transform: translate(-2px, 2px);
+  }
+  80% {
+    clip: rect(50px, 9999px, 70px, 0);
+    transform: translate(2px, -1px);
+  }
+  90% {
+    clip: rect(30px, 9999px, 60px, 0);
+    transform: translate(-1px, 2px);
+  }
+  100% {
+    clip: rect(0, 9999px, 0, 0);
+    transform: translate(0, 0);
+  }
+}
+@keyframes glitchBottom {
+  0% {
+    clip: rect(0, 9999px, 0, 0);
+    transform: translate(0, 0);
+  }
+  10% {
+    clip: rect(20px, 9999px, 60px, 0);
+    transform: translate(2px, 2px);
+  }
+  20% {
+    clip: rect(50px, 9999px, 90px, 0);
+    transform: translate(-2px, -1px);
+  }
+  30% {
+    clip: rect(70px, 9999px, 100px, 0);
+    transform: translate(2px, 1px);
+  }
+  40% {
+    clip: rect(40px, 9999px, 80px, 0);
+    transform: translate(-2px, -1px);
+  }
+  50% {
+    clip: rect(80px, 9999px, 110px, 0);
+    transform: translate(1px, 2px);
+  }
+  60% {
+    clip: rect(30px, 9999px, 70px, 0);
+    transform: translate(-1px, -2px);
+  }
+  70% {
+    clip: rect(50px, 9999px, 90px, 0);
+    transform: translate(2px, 1px);
+  }
+  80% {
+    clip: rect(20px, 9999px, 60px, 0);
+    transform: translate(-2px, 2px);
+  }
+  90% {
+    clip: rect(60px, 9999px, 100px, 0);
+    transform: translate(1px, -1px);
+  }
+  100% {
+    clip: rect(0, 9999px, 0, 0);
+    transform: translate(0, 0);
+  }
+}
+
+/* Contact Form Section */
+.contact-form-section {
+  position: relative;
+  padding: 6rem 0;
+  background: var(--dark);
+  color: var(--light);
+  overflow: hidden;
+}
+.contact-form {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+.contact-form .form-row {
+  display: flex;
+  gap: 1rem;
+}
+.contact-form input,
+.contact-form textarea {
+  flex: 1;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  background: var(--card-bg);
+  color: var(--light);
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.95rem;
+  backdrop-filter: blur(8px);
+}
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 8px var(--primary);
+}
+.contact-form button {
+  align-self: flex-start;
+}
+.form-response {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--primary);
+}
+.services-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2.5rem;
+  margin-top: 3rem;
+}
+.service-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  color: var(--light);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.service-card i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: var(--primary);
+  text-shadow: var(--accent-glow);
+}
+.service-card h3 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.4rem;
+  margin-bottom: 0.6rem;
+  color: var(--secondary);
+}
+.service-card p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: rgba(227, 242, 253, 0.85);
+}
+
+/* Tecnologia carousel */
+.tech-carousel {
+  margin-top: 3rem;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+.carousel-track {
+  display: flex;
+  width: max-content;
+  animation: scroll-carousel 30s linear infinite;
+  align-items: center;
+}
+.carousel-track i {
+  font-size: 2.2rem;
+  margin-right: 3rem;
+  color: var(--primary);
+  text-shadow: var(--accent-glow);
+}
+@keyframes scroll-carousel {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Timeline Section */
+.section-timeline {
+  position: relative;
+  padding: 6rem 0;
+  background: var(--dark);
+  color: var(--light);
+}
+.timeline {
+  position: relative;
+  margin-top: 3rem;
+  border-left: 2px solid var(--secondary);
+  padding-left: 2rem;
+}
+.timeline-item {
+  margin-bottom: 2.5rem;
+  position: relative;
+}
+.timeline-item h3 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.3rem;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+  text-shadow: var(--accent-glow);
+}
+.timeline-item p {
+  font-size: 0.9rem;
+  color: rgba(227, 242, 253, 0.85);
+  line-height: 1.5;
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -1.1rem;
+  top: 0.45rem;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+  background: var(--secondary);
+  box-shadow: 0 0 10px var(--secondary), 0 0 20px var(--secondary);
+}
+
+.skill-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  color: var(--light);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.skill-card i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: var(--primary);
+  text-shadow: var(--accent-glow);
+}
+
+.skill-card h3 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  color: var(--secondary);
+}
+
+.skill-card p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: rgba(227, 242, 253, 0.8);
+}
+
+/* Featured Projects */
+.section-featured {
+  padding: 6rem 0;
+  background: var(--dark);
+  color: var(--light);
+  /* Consente di posizionare il canvas 3D come sfondo interattivo */
+  position: relative;
+  overflow: hidden;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2.5rem;
+  margin-top: 3rem;
+}
+
+.project-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--transition), box-shadow var(--transition);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+}
+
+.project-image {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 ratio */
+  background-size: cover;
+  background-position: center;
+}
+
+.project-content {
+  padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.project-content h3 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+  color: var(--primary);
+}
+
+.project-content p {
+  flex-grow: 1;
+  font-size: 0.9rem;
+  color: rgba(227, 242, 253, 0.85);
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.project-card .secondary-btn {
+  align-self: flex-start;
+  margin-top: auto;
+  font-size: 0.8rem;
+}
+
+/* Canvas per la griglia cibernetica nei progetti in evidenza */
+#featured-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Porta il contenuto sopra il canvas */
+.section-featured .container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Footer */
+.site-footer {
+  background: #0a0120;
+  padding: 2rem 0;
+  text-align: center;
+  color: rgba(227, 242, 253, 0.6);
+  font-size: 0.85rem;
+}
+
+/* Portfolio page styles */
+.portfolio-hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  background-size: cover;
+  background-position: center;
+  text-align: center;
+  color: var(--light);
+  padding-top: 8rem;
+  padding-bottom: 3rem;
+  overflow: hidden;
+}
+.portfolio-hero .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(9, 0, 22, 0.85);
+  z-index: 0;
+}
+.page-title {
+  position: relative;
+  z-index: 1;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 3rem;
+  color: var(--primary);
+  margin-bottom: 1rem;
+  text-shadow: var(--accent-glow);
+}
+.portfolio-intro {
+  position: relative;
+  z-index: 1;
+  font-size: 1rem;
+  max-width: 700px;
+  margin: 0 auto 2rem auto;
+  color: rgba(227, 242, 253, 0.8);
+}
+.filters {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  justify-content: center;
+}
+.filter-btn {
+  border: 1px solid var(--primary);
+  background: transparent;
+  color: var(--primary);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.8rem;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.filter-btn.active,
+.filter-btn:hover {
+  background: var(--primary);
+  color: var(--dark);
+  box-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary);
+}
+
+.portfolio-list {
+  padding: 5rem 0 6rem 0;
+  background: var(--dark);
+}
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+.portfolio-item {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform var(--transition), box-shadow var(--transition);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.portfolio-item.hidden {
+  display: none !important;
+}
+
+/* Canvas 3D integrati nelle schede del portfolio */
+.item-image {
+  width: 100%;
+  padding-top: 56.25%;
+  background-size: cover;
+  background-position: center;
+}
+.item-content {
+  padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  color: var(--light);
+}
+.item-content h3 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+  color: var(--primary);
+}
+.item-content p {
+  flex-grow: 1;
+  font-size: 0.9rem;
+  color: rgba(227, 242, 253, 0.85);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+.tags span {
+  background: var(--secondary);
+  color: var(--dark);
+  font-size: 0.7rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 3px;
+  letter-spacing: 0.5px;
+}
+
+/* Canvas utilizzato per i campi stellari di sezione */
+.stars-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Contact page styles */
+.contact-hero {
+  position: relative;
+  min-height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+  color: var(--light);
+  padding-top: 8rem;
+  padding-bottom: 3rem;
+  text-align: center;
+  overflow: hidden;
+}
+.contact-hero .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(9, 0, 22, 0.85);
+  z-index: 0;
+}
+
+.contact-section {
+  background: var(--dark);
+  padding: 6rem 0;
+  color: var(--light);
+}
+.contact-container {
+  display: flex;
+  gap: 3rem;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+.contact-form,
+.contact-3d {
+  flex: 1 1 400px;
+}
+.contact-form {
+  /* Usa un fondo leggermente più chiaro per far risaltare il canvas */
+  background: rgba(20, 15, 35, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 2rem;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+.contact-form h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: var(--primary);
+  text-shadow: var(--accent-glow);
+}
+.form-group {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: rgba(227, 242, 253, 0.8);
+}
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--light);
+  font-size: 0.9rem;
+  resize: vertical;
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: rgba(227, 242, 253, 0.5);
+}
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.3);
+}
+
+.contact-3d {
+  position: relative;
+  min-height: 400px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+}
+.contact-3d canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Nuova sezione di contatto: canvas a schermo intero e contenuto sovrapposto */
+.contact-3d-full {
+  position: relative;
+  width: 100%;
+  min-height: 60vh;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+}
+.contact-3d-full canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+.contact-info {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  text-align: center;
+  padding: 2rem;
+  background: rgba(9, 0, 22, 0.6);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+}
+.contact-info h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: var(--primary);
+  text-shadow: var(--accent-glow);
+}
+.contact-info p {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+.contact-info a {
+  display: inline-block;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 600;
+  color: var(--secondary);
+  font-size: 1.2rem;
+  text-decoration: underline;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 900px) {
+  .contact-container {
+    flex-direction: column;
+  }
+  .contact-form,
+  .contact-3d {
+    flex: 1 1 auto;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hero-content h1 {
+    font-size: 2.2rem;
+  }
+  .hero-content h2 {
+    font-size: 1.4rem;
+  }
+  .skills-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+  .section-skills {
+    padding: 4rem 0;
+  }
+  .section-featured {
+    padding: 4rem 0;
+  }
+}
+
