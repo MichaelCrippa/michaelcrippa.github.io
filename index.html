@@ -197,47 +197,13 @@ body{
 .skip-link{position:absolute;left:-999px;top:auto;width:1px;height:1px;overflow:hidden}
 .skip-link:focus{left:16px;top:16px;width:auto;height:auto;background:var(--brand-1);color:#001114;padding:.6rem 1rem;border-radius:.6rem;z-index:9999}
 
-header{position:sticky;top:0;z-index:50;backdrop-filter:saturate(180%) blur(15px); background:linear-gradient(90deg, rgba(0,234,255,.16), rgba(255,0,234,.16)); border-bottom:1px solid var(--border); box-shadow:0 2px 12px rgba(0,0,0,.4)}
+header{position:sticky;top:0;z-index:50;backdrop-filter:saturate(140%) blur(10px); background:linear-gradient(90deg, rgba(0,234,255,.12), rgba(255,0,234,.12)); border-bottom:1px solid var(--border)}
 .nav{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:10px 16px}
 .brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.3px}
 .brand-avatar{width:32px;height:32px;border-radius:10px;object-fit:cover;border:1px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.25)}
 .nav a{color:var(--text);text-decoration:none;font-weight:600;opacity:.9}
 .spacer{flex:1}
 .nav .btn{padding:.55rem .9rem;border:1px solid var(--border);background:var(--glass);border-radius:.75rem;box-shadow:var(--shadow)}
-
-/* Pulsante menu mobile: nascosto su desktop, visibile su mobile */
-.nav-toggle{
-  display:none;
-  background:none;
-  border:0;
-  font-size:1.5rem;
-  color:var(--text);
-  cursor:pointer;
-  line-height:1;
-}
-
-/* Layout responsive per la navbar su dispositivi mobili */
-@media (max-width: 700px){
-  .nav{
-    flex-wrap:wrap;
-  }
-  .nav .spacer{
-    display:none;
-  }
-  .nav-toggle{
-    display:block;
-    margin-left:auto;
-  }
-  .nav .btn{
-    display:none;
-    width:100%;
-    margin-top:8px;
-    text-align:left;
-  }
-  .nav.open .btn{
-    display:inline-block;
-  }
-}
 
 .hero{position:relative;min-height:70vh;min-height:70svh;display:grid;place-items:center;overflow:clip}
 .hero-inner{max-width:1100px;margin:auto;display:grid;grid-template-columns:1.1fr .9fr;gap:26px;padding:60px 16px}
@@ -504,8 +470,6 @@ footer{padding:40px 16px;border-top:1px solid var(--border);color:var(--muted);t
         <img class="brand-avatar" src="michael-avatar.jpg" alt="Foto di Michael Crippa" />
         <span>Michael Crippa</span>
       </div>
-      <!-- Bottone per il menu mobile: visibile solo su schermi stretti -->
-      <button class="nav-toggle" id="navToggle" aria-label="Apri menu">☰</button>
       <div class="spacer"></div>
       <a class="btn" href="#progetti">Progetti</a>
       <a class="btn" href="#playground">Playground</a>
@@ -929,8 +893,13 @@ function runSandbox(src){
     const meterL   = $('#meterL');
     const meterR   = $('#meterR');
 
-    // Pulsante di chiusura: la modalità mini non è più supportata.
-    const closeBtn        = $('#closeBtn');
+    const minimizeBtn     = $('#minimizeBtn');
+    const miniUI          = $('#miniUI');
+    const miniExpandBtn   = $('#miniExpandBtn');
+    const miniPrevBtn     = $('#miniPrevBtn');
+    const miniPlayBtn     = $('#miniPlayPauseBtn');
+    const miniNextBtn     = $('#miniNextBtn');
+    const miniTitle       = $('#miniTitle');
 
     const PLAYLIST = [
       { src: 'audio/track-01.mp3', title: 'Brano 1' },
@@ -1003,7 +972,7 @@ function runSandbox(src){
     function setTitles(){
       const t = PLAYLIST[index]?.title || 'Sconosciuto';
       titleEl.textContent = t;
-      // La modalità mini è stata rimossa, quindi non aggiorniamo altri titoli.
+      miniTitle.textContent = t;
     }
 
     function load(i){
@@ -1012,30 +981,14 @@ function runSandbox(src){
       audio.src = PLAYLIST[index].src;
       setTitles();
       highlight();
-      // Aggiorna i controlli di riproduzione quando si carica un nuovo brano
-      syncButtons();
     }
 
     async function play(){
       ensureAC();
-      // Se il contesto audio è sospeso (ad es. tab in background), riprendilo
       if (AC.state === 'suspended'){
         try { await AC.resume(); } catch {}
       }
-      // Alcuni browser consentono l'autoplay solo se l'audio è inizialmente muto. Imposta muto, avvia e poi riabilita.
-      const prevMuted = audio.muted;
-      try {
-        audio.muted = true;
-        await audio.play();
-      } catch {
-        // Ignora eventuali errori di riproduzione (p.es. divieto di autoplay)
-      } finally {
-        // Ripristina il flag muto allo stato precedente e imposta il volume
-        audio.muted = prevMuted;
-        // Se il volume era 0, utilizza il valore dello slider o un valore base
-        const vol = +volume.value;
-        if (!isNaN(vol)) audio.volume = vol;
-      }
+      try{ await audio.play(); }catch{}
       syncButtons();
     }
 
@@ -1048,7 +1001,9 @@ function runSandbox(src){
       const isPlaying = !audio.paused && !audio.ended;
       const label = isPlaying ? 'Pausa' : 'Riproduci';
       playBtn.textContent = label;
+      miniPlayBtn.textContent = label;
       playBtn.setAttribute('aria-pressed', String(isPlaying));
+      miniPlayBtn.setAttribute('aria-pressed', String(isPlaying));
     }
 
     function togglePanelVisibility(){
@@ -1058,11 +1013,15 @@ function runSandbox(src){
     }
 
     function enterMini(){
-      // Funzione disabilitata: la modalità mini è stata rimossa.
+      panel.classList.add('mini');
+      miniUI.setAttribute('aria-hidden', 'false');
+      panel.setAttribute('aria-label', 'Player audio (ridotto)');
     }
 
     function exitMini(){
-      // Funzione disabilitata: la modalità mini è stata rimossa.
+      panel.classList.remove('mini');
+      miniUI.setAttribute('aria-hidden', 'true');
+      panel.setAttribute('aria-label', 'Player audio');
     }
 
     // Eventi UI
@@ -1072,17 +1031,11 @@ function runSandbox(src){
     prevBtn.addEventListener('click', () => { load(index - 1); if (!audio.paused) play(); });
     nextBtn.addEventListener('click', () => { load(index + 1); if (!audio.paused) play(); });
 
-    // Il pulsante di chiusura nasconde il pannello senza interrompere la riproduzione
-    // Invece di affidarsi a togglePanelVisibility (che alterna visibilità),
-    // forziamo la rimozione della classe `show` e aggiorniamo gli attributi ARIA.
-    closeBtn.addEventListener('click', () => {
-      // Se il pannello è visibile, rimuovi la classe che lo mostra e aggiorna gli attributi.
-      if (panel.classList.contains('show')) {
-        panel.classList.remove('show');
-        toggle.setAttribute('aria-expanded', 'false');
-        panel.setAttribute('aria-hidden', 'true');
-      }
-    });
+    minimizeBtn.addEventListener('click', enterMini);
+    miniExpandBtn.addEventListener('click', exitMini);
+    miniPlayBtn.addEventListener('click', () => { userInteracted = true; audio.paused ? play() : pause(); });
+    miniPrevBtn.addEventListener('click', () => { load(index - 1); if (!audio.paused) play(); });
+    miniNextBtn.addEventListener('click', () => { load(index + 1); if (!audio.paused) play(); });
 
     // Progresso + volume (persistenza)
     audio.addEventListener('timeupdate', () => {
@@ -1133,17 +1086,11 @@ function runSandbox(src){
     // Init
     buildList();
     load(index);
-    // Aggiorna lo stato dei pulsanti al caricamento
     syncButtons();
-    // Imposta il volume iniziale al 20% se non salvato precedentemente
-    if (savedVol === null) {
-      volume.value = '0.2';
-      audio.volume = 0.2;
-      localStorage.setItem(VOL_KEY, volume.value);
+
+    if (!panel.classList.contains('mini')){
+      miniUI.setAttribute('aria-hidden', 'true');
     }
-    // Avvio automatico della riproduzione al caricamento della pagina
-    userInteracted = true;
-    play();
   })();
   </script>
 
@@ -1159,19 +1106,22 @@ function runSandbox(src){
         <button id="prevBtn" title="Precedente" aria-label="Traccia precedente">◀</button>
         <button id="playPauseBtn" title="Riproduci/Pausa" aria-label="Riproduci" aria-pressed="false">Riproduci</button>
         <button id="nextBtn" title="Successivo" aria-label="Traccia successiva">▶</button>
-        <!-- Sostituzione del pulsante di minimizzazione con un pulsante di chiusura.
-             Questo pulsante chiude il player senza interrompere la riproduzione. -->
-        <button id="closeBtn" class="icon-btn" title="Chiudi player" aria-label="Chiudi player">✕</button>
+        <button id="minimizeBtn" class="icon-btn" title="Riduci a icona" aria-label="Riduci a icona">—</button>
       </div>
     </div>
 
     <div class="row">
       <input id="progress" class="progress" type="range" min="0" max="100" value="0" step="0.1" aria-label="Progresso brano">
-      <!-- Il volume ora parte al 20% per default -->
-      <input id="volume" type="range" min="0" max="1" step="0.01" value="0.2" aria-label="Volume" style="width:120px">
+      <input id="volume" type="range" min="0" max="1" step="0.01" value="0.8" aria-label="Volume" style="width:120px">
     </div>
 
-    <!-- Rimosso il blocco mini-ui: la modalità ridotta a icona non viene più utilizzata -->
+    <div class="mini-ui" id="miniUI" aria-hidden="true">
+      <button id="miniExpandBtn" class="icon-btn" title="Espandi player" aria-label="Espandi">▢</button>
+      <button id="miniPrevBtn" title="Precedente" aria-label="Traccia precedente">◀</button>
+      <button id="miniPlayPauseBtn" title="Riproduci/Pausa" aria-label="Riproduci" aria-pressed="false">Riproduci</button>
+      <button id="miniNextBtn" title="Successivo" aria-label="Traccia successiva">▶</button>
+      <span class="mini-title" id="miniTitle">Seleziona un brano</span>
+    </div>
 
     <div class="meters" aria-hidden="true">
       <div class="meter" title="Canale sinistro"><span id="meterL"></span></div>
@@ -1179,7 +1129,7 @@ function runSandbox(src){
     </div>
 
     <div class="playlist" id="playlist" aria-label="Playlist"></div>
-    <audio id="audioEl" preload="metadata" autoplay></audio>
+    <audio id="audioEl" preload="metadata"></audio>
   </div>
 
   <!-- Glow del cursore: crea un cerchio luminoso che segue il puntatore per un tocco high-tech -->
@@ -1191,20 +1141,6 @@ function runSandbox(src){
       document.addEventListener('pointermove', (e) => {
         glow.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
       });
-    })();
-  </script>
-
-  <!-- Script per gestire il menu mobile: apre e chiude i link nella navbar quando si preme il pulsante hamburger -->
-  <script>
-    (() => {
-      const navToggle = document.getElementById('navToggle');
-      const nav = document.querySelector('nav.nav');
-      if (navToggle && nav) {
-        navToggle.addEventListener('click', (e) => {
-          e.preventDefault();
-          nav.classList.toggle('open');
-        });
-      }
     })();
   </script>
 
