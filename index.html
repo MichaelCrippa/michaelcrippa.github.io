@@ -89,21 +89,26 @@ body::before{
 .reader-topbar .back-btn:hover{background-color:var(--sumi-1);color:var(--washi-0);border-color:var(--shu)}
 .reader-topbar .reader-title{font-family:var(--jp-serif);color:var(--washi-0);font-size:13px;letter-spacing:.14em;text-shadow:0 1px 3px rgba(0,0,0,.9);text-align:center;flex:1;padding:0 16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .reader-topbar-right{display:flex;gap:8px;align-items:center;margin-right:80px}
-.reader-topbar .reader-info-btn,.reader-topbar .reader-notes-btn{width:34px;height:34px;border-radius:50%;background-color:rgba(244,234,210,.92);border:1px solid rgba(58,48,37,.9);color:var(--sumi-0);font-family:var(--jp-serif);font-size:14px;cursor:pointer;transition:all .2s ease;display:flex;align-items:center;justify-content:center}
-.reader-topbar .reader-info-btn:hover,.reader-topbar .reader-notes-btn:hover{background-color:var(--shu);color:var(--washi-0);border-color:var(--shu-dk)}
+.reader-topbar .reader-info-btn,.reader-topbar .reader-notes-btn,.reader-topbar .reader-dual-btn{width:34px;height:34px;border-radius:50%;background-color:rgba(244,234,210,.92);border:1px solid rgba(58,48,37,.9);color:var(--sumi-0);font-family:var(--jp-serif);font-size:14px;cursor:pointer;transition:all .2s ease;display:flex;align-items:center;justify-content:center}
+.reader-topbar .reader-info-btn:hover,.reader-topbar .reader-notes-btn:hover,.reader-topbar .reader-dual-btn:hover{background-color:var(--shu);color:var(--washi-0);border-color:var(--shu-dk)}
 .reader-topbar .reader-notes-btn.off{background-color:rgba(244,234,210,.4);color:rgba(24,19,13,.4);position:relative}
 .reader-topbar .reader-notes-btn.off::after{content:"";position:absolute;left:6px;right:6px;top:50%;height:1.5px;background:var(--shu);transform:rotate(-25deg);pointer-events:none}
+.reader-topbar .reader-dual-btn.active{background-color:var(--shu);color:var(--washi-0);border-color:var(--shu-dk)}
 #transform-area{flex:1;display:flex;justify-content:center;align-items:center;cursor:grab;transform-origin:0 0;transition:transform 0.05s ease-out;overflow:hidden;position:relative;padding:52px 0 70px}
 #transform-area.grabbing{cursor:grabbing}
-#page-wrapper{position:relative;display:inline-block;line-height:0}
-#manga-image{display:block;max-height:calc(100vh - 130px);max-width:96vw;pointer-events:none;box-shadow:0 0 0 1px rgba(244,234,210,.35),0 0 0 2px rgba(58,48,37,.9),0 0 0 8px rgba(24,19,13,.65),0 0 0 9px rgba(168,137,74,.35),0 30px 70px rgba(0,0,0,.85);opacity:0;transition:opacity .22s ease;-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none;user-select:none}
-#manga-image.loaded{opacity:1}
-.page-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+#pages-container{position:relative;display:flex;justify-content:center;align-items:center;gap:6px;line-height:0;--cs:1}
+#pages-container.single .page-slot .page-img{max-height:calc(100vh - 130px);max-width:96vw}
+#pages-container.dual{flex-direction:row-reverse}
+#pages-container.dual .page-slot .page-img{max-height:calc(100vh - 130px);max-width:47vw}
+.page-slot{position:relative;display:block;line-height:0;flex:none}
+.page-img{display:block;pointer-events:none;box-shadow:0 0 0 1px rgba(244,234,210,.35),0 0 0 2px rgba(58,48,37,.9),0 0 0 8px rgba(24,19,13,.65),0 0 0 9px rgba(168,137,74,.35),0 30px 70px rgba(0,0,0,.85);opacity:0;transition:opacity .22s ease;-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none;user-select:none}
+.page-img.loaded{opacity:1}
+.page-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:5}
 .page-loading .spinner-jp{width:40px;height:40px;border:2px solid rgba(244,234,210,.2);border-top-color:var(--shu);border-radius:50%;animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* NOTE */
-#notes-layer{position:absolute;inset:0;pointer-events:none;z-index:3;--cs:1}
+.notes-layer{position:absolute;inset:0;pointer-events:none;z-index:3}
 .note{position:absolute;width:26px;height:26px;transform:translate(-50%,-50%) scale(var(--cs,1));transform-origin:center center;pointer-events:auto}
 .note-dot{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#e04a3c,var(--shu) 60%,var(--shu-dk));color:#f4ead2;font-family:var(--jp-serif);font-size:12px;font-weight:700;line-height:1;border:1.5px solid rgba(255,240,220,.85);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:0 2px 6px rgba(0,0,0,.5),inset 0 0 0 1px rgba(0,0,0,.15);transition:transform .2s ease;animation:notePulse 2.6s ease-out infinite}
 .note-dot:hover{transform:scale(1.15)}
@@ -156,27 +161,11 @@ button.nav-btn.compact{flex-direction:row;min-width:44px;padding:9px 12px;font-s
 .info-close{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;background-color:transparent;border:1px solid var(--sumi-3);color:var(--sumi-2);font-family:var(--ui-serif);font-size:16px;cursor:pointer;transition:all .2s ease;display:flex;align-items:center;justify-content:center}
 .info-close:hover{background-color:var(--shu);color:var(--washi-0);border-color:var(--shu-dk)}
 
-/* MUSIC PLAYER — draggabile + auto-reposition in reader */
-#music-player{
-    position:fixed;
-    top:22px;
-    right:22px;
-    z-index:200;
-    font-family:var(--ui-serif);
-    transition:top .3s ease,right .3s ease,bottom .3s ease,left .3s ease;
-}
+/* MUSIC PLAYER */
+#music-player{position:fixed;top:22px;right:22px;z-index:200;font-family:var(--ui-serif);transition:top .3s ease,right .3s ease,bottom .3s ease,left .3s ease}
 #music-player.dragging{transition:none}
-#music-player.in-reader{
-    top:auto;
-    bottom:84px;
-    right:22px;
-}
-#music-player.has-custom-pos.in-reader{
-    top:var(--mp-custom-top, auto);
-    left:var(--mp-custom-left, auto);
-    right:auto;
-    bottom:auto;
-}
+#music-player.in-reader{top:auto;bottom:84px;right:22px}
+#music-player.has-custom-pos.in-reader{top:var(--mp-custom-top, auto);left:var(--mp-custom-left, auto);right:auto;bottom:auto}
 #mp-mini{display:none;position:relative;width:54px;height:54px;border-radius:2px;background-color:var(--shu);color:var(--washi-0);font-family:var(--jp-serif);font-size:22px;cursor:pointer;align-items:center;justify-content:center;clip-path:polygon(2% 1%,96% 0%,100% 4%,99% 96%,96% 100%,4% 99%,0% 96%,1% 3%);box-shadow:0 6px 18px rgba(120,30,20,.55),inset 0 0 0 1px rgba(255,240,220,.2);transition:transform .25s ease;border:none;padding:0}
 #mp-mini:hover{transform:translateY(-2px) rotate(-3deg) scale(1.04)}
 #mp-mini.playing::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:1.5px solid var(--shu);animation:pulse 1.8s ease-out infinite;pointer-events:none}
@@ -299,9 +288,10 @@ button.nav-btn.compact{flex-direction:row;min-width:44px;padding:9px 12px;font-s
   .reader-topbar{padding:0 10px}
   .reader-topbar .back-btn{padding:6px 10px;font-size:11px}
   .reader-topbar .reader-title{font-size:11.5px}
-  .reader-topbar .reader-info-btn,.reader-topbar .reader-notes-btn{width:30px;height:30px;font-size:12px}
+  .reader-topbar .reader-info-btn,.reader-topbar .reader-notes-btn,.reader-topbar .reader-dual-btn{width:30px;height:30px;font-size:12px}
   .reader-topbar-right{margin-right:62px}
-  #manga-image{max-height:calc(100vh - 120px)}
+  #pages-container.single .page-slot .page-img{max-height:calc(100vh - 120px)}
+  #pages-container.dual .page-slot .page-img{max-height:calc(100vh - 120px);max-width:48vw}
 }
 </style>
 </head>
@@ -402,15 +392,13 @@ button.nav-btn.compact{flex-direction:row;min-width:44px;padding:9px 12px;font-s
         <button class="back-btn" id="reader-back">← Libreria</button>
         <div class="reader-title" id="reader-title">Volume</div>
         <div class="reader-topbar-right">
+            <button class="reader-dual-btn" id="reader-dual-toggle" title="Modalità pagina singola">双</button>
             <button class="reader-notes-btn" id="reader-notes-toggle" title="Nascondi note">注</button>
             <button class="reader-info-btn" id="reader-info" title="Info">?︎</button>
         </div>
     </div>
     <div id="transform-area">
-        <div id="page-wrapper">
-            <img id="manga-image" src="" alt="" draggable="false" oncontextmenu="return false">
-            <div id="notes-layer"></div>
-        </div>
+        <div id="pages-container" class="single"></div>
         <div class="page-loading hidden" id="page-loading"><div class="spinner-jp"></div></div>
     </div>
     <div class="nav-controls">
@@ -442,7 +430,7 @@ button.nav-btn.compact{flex-direction:row;min-width:44px;padding:9px 12px;font-s
         <div id="info-content">
             <p>Questo è un progetto amatoriale di traduzione e impaginazione di manga. Ogni volume è stato tradotto e adattato con cura per i lettori italiani.</p>
             <p>Le scan originali non sono state modificate. Le traduzioni sono disponibili come <strong>note interattive</strong>: clicca sui pallini rossi numerati che appaiono sulle pagine per leggere il testo tradotto. Puoi nascondere tutte le note con il tasto <strong>注</strong> in alto a destra.</p>
-            <p>Il lettore supporta <strong>zoom</strong> (rotella del mouse o pulsanti +/−), <strong>pan</strong> (trascina quando zoomato), navigazione da <strong>tastiera</strong> (← →), <strong>swipe</strong> su mobile, e <strong>musica di sottofondo</strong> integrata. Il player musicale è <strong>trascinabile</strong>: afferralo per la barra del titolo per spostarlo dove preferisci.</p>
+            <p>Il lettore supporta <strong>zoom</strong>, <strong>pan</strong>, navigazione da <strong>tastiera</strong> (← →), <strong>swipe</strong> su mobile, <strong>modalità doppia pagina</strong> (tasto <strong>双</strong>), e <strong>musica di sottofondo</strong> integrata. Il player musicale è <strong>trascinabile</strong>: afferralo per la barra del titolo per spostarlo dove preferisci.</p>
             <div class="credits">
                 <strong>Traduzione &amp; impaginazione</strong>
                 <span class="name">Michael Crippa</span>
@@ -585,6 +573,7 @@ function pickClickSound(el) {
     const cl = el.classList;
     if (id === 'mp-play' || id === 'mp-sound' || (cl && cl.contains('volume-card'))) return 'chin';
     if (id === 'mp-collapse' || id === 'mp-mini') return 'don';
+    if (id === 'reader-dual-toggle') return 'don';
     if (cl && (cl.contains('mp-item') || cl.contains('mp-suggest') || cl.contains('note-dot') || cl.contains('note-close'))) return 'ko';
     return 'kachi';
 }
@@ -795,9 +784,8 @@ const libraryView = $('library-view');
 const siteHeader = $('site-header');
 const siteFooter = $('site-footer');
 const transformArea = $('transform-area');
-const mangaImage = $('manga-image');
+const pagesContainer = $('pages-container');
 const pageLoading = $('page-loading');
-const notesLayer = $('notes-layer');
 const musicPlayer = $('music-player');
 
 let currentVolume = null;
@@ -806,7 +794,14 @@ let currentIndex = 0;
 let scale = 1, pointX = 0, pointY = 0;
 let panning = false, startX = 0, startY = 0;
 let notesVisible = true;
+let dualPage = false;   // modalità doppia pagina
+let loadToken = 0;       // token per invalidare caricamenti vecchi
 const preloadCache = new Set();
+
+// Carica preferenza da localStorage
+try {
+    dualPage = localStorage.getItem('mr-dual-page') === '1';
+} catch(e){}
 
 async function openVolume(volumeId) {
     const vol = CONFIG.volumes.find(v => v.id === volumeId);
@@ -818,9 +813,11 @@ async function openVolume(volumeId) {
     siteHeader.style.display = 'none';
     siteFooter.style.display = 'none';
     $('reader-title').textContent = `${vol.series} · ${vol.volumeLabel || ('Vol. ' + vol.volume)}`;
+    // Aggiorna aspetto toggle doppia pagina
+    updateDualToggleUI();
     const hashPage = getPageFromHash();
     currentVolume = vol;
-    mangaImage.classList.remove('loaded');
+    pagesContainer.innerHTML = '';
     pageLoading.classList.remove('hidden');
     $('page-info').textContent = '...';
     try {
@@ -828,7 +825,7 @@ async function openVolume(volumeId) {
         currentPages = await getPagesForVolume(vol, onProgress);
         currentIndex = Math.max(0, Math.min((hashPage || 1) - 1, currentPages.length - 1));
         resetZoomAndPan();
-        displayPage();
+        await displayPage();
         document.addEventListener('keydown', readerKeyHandler);
     } catch (e) {
         console.error('[manga-reader] errore apertura volume:', e);
@@ -847,7 +844,8 @@ function closeReader() {
     currentVolume = null;
     currentPages = [];
     currentIndex = 0;
-    notesLayer.innerHTML = '';
+    pagesContainer.innerHTML = '';
+    loadToken++; // invalida eventuali caricamenti in corso
     if (location.hash) location.hash = '';
 }
 
@@ -865,42 +863,102 @@ function updateHash() {
     }
 }
 
-function displayPage() {
+/* Determina quali pagine mostrare in base alla modalità */
+function getVisibleIndices() {
+    if (!dualPage) return [currentIndex];
+    // Doppia pagina: la copertina (index 0) è singola
+    if (currentIndex === 0) return [0];
+    const idxs = [currentIndex];
+    if (currentIndex + 1 < currentPages.length) idxs.push(currentIndex + 1);
+    return idxs;
+}
+
+function preloadImage(url) {
+    return new Promise(resolve => {
+        const img = new Image();
+        img.onload = img.onerror = () => resolve();
+        img.src = url;
+    });
+}
+
+async function displayPage() {
     if (!currentPages.length) return;
-    const url = currentPages[currentIndex];
+    const myToken = ++loadToken;
 
-    notesLayer.innerHTML = '';
-
-    mangaImage.classList.remove('loaded');
-    pageLoading.classList.remove('hidden');
-
-    const loader = new Image();
-    loader.onload = () => {
-        mangaImage.src = url;
-        mangaImage.onload = () => {
-            mangaImage.classList.add('loaded');
-            pageLoading.classList.add('hidden');
-            renderNotesForPage();
-        };
-    };
-    loader.onerror = () => {
-        console.warn('[manga-reader] errore immagine:', url);
-        pageLoading.classList.add('hidden');
-    };
-    loader.src = url;
-
+    // Aggiorna UI navigazione
     $('page-info').textContent = `${currentIndex + 1} / ${currentPages.length}`;
     $('page-input').value = currentIndex + 1;
     $('page-input').max = currentPages.length;
-    $('nav-next').disabled = currentIndex === currentPages.length - 1;
-    $('nav-prev').disabled = currentIndex === 0;
-
+    updateNavButtons();
     updateHash();
+
+    const indices = getVisibleIndices();
+
+    // Precarica tutte le immagini necessarie (senza toccare il DOM)
+    await Promise.all(indices.map(i => preloadImage(currentPages[i])));
+
+    // Se nel frattempo l'utente ha cambiato pagina, esci
+    if (myToken !== loadToken) return;
+
+    // Ora costruisci il DOM — le immagini sono in cache, quindi è istantaneo
+    pagesContainer.className = (dualPage && indices.length > 1) ? 'dual' : 'single';
+    pagesContainer.innerHTML = '';
+
+    indices.forEach(idx => {
+        const slot = document.createElement('div');
+        slot.className = 'page-slot';
+        slot.dataset.idx = String(idx);
+
+        const img = document.createElement('img');
+        img.className = 'page-img loaded';
+        img.src = currentPages[idx];
+        img.draggable = false;
+        img.alt = '';
+        img.oncontextmenu = () => false;
+        slot.appendChild(img);
+
+        const nl = document.createElement('div');
+        nl.className = 'notes-layer';
+        nl.dataset.page = String(idx);
+        slot.appendChild(nl);
+
+        pagesContainer.appendChild(slot);
+    });
+
+    pageLoading.classList.add('hidden');
+
+    // Applica lo stato di visibilità delle note
+    document.querySelectorAll('.notes-layer').forEach(nl => {
+        nl.style.display = notesVisible ? '' : 'none';
+    });
+
+    // Renderizza le note per ciascuna pagina visibile
+    renderAllNotes();
+
+    // Applica il counter-scale delle note
+    updateNotesScale();
+
+    // Precarica pagine adiacenti (in background, senza bloccare)
     preloadAround();
 }
 
+function updateNavButtons() {
+    const isLast = currentIndex === currentPages.length - 1;
+    const isFirst = currentIndex === 0;
+    $('nav-next').disabled = isLast;
+    $('nav-prev').disabled = isFirst;
+}
+
+function updateNotesScale() {
+    pagesContainer.style.setProperty('--cs', 1 / scale);
+}
+
 function preloadAround() {
-    [currentIndex + 1, currentIndex + 2, currentIndex - 1].forEach(i => {
+    const neighbors = [
+        currentIndex + 1, currentIndex + 2,
+        currentIndex - 1, currentIndex - 2
+    ];
+    neighbors.forEach(i => {
         if (i < 0 || i >= currentPages.length) return;
         const u = currentPages[i];
         if (preloadCache.has(u)) return;
@@ -911,18 +969,27 @@ function preloadAround() {
 }
 
 function nextPage() {
-    if (currentIndex < currentPages.length - 1) {
+    if (currentIndex >= currentPages.length - 1) return;
+    if (dualPage) {
+        // Da copertina (0) si va a 1, poi si salta di 2
+        if (currentIndex === 0) currentIndex = 1;
+        else currentIndex = Math.min(currentIndex + 2, currentPages.length - 1);
+    } else {
         currentIndex++;
-        SoundEngine.play('kachi');
-        displayPage();
     }
+    SoundEngine.play('kachi');
+    displayPage();
 }
 function prevPage() {
-    if (currentIndex > 0) {
+    if (currentIndex <= 0) return;
+    if (dualPage) {
+        if (currentIndex <= 1) currentIndex = 0;
+        else currentIndex = Math.max(0, currentIndex - 2);
+    } else {
         currentIndex--;
-        SoundEngine.play('kachi');
-        displayPage();
     }
+    SoundEngine.play('kachi');
+    displayPage();
 }
 function jumpToPage() {
     let t = parseInt($('page-input').value);
@@ -935,7 +1002,7 @@ function jumpToPage() {
 function updateTransform() {
     transformArea.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
     $('zoom-info').textContent = `${Math.round(scale * 100)}%`;
-    notesLayer.style.setProperty('--cs', 1 / scale);
+    updateNotesScale();
 }
 function resetZoomAndPan() { scale = 1; pointX = 0; pointY = 0; updateTransform(); }
 function zoomIn() { zoomTo(scale * 1.25); }
@@ -957,7 +1024,7 @@ function readerKeyHandler(e) {
     const typing = ae && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA');
     if (typing) return;
     if (e.key === 'Escape') {
-        const openNote = notesLayer.querySelector('.note.open');
+        const openNote = document.querySelector('.note.open');
         if (openNote) { openNote.classList.remove('open'); return; }
         closeReader();
     }
@@ -967,6 +1034,7 @@ function readerKeyHandler(e) {
     else if (e.key === '-') zoomOut();
     else if (e.key === '0') resetZoomAndPan();
     else if (e.key.toLowerCase() === 'n') toggleNotes();
+    else if (e.key.toLowerCase() === 'd') toggleDualPage();
 }
 
 $('reader-back').addEventListener('click', closeReader);
@@ -1017,8 +1085,8 @@ document.addEventListener('mouseup', () => {
 transformArea.addEventListener('click', e => {
     if (scale > 1) return;
     if (e.target.closest && e.target.closest('.note')) return;
-    if (e.target === mangaImage || e.target === notesLayer || e.target === $('page-wrapper')) {
-        notesLayer.querySelectorAll('.note.open').forEach(n => n.classList.remove('open'));
+    if (e.target.closest('#pages-container')) {
+        document.querySelectorAll('.note.open').forEach(n => n.classList.remove('open'));
         nextPage();
     }
 });
@@ -1045,32 +1113,34 @@ transformArea.addEventListener('touchend', e => {
 /* ============================================================
    NOTE
    ============================================================ */
-function renderNotesForPage() {
-    notesLayer.innerHTML = '';
-    if (!currentVolume || !currentVolume.notes) return;
-    const pageNum = currentIndex + 1;
-    const notes = currentVolume.notes[pageNum];
-    if (!notes || !notes.length) return;
+function renderAllNotes() {
+    document.querySelectorAll('.notes-layer').forEach(nl => {
+        nl.innerHTML = '';
+        const pageIdx = parseInt(nl.dataset.page);
+        if (isNaN(pageIdx)) return;
+        if (!currentVolume || !currentVolume.notes) return;
+        const pageNum = pageIdx + 1;
+        const notes = currentVolume.notes[pageNum];
+        if (!notes || !notes.length) return;
 
-    notes.forEach((n, i) => {
-        const el = document.createElement('div');
-        el.className = 'note';
-        el.style.left = n.x + '%';
-        el.style.top = n.y + '%';
-        el.dataset.idx = i;
-        const titleHtml = n.title ? `<div class="note-title">${escapeHtml(n.title)}</div>` : '';
-        el.innerHTML = `
-            <button class="note-dot" aria-label="Nota ${i+1}" type="button">${i+1}</button>
-            <div class="note-popup" role="dialog">
-                <button class="note-close" type="button" aria-label="Chiudi">×</button>
-                ${titleHtml}
-                <div class="note-text">${escapeHtml(n.text || '')}</div>
-            </div>
-        `;
-        notesLayer.appendChild(el);
+        notes.forEach((n, i) => {
+            const el = document.createElement('div');
+            el.className = 'note';
+            el.style.left = n.x + '%';
+            el.style.top = n.y + '%';
+            el.dataset.idx = i;
+            const titleHtml = n.title ? `<div class="note-title">${escapeHtml(n.title)}</div>` : '';
+            el.innerHTML = `
+                <button class="note-dot" aria-label="Nota ${i+1}" type="button">${i+1}</button>
+                <div class="note-popup" role="dialog">
+                    <button class="note-close" type="button" aria-label="Chiudi">×</button>
+                    ${titleHtml}
+                    <div class="note-text">${escapeHtml(n.text || '')}</div>
+                </div>
+            `;
+            nl.appendChild(el);
+        });
     });
-
-    notesLayer.style.display = notesVisible ? '' : 'none';
 }
 
 function adjustNotePosition(note) {
@@ -1081,11 +1151,16 @@ function adjustNotePosition(note) {
     else note.classList.remove('below');
 }
 
-notesLayer.addEventListener('click', (e) => {
+// Delega click per le note (funziona su tutti i layer)
+document.addEventListener('click', (e) => {
     const closeBtn = e.target.closest('.note-close');
     const dotBtn = e.target.closest('.note-dot');
     const note = e.target.closest('.note');
-    if (!note) return;
+    if (!note) {
+        // Click fuori dalle note → chiudi tutte
+        document.querySelectorAll('.note.open').forEach(n => n.classList.remove('open'));
+        return;
+    }
 
     if (closeBtn) {
         e.stopPropagation();
@@ -1095,8 +1170,9 @@ notesLayer.addEventListener('click', (e) => {
     }
     if (dotBtn) {
         e.stopPropagation();
+        e.preventDefault();
         const wasOpen = note.classList.contains('open');
-        notesLayer.querySelectorAll('.note.open').forEach(n => {
+        document.querySelectorAll('.note.open').forEach(n => {
             if (n !== note) n.classList.remove('open');
         });
         if (wasOpen) {
@@ -1107,22 +1183,40 @@ notesLayer.addEventListener('click', (e) => {
             SoundEngine.play('chin');
         }
     }
-});
-
-document.addEventListener('click', (e) => {
-    if (e.target.closest && e.target.closest('.note')) return;
-    notesLayer.querySelectorAll('.note.open').forEach(n => n.classList.remove('open'));
-});
+}, true);
 
 function toggleNotes() {
     notesVisible = !notesVisible;
-    notesLayer.style.display = notesVisible ? '' : 'none';
+    document.querySelectorAll('.notes-layer').forEach(nl => {
+        nl.style.display = notesVisible ? '' : 'none';
+    });
     const btn = $('reader-notes-toggle');
     btn.classList.toggle('off', !notesVisible);
     btn.title = notesVisible ? 'Nascondi note' : 'Mostra note';
     SoundEngine.play(notesVisible ? 'chin' : 'don');
 }
 $('reader-notes-toggle').addEventListener('click', toggleNotes);
+
+/* ============================================================
+   TOGGLE DOPPIA PAGINA
+   ============================================================ */
+function updateDualToggleUI() {
+    const btn = $('reader-dual-toggle');
+    btn.classList.toggle('active', dualPage);
+    btn.title = dualPage ? 'Modalità doppia pagina (attiva) · clicca per singola' : 'Modalità pagina singola · clicca per doppia';
+}
+
+function toggleDualPage() {
+    dualPage = !dualPage;
+    try {
+        localStorage.setItem('mr-dual-page', dualPage ? '1' : '0');
+    } catch(e){}
+    updateDualToggleUI();
+    SoundEngine.play(dualPage ? 'chin' : 'don');
+    // Ridisegna la pagina (l'indice rimane lo stesso)
+    displayPage();
+}
+$('reader-dual-toggle').addEventListener('click', toggleDualPage);
 
 /* ============================================================
    INFO
@@ -1361,7 +1455,6 @@ audioEngine.volume=parseInt($('mp-vol').value)/100;
     const header = document.getElementById('mp-header');
     if (!player || !header) return;
 
-    // Aggiungi il grip visivo nell'header
     const grip = document.createElement('span');
     grip.className = 'mp-drag-grip';
     grip.textContent = '⋮⋮';
@@ -1413,7 +1506,6 @@ audioEngine.volume=parseInt($('mp-vol').value)/100;
             localStorage.setItem('mp-custom-pos', '1');
         } catch(e){}
         player.classList.add('has-custom-pos');
-        // Imposta le custom property per la modalità reader
         player.style.setProperty('--mp-custom-left', rect.left + 'px');
         player.style.setProperty('--mp-custom-top', rect.top + 'px');
     }
@@ -1438,7 +1530,6 @@ audioEngine.volume=parseInt($('mp-vol').value)/100;
     }, { passive: true });
     document.addEventListener('touchend', endDrag);
 
-    // Ripristina posizione salvata
     try {
         if (localStorage.getItem('mp-custom-pos') === '1') {
             const saved = JSON.parse(localStorage.getItem('mp-pos') || 'null');
@@ -1457,7 +1548,6 @@ audioEngine.volume=parseInt($('mp-vol').value)/100;
         }
     } catch(e){}
 
-    // Clamp al resize
     window.addEventListener('resize', () => {
         const rect = player.getBoundingClientRect();
         const w = player.offsetWidth, h = player.offsetHeight;
@@ -1510,6 +1600,7 @@ try {
     applyConfigToUI();
     renderVolumeGrid();
     renderPlaylist();
+    updateDualToggleUI();
     handleInitialHash();
     console.log('[manga-reader] init completato');
 } catch (err) {
