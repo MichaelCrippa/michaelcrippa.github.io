@@ -479,10 +479,36 @@ const CONFIG = {
                  ]
             ─────────────────────────────────────────────── */
             notes: {
-                1: [{ x: 90.97, y: 78.96, text: "Prova", title: "Titolo" }],
-                2: [],
-                3: []
-            }
+    /* ═══════════════════════════════════════════════
+       PAGINA 1 — COPERTINA
+       ═══════════════════════════════════════════════ */
+    1: [
+        // ─── Crediti in alto a sinistra ───
+        { x: 4.5,  y: 3.5,  title: "Crediti", text: "Opera originale: Sansan SUN" },
+        { x: 4.5,  y: 9,    text: "Manga: Saho Tenamachi" },
+        { x: 4.5,  y: 13.5, text: "Character design originale: Momoko" },
+
+        // ─── Titolo (in verticale, si legge da destra) ───
+        { x: 93,   y: 5,    title: "Titolo · parte 1", text: "時々ボソッと\n→ «Ogni tanto, sottovoce...»" },
+        { x: 87,   y: 26,   title: "Titolo · parte 2", text: "ロシア語でデレる\n→ «...si scioglie in russo...»" },
+        { x: 12,   y: 51,   title: "Titolo · parte 3", text: "隣のアーリャさん\n→ «...la vicina Alya»" },
+
+        // ─── Badge volume ───
+        { x: 68.5, y: 42.5, title: "Volume", text: "Volume 1" },
+
+        // ─── Testo russo in basso a sinistra ───
+        { x: 24,   y: 80,   title: "Testo russo", text: "Иногда Аля внезапно кокетничает по-русски\n\n«A volte Alya improvvisamente civetta in russo»" },
+
+        // ─── Editore in basso a destra ───
+        { x: 90,   y: 93.5, title: "Rivista", text: "Shonen Magazine Comics" }
+    ],
+
+    /* ═══════════════════════════════════════════════
+       PAGINE SUCCESSIVE — da compilare man mano
+       ═══════════════════════════════════════════════ */
+    2: [],
+    3: []
+}
         }
     ]
 };
