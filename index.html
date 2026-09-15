@@ -172,29 +172,8 @@ button.nav-btn.compact{flex-direction:row;min-width:44px;padding:9px 12px;font-s
 #music-player.in-reader{top:auto;bottom:calc(84px + var(--safe-bottom));right:calc(22px + var(--safe-right))}
 #music-player.has-custom-pos.in-reader{top:var(--mp-custom-top, auto);left:var(--mp-custom-left, auto);right:auto;bottom:auto}
 
-/* Player completamente nascosto dall'utente */
-#music-player.hidden-by-user #mp-panel,
-#music-player.hidden-by-user #mp-mini{display:none !important}
-
-/* Pulsante di riapertura: appare solo quando il player è nascosto */
-#mp-reopen{
-    display:none;
-    width:44px;height:44px;
-    border-radius:50%;
-    background-color:rgba(176,53,40,.85);
-    border:1px solid var(--shu-dk);
-    color:var(--washi-0);
-    font-family:var(--jp-serif);
-    font-size:18px;
-    cursor:pointer;
-    align-items:center;justify-content:center;
-    box-shadow:0 6px 18px rgba(120,30,20,.5),inset 0 0 0 1px rgba(255,240,220,.2);
-    transition:transform .2s ease,background-color .2s ease;
-    padding:0;
-    -webkit-tap-highlight-color:transparent;
-}
-#mp-reopen:hover{transform:scale(1.08);background-color:var(--shu)}
-#music-player.hidden-by-user #mp-reopen{display:flex}
+/* Player completamente nascosto dall'utente: sparisce nel vuoto */
+#music-player.hidden-by-user{display:none !important}
 
 #mp-mini{display:none;position:relative;width:54px;height:54px;border-radius:2px;background-color:var(--shu);color:var(--washi-0);font-family:var(--jp-serif);font-size:22px;cursor:grab;align-items:center;justify-content:center;clip-path:polygon(2% 1%,96% 0%,100% 4%,99% 96%,96% 100%,4% 99%,0% 96%,1% 3%);box-shadow:0 6px 18px rgba(120,30,20,.55),inset 0 0 0 1px rgba(255,240,220,.2);transition:transform .25s ease;border:none;padding:0;touch-action:none;-webkit-tap-highlight-color:transparent}
 #mp-mini:active{cursor:grabbing}
@@ -401,7 +380,6 @@ button.nav-btn.compact{flex-direction:row;min-width:44px;padding:9px 12px;font-s
 
   #music-player{top:calc(10px + var(--safe-top));right:calc(10px + var(--safe-right))}
   #mp-mini{width:46px;height:46px;font-size:19px}
-  #mp-reopen{width:42px;height:42px;font-size:17px}
   #mp-panel{
     width:calc(100vw - 20px - var(--safe-left) - var(--safe-right));
     max-width:420px;
@@ -454,7 +432,6 @@ button.nav-btn.compact{flex-direction:row;min-width:44px;padding:9px 12px;font-s
 <body>
 
 <div id="music-player">
-    <button id="mp-reopen" title="Mostra player musicale">♪</button>
     <button id="mp-mini" title="Apri player">音</button>
     <div id="mp-panel">
         <div class="mp-header" id="mp-header">
@@ -525,6 +502,7 @@ button.nav-btn.compact{flex-direction:row;min-width:44px;padding:9px 12px;font-s
         </div>
     </div>
     <div class="header-actions">
+        <button class="header-btn" id="reopen-player-btn" style="display:none" title="Mostra player musicale">♪ 音楽</button>
         <button class="header-btn" id="about-btn">ℹ︎ Info</button>
     </div>
 </header>
@@ -727,7 +705,7 @@ function pickClickSound(el) {
     const id = el.id || '';
     const cl = el.classList;
     if (id === 'mp-play' || id === 'mp-sound' || (cl && cl.contains('volume-card'))) return 'chin';
-    if (id === 'mp-collapse' || id === 'mp-mini' || id === 'mp-hide' || id === 'mp-reopen') return 'don';
+    if (id === 'mp-collapse' || id === 'mp-mini' || id === 'mp-hide' || id === 'reopen-player-btn') return 'don';
     if (id === 'reader-dual-toggle') return 'don';
     if (cl && (cl.contains('mp-item') || cl.contains('mp-suggest') || cl.contains('note-dot') || cl.contains('note-close'))) return 'ko';
     return 'kachi';
@@ -943,6 +921,8 @@ try {
 try {
     if (localStorage.getItem('mp-hidden') === '1') {
         musicPlayer.classList.add('hidden-by-user');
+        const rb = document.getElementById('reopen-player-btn');
+        if (rb) rb.style.display = '';
     }
 } catch(e){}
 
@@ -1127,7 +1107,23 @@ function jumpToPage() {
     displayPage();
 }
 
+/* Tiene l'immagine sempre dentro il viewport */
+function clampPan() {
+    if (scale <= 1) {
+        pointX = 0;
+        pointY = 0;
+        return;
+    }
+    const aw = transformArea.clientWidth;
+    const ah = transformArea.clientHeight;
+    const minX = aw * (1 - scale);
+    const minY = ah * (1 - scale);
+    pointX = Math.max(minX, Math.min(0, pointX));
+    pointY = Math.max(minY, Math.min(0, pointY));
+}
+
 function updateTransform() {
+    clampPan();
     transformArea.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
     $('zoom-info').textContent = `${Math.round(scale * 100)}%`;
     updateNotesScale();
@@ -1144,6 +1140,7 @@ function zoomTo(ns) {
     pointX = cx - xs * scale;
     pointY = cy - ys * scale;
     if (scale === 1) { pointX = 0; pointY = 0; }
+    clampPan();
     updateTransform();
 }
 
@@ -1185,6 +1182,7 @@ transformArea.addEventListener('wheel', e => {
     pointX = e.clientX - xs * scale;
     pointY = e.clientY - ys * scale;
     if (scale === 1) { pointX = 0; pointY = 0; }
+    clampPan();
     updateTransform();
 }, { passive: false });
 
@@ -1203,6 +1201,7 @@ document.addEventListener('mousemove', e => {
     e.preventDefault();
     pointX = e.clientX - startX;
     pointY = e.clientY - startY;
+    clampPan();
     updateTransform();
 });
 document.addEventListener('mouseup', () => {
@@ -1218,7 +1217,7 @@ transformArea.addEventListener('click', e => {
     }
 });
 
-/* TOUCH: pinch + pan + swipe */
+/* TOUCH: pinch-to-zoom domato + pan 1 dito + swipe */
 let touchStartX = 0, touchStartY = 0, touchTime = 0;
 let pinchStartDist = 0;
 let pinchStartScale = 1;
@@ -1231,6 +1230,7 @@ transformArea.addEventListener('touchstart', e => {
         isPinching = true;
         const t1 = e.touches[0], t2 = e.touches[1];
         pinchStartDist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+        if (pinchStartDist < 30) pinchStartDist = 30;
         pinchStartScale = scale;
         pinchStartMid = {
             x: (t1.clientX + t2.clientX) / 2,
@@ -1261,10 +1261,13 @@ transformArea.addEventListener('touchmove', e => {
         e.preventDefault();
         const t1 = e.touches[0], t2 = e.touches[1];
         const dist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
-        const midX = (t1.clientX + t2.clientX) / 2;
-        const midY = (t1.clientY + t2.clientY) / 2;
 
-        let newScale = pinchStartScale * (dist / pinchStartDist);
+        /* Sensibilità ridotta: 0.55 = più graduale, 1.0 = raw */
+        const SENSITIVITY = 0.55;
+        let rawRatio = dist / pinchStartDist;
+        let ratio = 1 + (rawRatio - 1) * SENSITIVITY;
+
+        let newScale = pinchStartScale * ratio;
         newScale = Math.max(1, Math.min(newScale, 5));
 
         const rect = transformArea.getBoundingClientRect();
@@ -1272,14 +1275,14 @@ transformArea.addEventListener('touchmove', e => {
         const cy = pinchStartMid.y - rect.top;
         const xs = (cx - pinchStartPointX) / pinchStartScale;
         const ys = (cy - pinchStartPointY) / pinchStartScale;
+
         scale = newScale;
         pointX = cx - xs * scale;
         pointY = cy - ys * scale;
 
-        pointX += (midX - pinchStartMid.x);
-        pointY += (midY - pinchStartMid.y);
-
         if (scale === 1) { pointX = 0; pointY = 0; }
+
+        clampPan();
         updateTransform();
         return;
     }
@@ -1287,6 +1290,7 @@ transformArea.addEventListener('touchmove', e => {
         e.preventDefault();
         pointX = e.touches[0].clientX - startX;
         pointY = e.touches[0].clientY - startY;
+        clampPan();
         updateTransform();
     }
 }, { passive: false });
@@ -1311,7 +1315,7 @@ transformArea.addEventListener('touchend', e => {
         const dy = e.changedTouches[0].clientY - touchStartY;
         const dt = Date.now() - touchTime;
         if (Math.abs(dx) > 60 && Math.abs(dy) < 80 && dt < 700) {
-            /* Fix: manga RTL → swipe verso DESTRA = pagina successiva */
+            /* Manga RTL → swipe verso DESTRA = pagina successiva */
             if (dx > 0) nextPage(); else prevPage();
         }
     }
@@ -1373,12 +1377,10 @@ function adjustNotePosition(note) {
     else note.classList.remove('below');
 }
 
-/* ── NUOVO: clamp del popup dentro il viewport ── */
 function positionNotePopup(note) {
     const popup = note.querySelector('.note-popup');
     if (!popup) return;
 
-    // Forza lo stato finale (aperto) per misurare correttamente
     const prevTransition = popup.style.transition;
     const prevTransform = popup.style.transform;
     popup.style.transition = 'none';
@@ -1405,7 +1407,6 @@ function positionNotePopup(note) {
         popup.style.setProperty('--arrow-pos', Math.max(12, Math.min(88, arrowPct)) + '%');
     }
 
-    // Ripristina transform/transition
     popup.style.transform = prevTransform;
     popup.style.transition = prevTransition;
 }
@@ -1443,7 +1444,6 @@ document.addEventListener('click', (e) => {
             note.classList.add('open');
             if (myLayer) myLayer.classList.add('has-open');
             SoundEngine.play('chin');
-            // Chiama positionNotePopup dopo che il browser ha applicato la classe
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => positionNotePopup(note));
             });
@@ -1694,19 +1694,27 @@ $('mp-collapse').addEventListener('click', (e) => {
     $('mp-mini').style.display = 'flex';
 });
 
-/* ── Nascondi completamente il player ── */
+/* ── Nascondi completamente il player: sparisce nel vuoto ── */
+function setPlayerHidden(hidden) {
+    if (hidden) {
+        musicPlayer.classList.add('hidden-by-user');
+        $('reopen-player-btn').style.display = '';
+    } else {
+        musicPlayer.classList.remove('hidden-by-user');
+        $('reopen-player-btn').style.display = 'none';
+    }
+    try { localStorage.setItem('mp-hidden', hidden ? '1' : '0'); } catch(e){}
+}
+
 $('mp-hide').addEventListener('click', (e) => {
     e.stopPropagation();
-    musicPlayer.classList.add('hidden-by-user');
-    try { localStorage.setItem('mp-hidden', '1'); } catch(e){}
+    setPlayerHidden(true);
     SoundEngine.play('don');
 });
 
-/* ── Riapri il player ── */
-$('mp-reopen').addEventListener('click', (e) => {
+$('reopen-player-btn').addEventListener('click', (e) => {
     e.stopPropagation();
-    musicPlayer.classList.remove('hidden-by-user');
-    try { localStorage.setItem('mp-hidden', '0'); } catch(e){}
+    setPlayerHidden(false);
     SoundEngine.play('chin');
 });
 
@@ -1732,7 +1740,6 @@ audioEngine.volume=parseInt($('mp-vol').value)/100;
     const player = document.getElementById('music-player');
     const header = document.getElementById('mp-header');
     const mini = document.getElementById('mp-mini');
-    const reopen = document.getElementById('mp-reopen');
     if (!player || !header) return;
 
     const grip = document.createElement('span');
@@ -1807,7 +1814,7 @@ audioEngine.volume=parseInt($('mp-vol').value)/100;
             player.style.setProperty('--mp-custom-left', rect.left + 'px');
             player.style.setProperty('--mp-custom-top', rect.top + 'px');
         }
-        if ((source === 'mini' || source === 'reopen') && wasDragged) {
+        if (source === 'mini' && wasDragged) {
             player.dataset.justDragged = '1';
             setTimeout(() => { delete player.dataset.justDragged; }, 80);
         }
@@ -1832,23 +1839,6 @@ audioEngine.volume=parseInt($('mp-vol').value)/100;
             const t = e.touches[0];
             startDrag(t.clientX, t.clientY, 'mini');
         }, { passive: true });
-    }
-
-    if (reopen) {
-        reopen.addEventListener('mousedown', (e) => {
-            startDrag(e.clientX, e.clientY, 'reopen');
-        });
-        reopen.addEventListener('touchstart', (e) => {
-            const t = e.touches[0];
-            startDrag(t.clientX, t.clientY, 'reopen');
-        }, { passive: true });
-        reopen.addEventListener('click', (e) => {
-            if (player.dataset.justDragged === '1') {
-                e.stopPropagation();
-                e.preventDefault();
-                return;
-            }
-        }, true);
     }
 
     document.addEventListener('mousemove', (e) => moveDrag(e.clientX, e.clientY));
