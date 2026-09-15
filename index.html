@@ -101,12 +101,23 @@ body::before{
 .reader-topbar .reader-dual-btn.active{background-color:var(--shu);color:var(--washi-0);border-color:var(--shu-dk)}
 #transform-area{flex:1;display:flex;justify-content:center;align-items:center;cursor:grab;transform-origin:0 0;overflow:hidden;position:relative;padding:calc(52px + var(--safe-top)) 0 calc(70px + var(--safe-bottom));touch-action:none}
 #transform-area.grabbing{cursor:grabbing}
-#pages-container{position:relative;display:flex;justify-content:center;align-items:center;gap:6px;line-height:0;--cs:1;will-change:transform}
+/* Promuove a layer GPU SOLO durante i gesti, così dopo il browser può ri-renderizzare ad alta risoluzione */
+#transform-area.gesturing{will-change:transform}
+#pages-container{position:relative;display:flex;justify-content:center;align-items:center;gap:6px;line-height:0;--cs:1}
 #pages-container.single .page-slot .page-img{max-height:calc(100vh - 130px);max-width:96vw}
 #pages-container.dual{flex-direction:row-reverse}
 #pages-container.dual .page-slot .page-img{max-height:calc(100vh - 130px);max-width:47vw}
 .page-slot{position:relative;display:block;line-height:0;flex:none}
-.page-img{display:block;pointer-events:none;box-shadow:0 0 0 1px rgba(244,234,210,.35),0 0 0 2px rgba(58,48,37,.9),0 0 0 8px rgba(24,19,13,.65),0 0 0 9px rgba(168,137,74,.35),0 30px 70px rgba(0,0,0,.85);opacity:0;transition:opacity .22s ease;-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none;user-select:none}
+.page-img{
+  display:block;pointer-events:none;
+  box-shadow:0 0 0 1px rgba(244,234,210,.35),0 0 0 2px rgba(58,48,37,.9),0 0 0 8px rgba(24,19,13,.65),0 0 0 9px rgba(168,137,74,.35),0 30px 70px rgba(0,0,0,.85);
+  opacity:0;transition:opacity .22s ease;
+  -webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none;user-select:none;
+  /* Interpolazione di alta qualità durante zoom/scale */
+  image-rendering:auto;
+  image-rendering:high-quality;
+  image-rendering:-webkit-optimize-contrast;
+}
 .page-img.loaded{opacity:1}
 .page-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:5}
 .page-loading .spinner-jp{width:40px;height:40px;border:2px solid rgba(244,234,210,.2);border-top-color:var(--shu);border-radius:50%;animation:spin 1s linear infinite}
@@ -427,7 +438,6 @@ button.nav-btn.compact{flex-direction:row;min-width:44px;padding:9px 12px;font-s
   .info-card h3{font-size:16px}
   .info-card p{font-size:12.5px;line-height:1.7}
 
-  /* Pallini più piccoli anche su mobile: 22px e semi-trasparenti */
   .note{width:22px;height:22px}
   .note-dot{width:22px;height:22px;font-size:11px;border-width:1.2px;opacity:.55}
   .note-dot:hover{opacity:1}
@@ -650,30 +660,19 @@ const CONFIG = {
         { x: 24,   y: 80,   title: "Иногда Аля внезапно кокетничает по-русски",
           text: "A volte Alya improvvisamente civetta in russo" },
     ],
-    2: [],   /* pagina bianca */
+    2: [],
 
-    /* ═══════════════════════════════════════════
-       PAGINA 3 — PAGINA INTERNO TITOLO
-       ═══════════════════════════════════════════ */
     3: [
-        /* ─── Blocco titolo (unico, verticale) ─── */
         { x: 18,   y: 15,   title: "時々ボソッとロシア語でデレる隣のアーリャさん",
           text: "Alya Sometimes Hides Her Feelings in Russian" },
-
-        /* ─── Testo in cirillico · colonna sinistra del blocco ─── */
         { x: 7.5,  y: 22,   title: "Иногда Аля внезапно кокетничает по-русски",
           text: "A volte Alya improvvisamente civetta in russo" },
     ],
-4: [
-        /* ─── Frase in cirillico · in alto al centro ─── */
+    4: [
         { x: 50,   y: 11,   title: "Иногда Аля внезапно кокетничает по-русски",
           text: "A volte Alya improvvisamente civetta in russo" },
-
-        /* ─── Titolo "目次" ─── */
         { x: 50,   y: 21,   title: "目次",
           text: "Indice" },
-
-        /* ─── I 9 capitoli · da destra verso sinistra ─── */
         { x: 82,   y: 45,   title: "第1話 · 孤高のお姫様と怠惰な隣人",
           text: "Capitolo 1 — La principessa altezzosa e il pigro vicino di casa" },
         { x: 73,   y: 45,   title: "第2話 · 無料ガチャって逃すと無性に悔しくない？",
@@ -693,14 +692,11 @@ const CONFIG = {
         { x: 16,   y: 45,   title: "第9話 · 姉妹百合、嫌いじゃないです②",
           text: "Capitolo 9 — Lo yuri tra sorelle non mi dispiace ②" }
     ],
-              5: [
-        /* ─── PANNELLO 1 · inquadratura della scuola ─── */
+    5: [
         { x: 17,   y: 9,    title: "第1話",
           text: "Capitolo 1" },
         { x: 78,   y: 14,   title: "私立征領学園",
           text: "Istituto Privato Seiryou" },
-
-        /* ─── PANNELLO 2 · studenti all'ingresso ─── */
         { x: 85,   y: 44,   title: "日本最高峰の偏差値を誇る",
           text: "Vanta il punteggio di deviazione più alto del Giappone" },
         { x: 78,   y: 52,   title: "由緒正しき中高大一貫校",
@@ -709,12 +705,16 @@ const CONFIG = {
           text: "Un tempo vi studiavano i figli di aristocratici e nobili" },
         { x: 15,   y: 48,   title: "卒業生は政財界で活躍する者も多い──",
           text: "Molti diplomati sono attivi nel mondo politico e finanziario──" },
-
-        /* ─── PANNELLO 3 · la ragazza di spalle ─── */
         { x: 80,   y: 72,   title: "そんな傑物たちの中で",
           text: "E tra tali persone straordinarie" },
         { x: 20,   y: 80,   title: "一際輝く少女がいた…！",
           text: "C'era una ragazza che brillava più di tutte…!" }
+    ],
+    6: [
+        { x: 91,   y: 8,    title: "第1話",
+          text: "Capitolo 1" },
+        { x: 83,   y: 20,   title: "孤高のお姫様と怠惰な隣人",
+          text: "La principessa altezzosa e il pigro vicino di casa" }
     ],
 }
         }
@@ -1012,6 +1012,21 @@ let dualPage = false;
 let loadToken = 0;
 const preloadCache = new Set();
 
+/* ─── Gesture hint: promuove a layer GPU solo durante i gesti,
+   così dopo il browser può ri-renderizzare ad alta risoluzione ─── */
+let _gestureTimer = null;
+function startGesture() {
+    transformArea.classList.add('gesturing');
+    if (_gestureTimer) { clearTimeout(_gestureTimer); _gestureTimer = null; }
+}
+function endGesture() {
+    if (_gestureTimer) clearTimeout(_gestureTimer);
+    _gestureTimer = setTimeout(() => {
+        transformArea.classList.remove('gesturing');
+        _gestureTimer = null;
+    }, 200);
+}
+
 /* Timer per la modalità "notes-idle" (pallini ancora più attenuati dopo inattività) */
 let idleTimer = null;
 function resetIdleTimer() {
@@ -1237,7 +1252,6 @@ function clampPan() {
     pointY = Math.max(minY, Math.min(0, pointY));
 }
 
-/* Applica la trasformazione SENZA clampPan (usato durante pinch) */
 function applyTransformNoClamp() {
     transformArea.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
     $('zoom-info').textContent = `${Math.round(scale * 100)}%`;
@@ -1286,13 +1300,14 @@ $('nav-next').addEventListener('click', nextPage);
 $('nav-prev').addEventListener('click', prevPage);
 $('nav-jump').addEventListener('click', jumpToPage);
 $('page-input').addEventListener('keydown', e => { if (e.key === 'Enter') jumpToPage(); });
-$('nav-zoomin').addEventListener('click', zoomIn);
-$('nav-zoomout').addEventListener('click', zoomOut);
-$('nav-zoomreset').addEventListener('click', resetZoomAndPan);
+$('nav-zoomin').addEventListener('click', () => { startGesture(); zoomIn(); endGesture(); });
+$('nav-zoomout').addEventListener('click', () => { startGesture(); zoomOut(); endGesture(); });
+$('nav-zoomreset').addEventListener('click', () => { startGesture(); resetZoomAndPan(); endGesture(); });
 
 transformArea.addEventListener('wheel', e => {
     if (!readerView.classList.contains('active')) return;
     e.preventDefault();
+    startGesture();
     const xs = (e.clientX - pointX) / scale;
     const ys = (e.clientY - pointY) / scale;
     let ns = scale * (-e.deltaY > 0 ? 1.1 : 0.9);
@@ -1302,12 +1317,14 @@ transformArea.addEventListener('wheel', e => {
     pointY = e.clientY - ys * scale;
     if (scale === 1) { pointX = 0; pointY = 0; }
     updateTransform();
+    endGesture();
 }, { passive: false });
 
 transformArea.addEventListener('mousedown', e => {
     if (e.button !== 0) return;
     if (e.target.closest && e.target.closest('.note')) return;
     if (scale > 1) {
+        startGesture();
         panning = true;
         startX = e.clientX - pointX;
         startY = e.clientY - pointY;
@@ -1322,6 +1339,9 @@ document.addEventListener('mousemove', e => {
     updateTransform();
 });
 document.addEventListener('mouseup', () => {
+    if (panning) {
+        endGesture();
+    }
     panning = false;
     transformArea.classList.remove('grabbing');
 });
@@ -1340,7 +1360,6 @@ transformArea.addEventListener('click', e => {
    ═══════════════════════════════════════════════════════════ */
 let touchStartX = 0, touchStartY = 0, touchTime = 0;
 let isPinching = false;
-/* Stato pinch: punto di ancoraggio nel "mondo contenuto" (indipendente dallo schermo) */
 let pinchAnchorX = 0, pinchAnchorY = 0;
 let pinchStartDist = 0;
 let pinchStartMidX = 0, pinchStartMidY = 0;
@@ -1354,6 +1373,7 @@ function getTouchMid(t1, t2) {
 }
 
 transformArea.addEventListener('touchstart', e => {
+    startGesture();
     if (e.touches.length === 2) {
         isPinching = true;
         pinchMoved = false;
@@ -1365,11 +1385,6 @@ transformArea.addEventListener('touchstart', e => {
         pinchStartMidX = mid.x;
         pinchStartMidY = mid.y;
 
-        /* Ancora = punto nel sistema del contenuto sotto il centro iniziale delle dita.
-           Il contenuto è posizionato con translate(pointX, pointY) e scale(scale).
-           Un punto (sx, sy) sullo schermo corrisponde nel contenuto a:
-             contentX = (sx - rect.left - pointX) / scale
-        */
         const localX = mid.x - rect.left;
         const localY = mid.y - rect.top;
         pinchAnchorX = (localX - pointX) / scale;
@@ -1401,31 +1416,23 @@ transformArea.addEventListener('touchmove', e => {
         const dist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
         const mid = getTouchMid(t1, t2);
 
-        /* Sensibilità: 0.6 = più graduale, 1.0 = 1:1 come le dita */
         const SENSITIVITY = 0.85;
         const rawRatio = dist / pinchStartDist;
         const ratio = 1 + (rawRatio - 1) * SENSITIVITY;
 
         let newScale = scale * ratio;
-        /* La scala corrente è quella dell'inizio pinch: ricaviamo dallo scale iniziale.
-           In realtà aggiorniamo incrementalmente, quindi use current scale moltiplicato per ratio incrementale. */
-        /* Non incrementale per stabilità: ricalcoliamo dall'inizio del pinch. */
-        /* Ma siccome non salviamo lo scale iniziale, usiamo il rapporto incrementale. */
         newScale = Math.max(1, Math.min(newScale, 5));
 
         const rect = transformArea.getBoundingClientRect();
-        /* Posizione corrente del centro delle dita in coordinate locali */
         const localMidX = mid.x - rect.left;
         const localMidY = mid.y - rect.top;
 
-        /* Applica: il punto "pinchAnchor" deve restare sotto (localMidX, localMidY) */
         scale = newScale;
         pointX = localMidX - pinchAnchorX * scale;
         pointY = localMidY - pinchAnchorY * scale;
 
         if (scale === 1) { pointX = 0; pointY = 0; }
 
-        /* Applica SENZA clamp durante il pinch: garantisce precisione di ancoraggio */
         applyTransformNoClamp();
         return;
     }
@@ -1440,15 +1447,16 @@ transformArea.addEventListener('touchmove', e => {
 
 transformArea.addEventListener('touchend', e => {
     if (e.touches.length < 2 && isPinching) {
-        /* Fine del pinch: applica il clamp una sola volta per riportare l'immagine dentro i bordi */
         isPinching = false;
         if (pinchMoved) {
             clampPan();
             applyTransformNoClamp();
         }
+        endGesture();
         return;
     }
     if (e.touches.length === 0) {
+        endGesture();
         if (panning) {
             panning = false;
             transformArea.classList.remove('grabbing');
@@ -1460,7 +1468,6 @@ transformArea.addEventListener('touchend', e => {
         const dy = e.changedTouches[0].clientY - touchStartY;
         const dt = Date.now() - touchTime;
         if (Math.abs(dx) > 60 && Math.abs(dy) < 80 && dt < 700) {
-            /* Manga RTL → swipe verso DESTRA = pagina successiva */
             if (dx > 0) nextPage(); else prevPage();
         }
     }
