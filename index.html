@@ -38,7 +38,6 @@ body::before{
 }
 .hidden{display:none !important}
 
-/* HEADER */
 #site-header{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;max-width:1240px;margin:0 auto;padding:26px 32px 20px}
 .brand{display:flex;align-items:center;gap:16px}
 .brand-hanko{width:52px;height:52px;flex:none;background:var(--shu);color:#f4ead2;font-family:var(--jp-serif);font-size:22px;font-weight:600;writing-mode:vertical-rl;display:flex;align-items:center;justify-content:center;letter-spacing:.08em;line-height:1;transform:rotate(2deg);clip-path:polygon(2% 1%,96% 0%,99% 3%,100% 97%,97% 99%,3% 100%,0% 97%,1% 3%);box-shadow:0 3px 0 rgba(120,20,10,.35)}
@@ -48,7 +47,6 @@ body::before{
 .header-btn{background-color:var(--washi-0);border:1px solid var(--sumi-3);color:var(--sumi-0);padding:8px 14px;font-family:var(--ui-serif);font-style:italic;font-size:11.5px;cursor:pointer;transition:all .2s ease}
 .header-btn:hover{background-color:var(--sumi-1);color:var(--washi-0);border-color:var(--sumi-0)}
 
-/* LIBRERIA */
 #library-view{position:relative;z-index:2;max-width:1240px;margin:0 auto;padding:8px 32px 80px}
 .library-intro{text-align:center;max-width:640px;margin:0 auto 46px;padding:0 12px}
 .library-intro .jp-title{display:block;font-family:var(--jp-serif);font-size:clamp(28px,5.2vw,42px);letter-spacing:.2em;text-indent:.2em;color:var(--sumi-0);line-height:1.15;text-shadow:0 1px 0 rgba(255,250,235,.6)}
@@ -80,7 +78,6 @@ body::before{
 .library-empty{text-align:center;padding:60px 30px;font-style:italic;color:var(--text-muted)}
 .library-empty .empty-mark{display:block;font-family:var(--jp-serif);font-size:64px;color:var(--shu);opacity:.35;margin-bottom:16px}
 
-/* READER */
 #reader-view{display:none;position:fixed;inset:0;background-color:var(--sumi-0);background-image:repeating-linear-gradient(90deg,rgba(255,235,200,.015) 0,rgba(255,235,200,.015) 1px,transparent 1px,transparent 4px),repeating-linear-gradient(0deg,rgba(0,0,0,.15) 0,rgba(0,0,0,.15) 1px,transparent 1px,transparent 3px),radial-gradient(ellipse at 50% 40%,rgba(80,60,40,.4) 0%,transparent 70%),radial-gradient(ellipse at 20% 80%,rgba(0,0,0,.5) 0%,transparent 60%);z-index:100;flex-direction:column}
 #reader-view.active{display:flex}
 .reader-topbar{position:absolute;top:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;background:linear-gradient(180deg,rgba(24,19,13,.92),rgba(24,19,13,0));z-index:15;pointer-events:none}
@@ -107,12 +104,9 @@ body::before{
 .page-loading .spinner-jp{width:40px;height:40px;border:2px solid rgba(244,234,210,.2);border-top-color:var(--shu);border-radius:50%;animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* NOTE */
 .notes-layer{position:absolute;inset:0;pointer-events:none;z-index:3;transition:z-index .12s ease}
-/* La nota aperta porta in primo piano TUTTO il suo layer */
 .notes-layer.has-open{z-index:50}
 .note{position:absolute;width:26px;height:26px;transform:translate(-50%,-50%) scale(var(--cs,1));transform-origin:center center;pointer-events:auto}
-/* La nota aperta è sopra le altre note dello stesso layer */
 .note.open{z-index:1}
 .note-dot{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#e04a3c,var(--shu) 60%,var(--shu-dk));color:#f4ead2;font-family:var(--jp-serif);font-size:12px;font-weight:700;line-height:1;border:1.5px solid rgba(255,240,220,.85);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:0 2px 6px rgba(0,0,0,.5),inset 0 0 0 1px rgba(0,0,0,.15);transition:transform .2s ease;animation:notePulse 2.6s ease-out infinite}
 .note-dot:hover{transform:scale(1.15)}
@@ -151,7 +145,6 @@ button.nav-btn.compact{flex-direction:row;min-width:44px;padding:9px 12px;font-s
 .zoom-group{display:flex;gap:6px;align-items:center;border-left:1px solid rgba(168,137,74,.3);border-right:1px solid rgba(168,137,74,.3);padding:0 14px}
 #page-info,#zoom-info{font-family:var(--jp-serif);font-size:12px;min-width:64px;text-align:center;color:var(--washi-0);font-weight:500;letter-spacing:.14em;font-variant-numeric:tabular-nums;padding:8px 12px;background-color:rgba(24,19,13,.75);border:1px solid rgba(168,137,74,.35);text-shadow:0 1px 2px rgba(0,0,0,.7)}
 
-/* INFO */
 #info-panel{position:fixed;inset:0;background:rgba(24,19,13,.65);z-index:300;display:none;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(4px)}
 #info-panel.show{display:flex}
 .info-card{max-width:480px;width:100%;background-color:var(--washi-0);background-image:repeating-linear-gradient(87deg,rgba(120,100,70,.05) 0,rgba(120,100,70,.05) 1px,transparent 1px,transparent 4px),radial-gradient(ellipse at 30% 30%,rgba(160,130,90,.11) 0%,transparent 55%);box-shadow:0 0 0 1.5px var(--line),0 0 0 6px var(--washi-0),0 0 0 7.5px var(--line),0 30px 70px rgba(0,0,0,.6);padding:36px 32px 28px;position:relative;max-height:80vh;overflow-y:auto}
@@ -165,12 +158,12 @@ button.nav-btn.compact{flex-direction:row;min-width:44px;padding:9px 12px;font-s
 .info-close{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;background-color:transparent;border:1px solid var(--sumi-3);color:var(--sumi-2);font-family:var(--ui-serif);font-size:16px;cursor:pointer;transition:all .2s ease;display:flex;align-items:center;justify-content:center}
 .info-close:hover{background-color:var(--shu);color:var(--washi-0);border-color:var(--shu-dk)}
 
-/* MUSIC PLAYER */
 #music-player{position:fixed;top:22px;right:22px;z-index:200;font-family:var(--ui-serif);transition:top .3s ease,right .3s ease,bottom .3s ease,left .3s ease}
 #music-player.dragging{transition:none}
 #music-player.in-reader{top:auto;bottom:84px;right:22px}
 #music-player.has-custom-pos.in-reader{top:var(--mp-custom-top, auto);left:var(--mp-custom-left, auto);right:auto;bottom:auto}
-#mp-mini{display:none;position:relative;width:54px;height:54px;border-radius:2px;background-color:var(--shu);color:var(--washi-0);font-family:var(--jp-serif);font-size:22px;cursor:pointer;align-items:center;justify-content:center;clip-path:polygon(2% 1%,96% 0%,100% 4%,99% 96%,96% 100%,4% 99%,0% 96%,1% 3%);box-shadow:0 6px 18px rgba(120,30,20,.55),inset 0 0 0 1px rgba(255,240,220,.2);transition:transform .25s ease;border:none;padding:0}
+#mp-mini{display:none;position:relative;width:54px;height:54px;border-radius:2px;background-color:var(--shu);color:var(--washi-0);font-family:var(--jp-serif);font-size:22px;cursor:grab;align-items:center;justify-content:center;clip-path:polygon(2% 1%,96% 0%,100% 4%,99% 96%,96% 100%,4% 99%,0% 96%,1% 3%);box-shadow:0 6px 18px rgba(120,30,20,.55),inset 0 0 0 1px rgba(255,240,220,.2);transition:transform .25s ease;border:none;padding:0;touch-action:none}
+#mp-mini:active{cursor:grabbing}
 #mp-mini:hover{transform:translateY(-2px) rotate(-3deg) scale(1.04)}
 #mp-mini.playing::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:1.5px solid var(--shu);animation:pulse 1.8s ease-out infinite;pointer-events:none}
 @keyframes pulse{0%{transform:scale(.9);opacity:.9}100%{transform:scale(1.3);opacity:0}}
@@ -434,7 +427,7 @@ button.nav-btn.compact{flex-direction:row;min-width:44px;padding:9px 12px;font-s
         <div id="info-content">
             <p>Questo è un progetto amatoriale di traduzione e impaginazione di manga. Ogni volume è stato tradotto e adattato con cura per i lettori italiani.</p>
             <p>Le scan originali non sono state modificate. Le traduzioni sono disponibili come <strong>note interattive</strong>: clicca sui pallini rossi numerati che appaiono sulle pagine per leggere il testo tradotto. Puoi nascondere tutte le note con il tasto <strong>注</strong> in alto a destra.</p>
-            <p>Il lettore supporta <strong>zoom</strong>, <strong>pan</strong>, navigazione da <strong>tastiera</strong> (← →), <strong>swipe</strong> su mobile, <strong>modalità doppia pagina</strong> (tasto <strong>双</strong>), e <strong>musica di sottofondo</strong> integrata. Il player musicale è <strong>trascinabile</strong>: afferralo per la barra del titolo per spostarlo dove preferisci.</p>
+            <p>Il lettore supporta <strong>zoom</strong>, <strong>pan</strong>, navigazione da <strong>tastiera</strong> (← →), <strong>swipe</strong> su mobile, <strong>modalità doppia pagina</strong> (tasto <strong>双</strong>), e <strong>musica di sottofondo</strong> integrata. Il player musicale è <strong>trascinabile</strong>: afferralo per la barra del titolo (o per l'icona quando è ridotto) per spostarlo dove preferisci.</p>
             <div class="credits">
                 <strong>Traduzione &amp; impaginazione</strong>
                 <span class="name">Michael Crippa</span>
@@ -1076,12 +1069,12 @@ document.addEventListener('mouseup', () => {
     transformArea.classList.remove('grabbing');
 });
 
+/* Click sull'immagine: chiude solo le note, NON cambia pagina */
 transformArea.addEventListener('click', e => {
     if (scale > 1) return;
     if (e.target.closest && e.target.closest('.note')) return;
     if (e.target.closest('#pages-container')) {
         closeAllNotes();
-        nextPage();
     }
 });
 
@@ -1105,12 +1098,12 @@ transformArea.addEventListener('touchend', e => {
 }, { passive: true });
 
 /* ============================================================
-   NOTE — con gestione z-index dinamico
+   NOTE
    ============================================================ */
 function renderAllNotes() {
     document.querySelectorAll('.notes-layer').forEach(nl => {
         nl.innerHTML = '';
-        nl.classList.remove('has-open'); // reset stato
+        nl.classList.remove('has-open');
         const pageIdx = parseInt(nl.dataset.page);
         if (isNaN(pageIdx)) return;
         if (!currentVolume || !currentVolume.notes) return;
@@ -1138,20 +1131,17 @@ function renderAllNotes() {
     });
 }
 
-/* Chiude una singola nota e ripristina lo z-index del suo layer */
 function closeNote(note) {
     if (!note) return;
     note.classList.remove('open');
     const layer = note.closest('.notes-layer');
     if (layer) {
-        // Se non ci sono più note aperte in questo layer, togli has-open
         if (!layer.querySelector('.note.open')) {
             layer.classList.remove('has-open');
         }
     }
 }
 
-/* Chiude tutte le note e resetta tutti i layer */
 function closeAllNotes() {
     document.querySelectorAll('.note.open').forEach(n => n.classList.remove('open'));
     document.querySelectorAll('.notes-layer.has-open').forEach(l => l.classList.remove('has-open'));
@@ -1170,7 +1160,6 @@ document.addEventListener('click', (e) => {
     const dotBtn = e.target.closest('.note-dot');
     const note = e.target.closest('.note');
     if (!note) {
-        // Click fuori dalle note → chiudi tutte
         closeAllNotes();
         return;
     }
@@ -1185,7 +1174,6 @@ document.addEventListener('click', (e) => {
         e.stopPropagation();
         e.preventDefault();
         const wasOpen = note.classList.contains('open');
-        // Chiudi tutte le altre note e TUTTI i layer (tranne quello di questa nota)
         const myLayer = note.closest('.notes-layer');
         document.querySelectorAll('.note.open').forEach(n => {
             if (n !== note) n.classList.remove('open');
@@ -1198,7 +1186,6 @@ document.addEventListener('click', (e) => {
         } else {
             adjustNotePosition(note);
             note.classList.add('open');
-            // Porta in primo piano il layer che contiene questa nota
             if (myLayer) myLayer.classList.add('has-open');
             SoundEngine.play('chin');
         }
@@ -1207,7 +1194,6 @@ document.addEventListener('click', (e) => {
 
 function toggleNotes() {
     notesVisible = !notesVisible;
-    // Se stiamo nascondendo le note, chiudi quelle aperte
     if (!notesVisible) closeAllNotes();
     document.querySelectorAll('.notes-layer').forEach(nl => {
         nl.style.display = notesVisible ? '' : 'none';
@@ -1452,8 +1438,11 @@ $('mp-collapse').addEventListener('click', (e) => {
     $('mp-panel').style.display = 'none';
     $('mp-mini').style.display = 'flex';
 });
+
+/* Click sul mini: se non è stato trascinato, apre il pannello */
 $('mp-mini').addEventListener('click', (e) => {
     e.stopPropagation();
+    if (musicPlayer.dataset.justDragged === '1') return;
     $('mp-panel').style.display = 'block';
     $('mp-mini').style.display = 'none';
 });
@@ -1469,13 +1458,15 @@ $('mp-sound').addEventListener('click', (e) => {
 audioEngine.volume=parseInt($('mp-vol').value)/100;
 
 /* ============================================================
-   DRAG DEL PLAYER MUSICALE
+   DRAG DEL PLAYER — funziona sia su header (grande) sia su mini (piccolo)
    ============================================================ */
 (function makePlayerDraggable(){
     const player = document.getElementById('music-player');
     const header = document.getElementById('mp-header');
+    const mini = document.getElementById('mp-mini');
     if (!player || !header) return;
 
+    // Grip visivo nell'header grande
     const grip = document.createElement('span');
     grip.className = 'mp-drag-grip';
     grip.textContent = '⋮⋮';
@@ -1491,12 +1482,18 @@ audioEngine.volume=parseInt($('mp-vol').value)/100;
     }
 
     let dragging = false, offX = 0, offY = 0;
+    let dragStartX = 0, dragStartY = 0, dragMoved = false;
+    let dragSource = null; // 'header' | 'mini'
 
-    function startDrag(clientX, clientY){
+    function startDrag(clientX, clientY, source){
         const rect = player.getBoundingClientRect();
         offX = clientX - rect.left;
         offY = clientY - rect.top;
         dragging = true;
+        dragMoved = false;
+        dragStartX = clientX;
+        dragStartY = clientY;
+        dragSource = source;
         player.classList.add('dragging');
         player.style.right = 'auto';
         player.style.bottom = 'auto';
@@ -1505,8 +1502,14 @@ audioEngine.volume=parseInt($('mp-vol').value)/100;
         document.body.style.userSelect = 'none';
         document.body.style.cursor = 'grabbing';
     }
+
     function moveDrag(clientX, clientY){
         if (!dragging) return;
+        if (!dragMoved) {
+            const dx = clientX - dragStartX;
+            const dy = clientY - dragStartY;
+            if (Math.hypot(dx, dy) > 4) dragMoved = true;
+        }
         const w = player.offsetWidth, h = player.offsetHeight;
         let x = clientX - offX;
         let y = clientY - offY;
@@ -1515,35 +1518,61 @@ audioEngine.volume=parseInt($('mp-vol').value)/100;
         player.style.left = x + 'px';
         player.style.top = y + 'px';
     }
+
     function endDrag(){
         if (!dragging) return;
         dragging = false;
+        const wasDragged = dragMoved;
+        const source = dragSource;
+        dragSource = null;
+        dragMoved = false;
         player.classList.remove('dragging');
         document.body.style.userSelect = '';
         document.body.style.cursor = '';
-        const rect = player.getBoundingClientRect();
-        try {
-            localStorage.setItem('mp-pos', JSON.stringify({ x: rect.left, y: rect.top }));
-            localStorage.setItem('mp-custom-pos', '1');
-        } catch(e){}
-        player.classList.add('has-custom-pos');
-        player.style.setProperty('--mp-custom-left', rect.left + 'px');
-        player.style.setProperty('--mp-custom-top', rect.top + 'px');
+        if (wasDragged) {
+            const rect = player.getBoundingClientRect();
+            try {
+                localStorage.setItem('mp-pos', JSON.stringify({ x: rect.left, y: rect.top }));
+                localStorage.setItem('mp-custom-pos', '1');
+            } catch(e){}
+            player.classList.add('has-custom-pos');
+            player.style.setProperty('--mp-custom-left', rect.left + 'px');
+            player.style.setProperty('--mp-custom-top', rect.top + 'px');
+        }
+        // Se era una drag sul mini, blocca il click che segue
+        if (source === 'mini' && wasDragged) {
+            player.dataset.justDragged = '1';
+            setTimeout(() => { delete player.dataset.justDragged; }, 60);
+        }
     }
 
+    // Drag sull'header grande
     header.addEventListener('mousedown', (e) => {
         if (e.target.closest('button')) return;
         e.preventDefault();
-        startDrag(e.clientX, e.clientY);
+        startDrag(e.clientX, e.clientY, 'header');
     });
-    document.addEventListener('mousemove', (e) => moveDrag(e.clientX, e.clientY));
-    document.addEventListener('mouseup', endDrag);
-
     header.addEventListener('touchstart', (e) => {
         if (e.target.closest('button')) return;
         const t = e.touches[0];
-        startDrag(t.clientX, t.clientY);
+        startDrag(t.clientX, t.clientY, 'header');
     }, { passive: true });
+
+    // Drag sul mini (icona piccola) — NON blocchiamo il click, lo gestiamo con justDragged
+    if (mini) {
+        mini.addEventListener('mousedown', (e) => {
+            // NON preventDefault: vogliamo che il click parta normalmente
+            startDrag(e.clientX, e.clientY, 'mini');
+        });
+        mini.addEventListener('touchstart', (e) => {
+            const t = e.touches[0];
+            startDrag(t.clientX, t.clientY, 'mini');
+        }, { passive: true });
+    }
+
+    document.addEventListener('mousemove', (e) => moveDrag(e.clientX, e.clientY));
+    document.addEventListener('mouseup', endDrag);
+
     document.addEventListener('touchmove', (e) => {
         if (!dragging) return;
         const t = e.touches[0];
@@ -1551,6 +1580,7 @@ audioEngine.volume=parseInt($('mp-vol').value)/100;
     }, { passive: true });
     document.addEventListener('touchend', endDrag);
 
+    // Ripristina posizione salvata
     try {
         if (localStorage.getItem('mp-custom-pos') === '1') {
             const saved = JSON.parse(localStorage.getItem('mp-pos') || 'null');
