@@ -99,9 +99,9 @@ body::before{
 .reader-topbar .reader-notes-btn.off{background-color:rgba(244,234,210,.4);color:rgba(24,19,13,.4);position:relative}
 .reader-topbar .reader-notes-btn.off::after{content:"";position:absolute;left:6px;right:6px;top:50%;height:1.5px;background:var(--shu);transform:rotate(-25deg);pointer-events:none}
 .reader-topbar .reader-dual-btn.active{background-color:var(--shu);color:var(--washi-0);border-color:var(--shu-dk)}
-#transform-area{flex:1;display:flex;justify-content:center;align-items:center;cursor:grab;transform-origin:0 0;transition:transform 0.05s ease-out;overflow:hidden;position:relative;padding:calc(52px + var(--safe-top)) 0 calc(70px + var(--safe-bottom));touch-action:none}
+#transform-area{flex:1;display:flex;justify-content:center;align-items:center;cursor:grab;transform-origin:0 0;overflow:hidden;position:relative;padding:calc(52px + var(--safe-top)) 0 calc(70px + var(--safe-bottom));touch-action:none}
 #transform-area.grabbing{cursor:grabbing}
-#pages-container{position:relative;display:flex;justify-content:center;align-items:center;gap:6px;line-height:0;--cs:1}
+#pages-container{position:relative;display:flex;justify-content:center;align-items:center;gap:6px;line-height:0;--cs:1;will-change:transform}
 #pages-container.single .page-slot .page-img{max-height:calc(100vh - 130px);max-width:96vw}
 #pages-container.dual{flex-direction:row-reverse}
 #pages-container.dual .page-slot .page-img{max-height:calc(100vh - 130px);max-width:47vw}
@@ -112,25 +112,53 @@ body::before{
 .page-loading .spinner-jp{width:40px;height:40px;border:2px solid rgba(244,234,210,.2);border-top-color:var(--shu);border-radius:50%;animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
+/* ═══════════════ NOTE ═══════════════
+   Pallini piccoli (18px) e semi-trasparenti (opacity .55)
+   Diventano pieni al hover o quando aperti.
+   La dimensione visiva resta costante grazie a --cs (counter-scale).
+   ═══════════════════════════════════ */
 .notes-layer{position:absolute;inset:0;pointer-events:none;z-index:3;transition:z-index .12s ease}
 .notes-layer.has-open{z-index:50}
-.note{position:absolute;width:26px;height:26px;transform:translate(-50%,-50%) scale(var(--cs,1));transform-origin:center center;pointer-events:auto}
+.note{position:absolute;width:18px;height:18px;transform:translate(-50%,-50%) scale(var(--cs,1));transform-origin:center center;pointer-events:auto}
 .note.open{z-index:1}
-.note-dot{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#e04a3c,var(--shu) 60%,var(--shu-dk));color:#f4ead2;font-family:var(--jp-serif);font-size:12px;font-weight:700;line-height:1;border:1.5px solid rgba(255,240,220,.85);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:0 2px 6px rgba(0,0,0,.5),inset 0 0 0 1px rgba(0,0,0,.15);transition:transform .2s ease;animation:notePulse 2.6s ease-out infinite;-webkit-tap-highlight-color:transparent}
-.note-dot:hover{transform:scale(1.15)}
-.note.open .note-dot{animation:none;box-shadow:0 3px 10px rgba(0,0,0,.7),inset 0 0 0 1px rgba(0,0,0,.15)}
-@keyframes notePulse{
-  0%,100%{box-shadow:0 2px 6px rgba(0,0,0,.5),inset 0 0 0 1px rgba(0,0,0,.15),0 0 0 0 rgba(176,53,40,.55)}
-  50%{box-shadow:0 2px 6px rgba(0,0,0,.5),inset 0 0 0 1px rgba(0,0,0,.15),0 0 0 10px rgba(176,53,40,0)}
+.note-dot{
+  width:18px;height:18px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#e04a3c,var(--shu) 60%,var(--shu-dk));
+  color:#f4ead2;
+  font-family:var(--jp-serif);
+  font-size:9px;font-weight:700;line-height:1;
+  border:1px solid rgba(255,240,220,.7);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  padding:0;
+  box-shadow:0 1px 3px rgba(0,0,0,.55),inset 0 0 0 1px rgba(0,0,0,.15);
+  transition:transform .18s ease,opacity .25s ease,box-shadow .2s ease;
+  animation:notePulse 3.2s ease-out infinite;
+  -webkit-tap-highlight-color:transparent;
+  opacity:.55;
 }
-.note-popup{position:absolute;bottom:calc(100% + 14px);left:50%;transform:translateX(-50%) scale(.9);transform-origin:bottom center;min-width:200px;max-width:320px;background-color:var(--washi-0);background-image:radial-gradient(ellipse at 30% 30%,rgba(160,130,90,.12) 0%,transparent 55%);border:1.5px solid var(--sumi-1);box-shadow:0 0 0 4px var(--washi-0),0 0 0 5.5px var(--sumi-1),0 18px 40px rgba(0,0,0,.5);padding:16px 34px 16px 18px;color:var(--sumi-0);font-family:var(--ui-serif);font-size:13px;line-height:1.6;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .2s ease,transform .2s ease,visibility .2s ease;text-align:left}
+.note-dot:hover{transform:scale(1.35);opacity:1}
+.note.open .note-dot{
+  animation:none;
+  opacity:1;
+  transform:scale(1.15);
+  box-shadow:0 2px 8px rgba(0,0,0,.75),inset 0 0 0 1px rgba(0,0,0,.15);
+}
+@keyframes notePulse{
+  0%,100%{box-shadow:0 1px 3px rgba(0,0,0,.55),inset 0 0 0 1px rgba(0,0,0,.15),0 0 0 0 rgba(176,53,40,.5)}
+  50%{box-shadow:0 1px 3px rgba(0,0,0,.55),inset 0 0 0 1px rgba(0,0,0,.15),0 0 0 6px rgba(176,53,40,0)}
+}
+/* Quando il reader è "a riposo" (nessun hover recente) i pallini si attenuano ancora di più */
+#reader-view.notes-idle .note-dot{opacity:.28}
+#reader-view.notes-idle .note.open .note-dot{opacity:1}
+
+.note-popup{position:absolute;bottom:calc(100% + 12px);left:50%;transform:translateX(-50%) scale(.9);transform-origin:bottom center;min-width:190px;max-width:300px;background-color:var(--washi-0);background-image:radial-gradient(ellipse at 30% 30%,rgba(160,130,90,.12) 0%,transparent 55%);border:1.5px solid var(--sumi-1);box-shadow:0 0 0 4px var(--washi-0),0 0 0 5.5px var(--sumi-1),0 18px 40px rgba(0,0,0,.5);padding:14px 32px 14px 16px;color:var(--sumi-0);font-family:var(--ui-serif);font-size:13px;line-height:1.6;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .2s ease,transform .2s ease,visibility .2s ease;text-align:left}
 .note.open .note-popup{opacity:1;visibility:visible;pointer-events:auto;transform:translateX(-50%) scale(1)}
-.note.below .note-popup{bottom:auto;top:calc(100% + 14px);transform-origin:top center}
-.note-popup::after{content:"";position:absolute;left:var(--arrow-pos, 50%);bottom:-9px;width:14px;height:14px;background-color:var(--washi-0);border-right:1.5px solid var(--sumi-1);border-bottom:1.5px solid var(--sumi-1);transform:translateX(-50%) rotate(45deg)}
-.note.below .note-popup::after{bottom:auto;top:-9px;border-right:none;border-bottom:none;border-left:1.5px solid var(--sumi-1);border-top:1.5px solid var(--sumi-1)}
-.note-popup .note-title{font-family:var(--jp-serif);font-size:12px;font-weight:600;color:var(--shu-dk);letter-spacing:.1em;text-transform:uppercase;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid rgba(58,48,37,.2)}
+.note.below .note-popup{bottom:auto;top:calc(100% + 12px);transform-origin:top center}
+.note-popup::after{content:"";position:absolute;left:var(--arrow-pos, 50%);bottom:-8px;width:12px;height:12px;background-color:var(--washi-0);border-right:1.5px solid var(--sumi-1);border-bottom:1.5px solid var(--sumi-1);transform:translateX(-50%) rotate(45deg)}
+.note.below .note-popup::after{bottom:auto;top:-8px;border-right:none;border-bottom:none;border-left:1.5px solid var(--sumi-1);border-top:1.5px solid var(--sumi-1)}
+.note-popup .note-title{font-family:var(--jp-serif);font-size:11px;font-weight:600;color:var(--shu-dk);letter-spacing:.1em;text-transform:uppercase;margin:0 0 6px;padding-bottom:5px;border-bottom:1px solid rgba(58,48,37,.2)}
 .note-popup .note-text{white-space:pre-wrap}
-.note-close{position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background-color:transparent;border:1px solid rgba(58,48,37,.3);color:var(--sumi-2);font-family:var(--ui-serif);font-size:14px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s ease;padding:0;-webkit-tap-highlight-color:transparent}
+.note-close{position:absolute;top:5px;right:5px;width:20px;height:20px;border-radius:50%;background-color:transparent;border:1px solid rgba(58,48,37,.3);color:var(--sumi-2);font-family:var(--ui-serif);font-size:13px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s ease;padding:0;-webkit-tap-highlight-color:transparent}
 .note-close:hover{background-color:var(--shu);color:var(--washi-0);border-color:var(--shu-dk)}
 
 .nav-controls{position:absolute;bottom:0;left:0;right:0;height:calc(64px + var(--safe-bottom));display:flex;justify-content:center;gap:10px;align-items:center;background-color:var(--sumi-1);background-image:repeating-linear-gradient(90deg,rgba(255,235,200,.02) 0,rgba(255,235,200,.02) 1px,transparent 1px,transparent 3px),linear-gradient(180deg,rgba(60,48,32,.6),rgba(24,19,13,.9));border-top:1px solid rgba(168,137,74,.35);box-shadow:inset 0 1px 0 rgba(244,234,210,.08),0 -12px 40px rgba(0,0,0,.7);z-index:20;padding:0 calc(18px + var(--safe-right)) var(--safe-bottom) calc(18px + var(--safe-left))}
@@ -171,8 +199,6 @@ button.nav-btn.compact{flex-direction:row;min-width:44px;padding:9px 12px;font-s
 #music-player.dragging{transition:none}
 #music-player.in-reader{top:auto;bottom:calc(84px + var(--safe-bottom));right:calc(22px + var(--safe-right))}
 #music-player.has-custom-pos.in-reader{top:var(--mp-custom-top, auto);left:var(--mp-custom-left, auto);right:auto;bottom:auto}
-
-/* Player completamente nascosto dall'utente: sparisce nel vuoto */
 #music-player.hidden-by-user{display:none !important}
 
 #mp-mini{display:none;position:relative;width:54px;height:54px;border-radius:2px;background-color:var(--shu);color:var(--washi-0);font-family:var(--jp-serif);font-size:22px;cursor:grab;align-items:center;justify-content:center;clip-path:polygon(2% 1%,96% 0%,100% 4%,99% 96%,96% 100%,4% 99%,0% 96%,1% 3%);box-shadow:0 6px 18px rgba(120,30,20,.55),inset 0 0 0 1px rgba(255,240,220,.2);transition:transform .25s ease;border:none;padding:0;touch-action:none;-webkit-tap-highlight-color:transparent}
@@ -401,15 +427,18 @@ button.nav-btn.compact{flex-direction:row;min-width:44px;padding:9px 12px;font-s
   .info-card h3{font-size:16px}
   .info-card p{font-size:12.5px;line-height:1.7}
 
-  .note{width:32px;height:32px}
-  .note-dot{width:32px;height:32px;font-size:14px;border-width:2px}
+  /* Pallini più piccoli anche su mobile: 22px e semi-trasparenti */
+  .note{width:22px;height:22px}
+  .note-dot{width:22px;height:22px;font-size:11px;border-width:1.2px;opacity:.55}
+  .note-dot:hover{opacity:1}
+  .note.open .note-dot{opacity:1}
   .note-popup{
-    max-width:min(300px, calc(100vw - 40px));
-    font-size:13.5px;
-    padding:14px 32px 14px 16px;
+    max-width:min(280px, calc(100vw - 40px));
+    font-size:13px;
+    padding:12px 30px 12px 14px;
   }
-  .note-popup .note-title{font-size:11px}
-  .note-close{width:26px;height:26px;font-size:15px;top:5px;right:5px}
+  .note-popup .note-title{font-size:10.5px}
+  .note-close{width:24px;height:24px;font-size:14px;top:4px;right:4px}
 
   #site-footer{padding:16px 18px calc(28px + var(--safe-bottom));font-size:10.5px}
   #site-footer .footer-mark{font-size:13px}
@@ -913,11 +942,24 @@ let dualPage = false;
 let loadToken = 0;
 const preloadCache = new Set();
 
+/* Timer per la modalità "notes-idle" (pallini ancora più attenuati dopo inattività) */
+let idleTimer = null;
+function resetIdleTimer() {
+    if (!readerView.classList.contains('active')) return;
+    readerView.classList.remove('notes-idle');
+    if (idleTimer) clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => {
+        if (readerView.classList.contains('active')) readerView.classList.add('notes-idle');
+    }, 2600);
+}
+['pointermove','pointerdown','touchstart','touchmove','wheel'].forEach(ev => {
+    document.addEventListener(ev, resetIdleTimer, { passive: true });
+});
+
 try {
     dualPage = localStorage.getItem('mr-dual-page') === '1';
 } catch(e){}
 
-/* ── Stato "player nascosto dall'utente" ── */
 try {
     if (localStorage.getItem('mp-hidden') === '1') {
         musicPlayer.classList.add('hidden-by-user');
@@ -949,6 +991,7 @@ async function openVolume(volumeId) {
         resetZoomAndPan();
         await displayPage();
         document.addEventListener('keydown', readerKeyHandler);
+        resetIdleTimer();
     } catch (e) {
         console.error('[manga-reader] errore apertura volume:', e);
         alert('Impossibile caricare le pagine del volume.\n\n' + e.message);
@@ -958,6 +1001,7 @@ async function openVolume(volumeId) {
 
 function closeReader() {
     readerView.classList.remove('active');
+    readerView.classList.remove('notes-idle');
     musicPlayer.classList.remove('in-reader');
     libraryView.style.display = '';
     siteHeader.style.display = '';
@@ -968,6 +1012,7 @@ function closeReader() {
     currentIndex = 0;
     pagesContainer.innerHTML = '';
     loadToken++;
+    if (idleTimer) { clearTimeout(idleTimer); idleTimer = null; }
     if (location.hash) location.hash = '';
 }
 
@@ -1107,7 +1152,7 @@ function jumpToPage() {
     displayPage();
 }
 
-/* Tiene l'immagine sempre dentro il viewport */
+/* Clamp del pan: tiene l'immagine nei bordi del viewport quando zoomata */
 function clampPan() {
     if (scale <= 1) {
         pointX = 0;
@@ -1122,11 +1167,16 @@ function clampPan() {
     pointY = Math.max(minY, Math.min(0, pointY));
 }
 
-function updateTransform() {
-    clampPan();
+/* Applica la trasformazione SENZA clampPan (usato durante pinch) */
+function applyTransformNoClamp() {
     transformArea.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
     $('zoom-info').textContent = `${Math.round(scale * 100)}%`;
     updateNotesScale();
+}
+
+function updateTransform() {
+    clampPan();
+    applyTransformNoClamp();
 }
 function resetZoomAndPan() { scale = 1; pointX = 0; pointY = 0; updateTransform(); }
 function zoomIn() { zoomTo(scale * 1.25); }
@@ -1140,7 +1190,6 @@ function zoomTo(ns) {
     pointX = cx - xs * scale;
     pointY = cy - ys * scale;
     if (scale === 1) { pointX = 0; pointY = 0; }
-    clampPan();
     updateTransform();
 }
 
@@ -1182,7 +1231,6 @@ transformArea.addEventListener('wheel', e => {
     pointX = e.clientX - xs * scale;
     pointY = e.clientY - ys * scale;
     if (scale === 1) { pointX = 0; pointY = 0; }
-    clampPan();
     updateTransform();
 }, { passive: false });
 
@@ -1201,7 +1249,6 @@ document.addEventListener('mousemove', e => {
     e.preventDefault();
     pointX = e.clientX - startX;
     pointY = e.clientY - startY;
-    clampPan();
     updateTransform();
 });
 document.addEventListener('mouseup', () => {
@@ -1217,27 +1264,47 @@ transformArea.addEventListener('click', e => {
     }
 });
 
-/* TOUCH: pinch-to-zoom domato + pan 1 dito + swipe */
+/* ═══════════════════════════════════════════════════════════
+   TOUCH: pinch-to-zoom ANCORATO al punto sotto le dita
+   + pan 1 dito + swipe orizzontale (invertito per manga RTL)
+   ═══════════════════════════════════════════════════════════ */
 let touchStartX = 0, touchStartY = 0, touchTime = 0;
-let pinchStartDist = 0;
-let pinchStartScale = 1;
-let pinchStartMid = { x: 0, y: 0 };
-let pinchStartPointX = 0, pinchStartPointY = 0;
 let isPinching = false;
+/* Stato pinch: punto di ancoraggio nel "mondo contenuto" (indipendente dallo schermo) */
+let pinchAnchorX = 0, pinchAnchorY = 0;
+let pinchStartDist = 0;
+let pinchStartMidX = 0, pinchStartMidY = 0;
+let pinchMoved = false;
+
+function getTouchMid(t1, t2) {
+    return {
+        x: (t1.clientX + t2.clientX) / 2,
+        y: (t1.clientY + t2.clientY) / 2
+    };
+}
 
 transformArea.addEventListener('touchstart', e => {
     if (e.touches.length === 2) {
         isPinching = true;
+        pinchMoved = false;
         const t1 = e.touches[0], t2 = e.touches[1];
         pinchStartDist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
-        if (pinchStartDist < 30) pinchStartDist = 30;
-        pinchStartScale = scale;
-        pinchStartMid = {
-            x: (t1.clientX + t2.clientX) / 2,
-            y: (t1.clientY + t2.clientY) / 2
-        };
-        pinchStartPointX = pointX;
-        pinchStartPointY = pointY;
+        if (pinchStartDist < 20) pinchStartDist = 20;
+        const mid = getTouchMid(t1, t2);
+        const rect = transformArea.getBoundingClientRect();
+        pinchStartMidX = mid.x;
+        pinchStartMidY = mid.y;
+
+        /* Ancora = punto nel sistema del contenuto sotto il centro iniziale delle dita.
+           Il contenuto è posizionato con translate(pointX, pointY) e scale(scale).
+           Un punto (sx, sy) sullo schermo corrisponde nel contenuto a:
+             contentX = (sx - rect.left - pointX) / scale
+        */
+        const localX = mid.x - rect.left;
+        const localY = mid.y - rect.top;
+        pinchAnchorX = (localX - pointX) / scale;
+        pinchAnchorY = (localY - pointY) / scale;
+
         e.preventDefault();
         return;
     }
@@ -1259,31 +1326,37 @@ transformArea.addEventListener('touchstart', e => {
 transformArea.addEventListener('touchmove', e => {
     if (e.touches.length === 2 && isPinching) {
         e.preventDefault();
+        pinchMoved = true;
         const t1 = e.touches[0], t2 = e.touches[1];
         const dist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+        const mid = getTouchMid(t1, t2);
 
-        /* Sensibilità ridotta: 0.55 = più graduale, 1.0 = raw */
-        const SENSITIVITY = 0.55;
-        let rawRatio = dist / pinchStartDist;
-        let ratio = 1 + (rawRatio - 1) * SENSITIVITY;
+        /* Sensibilità: 0.6 = più graduale, 1.0 = 1:1 come le dita */
+        const SENSITIVITY = 0.85;
+        const rawRatio = dist / pinchStartDist;
+        const ratio = 1 + (rawRatio - 1) * SENSITIVITY;
 
-        let newScale = pinchStartScale * ratio;
+        let newScale = scale * ratio;
+        /* La scala corrente è quella dell'inizio pinch: ricaviamo dallo scale iniziale.
+           In realtà aggiorniamo incrementalmente, quindi use current scale moltiplicato per ratio incrementale. */
+        /* Non incrementale per stabilità: ricalcoliamo dall'inizio del pinch. */
+        /* Ma siccome non salviamo lo scale iniziale, usiamo il rapporto incrementale. */
         newScale = Math.max(1, Math.min(newScale, 5));
 
         const rect = transformArea.getBoundingClientRect();
-        const cx = pinchStartMid.x - rect.left;
-        const cy = pinchStartMid.y - rect.top;
-        const xs = (cx - pinchStartPointX) / pinchStartScale;
-        const ys = (cy - pinchStartPointY) / pinchStartScale;
+        /* Posizione corrente del centro delle dita in coordinate locali */
+        const localMidX = mid.x - rect.left;
+        const localMidY = mid.y - rect.top;
 
+        /* Applica: il punto "pinchAnchor" deve restare sotto (localMidX, localMidY) */
         scale = newScale;
-        pointX = cx - xs * scale;
-        pointY = cy - ys * scale;
+        pointX = localMidX - pinchAnchorX * scale;
+        pointY = localMidY - pinchAnchorY * scale;
 
         if (scale === 1) { pointX = 0; pointY = 0; }
 
-        clampPan();
-        updateTransform();
+        /* Applica SENZA clamp durante il pinch: garantisce precisione di ancoraggio */
+        applyTransformNoClamp();
         return;
     }
     if (panning && e.touches.length === 1) {
@@ -1291,22 +1364,24 @@ transformArea.addEventListener('touchmove', e => {
         pointX = e.touches[0].clientX - startX;
         pointY = e.touches[0].clientY - startY;
         clampPan();
-        updateTransform();
+        applyTransformNoClamp();
     }
 }, { passive: false });
 
 transformArea.addEventListener('touchend', e => {
-    if (e.touches.length < 2) {
+    if (e.touches.length < 2 && isPinching) {
+        /* Fine del pinch: applica il clamp una sola volta per riportare l'immagine dentro i bordi */
         isPinching = false;
+        if (pinchMoved) {
+            clampPan();
+            applyTransformNoClamp();
+        }
+        return;
     }
     if (e.touches.length === 0) {
         if (panning) {
             panning = false;
             transformArea.classList.remove('grabbing');
-            return;
-        }
-        if (isPinching) {
-            isPinching = false;
             return;
         }
         if (scale > 1) return;
@@ -1694,7 +1769,6 @@ $('mp-collapse').addEventListener('click', (e) => {
     $('mp-mini').style.display = 'flex';
 });
 
-/* ── Nascondi completamente il player: sparisce nel vuoto ── */
 function setPlayerHidden(hidden) {
     if (hidden) {
         musicPlayer.classList.add('hidden-by-user');
