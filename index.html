@@ -2,8 +2,9 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="description" content="Lettore manga online — traduzioni amatoriali di Michael Crippa">
+<meta name="theme-color" content="#18130d">
 <title>漫画リーダー · Manga Reader</title>
 <style>
 :root{
@@ -13,9 +14,14 @@
   --text:#241d15;--text-muted:#6f614e;--line:#3a3025;--line-soft:#8a7a62;
   --jp-serif:"Yu Mincho","YuMincho","Hiragino Mincho ProN","Noto Serif JP","MS Mincho","TakaoMincho",serif;
   --ui-serif:"Georgia","Times New Roman","Yu Mincho","Noto Serif JP",serif;
+  --safe-top:env(safe-area-inset-top, 0px);
+  --safe-bottom:env(safe-area-inset-bottom, 0px);
+  --safe-left:env(safe-area-inset-left, 0px);
+  --safe-right:env(safe-area-inset-right, 0px);
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;height:100%}
+html{-webkit-text-size-adjust:100%}
 body{
   background-color:var(--washi-1);
   background-image:
@@ -28,6 +34,8 @@ body{
     radial-gradient(ellipse at 30% 90%,rgba(140,110,70,.13) 0%,transparent 40%);
   color:var(--text);font-family:var(--ui-serif);
   min-height:100vh;overflow-x:hidden;user-select:none;-webkit-user-select:none;position:relative;
+  -webkit-tap-highlight-color:transparent;
+  overscroll-behavior:none;
 }
 body::before{
   content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.42;
@@ -38,6 +46,7 @@ body::before{
 }
 .hidden{display:none !important}
 
+/* HEADER */
 #site-header{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;max-width:1240px;margin:0 auto;padding:26px 32px 20px}
 .brand{display:flex;align-items:center;gap:16px}
 .brand-hanko{width:52px;height:52px;flex:none;background:var(--shu);color:#f4ead2;font-family:var(--jp-serif);font-size:22px;font-weight:600;writing-mode:vertical-rl;display:flex;align-items:center;justify-content:center;letter-spacing:.08em;line-height:1;transform:rotate(2deg);clip-path:polygon(2% 1%,96% 0%,99% 3%,100% 97%,97% 99%,3% 100%,0% 97%,1% 3%);box-shadow:0 3px 0 rgba(120,20,10,.35)}
@@ -47,6 +56,7 @@ body::before{
 .header-btn{background-color:var(--washi-0);border:1px solid var(--sumi-3);color:var(--sumi-0);padding:8px 14px;font-family:var(--ui-serif);font-style:italic;font-size:11.5px;cursor:pointer;transition:all .2s ease}
 .header-btn:hover{background-color:var(--sumi-1);color:var(--washi-0);border-color:var(--sumi-0)}
 
+/* LIBRERIA */
 #library-view{position:relative;z-index:2;max-width:1240px;margin:0 auto;padding:8px 32px 80px}
 .library-intro{text-align:center;max-width:640px;margin:0 auto 46px;padding:0 12px}
 .library-intro .jp-title{display:block;font-family:var(--jp-serif);font-size:clamp(28px,5.2vw,42px);letter-spacing:.2em;text-indent:.2em;color:var(--sumi-0);line-height:1.15;text-shadow:0 1px 0 rgba(255,250,235,.6)}
@@ -78,20 +88,21 @@ body::before{
 .library-empty{text-align:center;padding:60px 30px;font-style:italic;color:var(--text-muted)}
 .library-empty .empty-mark{display:block;font-family:var(--jp-serif);font-size:64px;color:var(--shu);opacity:.35;margin-bottom:16px}
 
+/* READER */
 #reader-view{display:none;position:fixed;inset:0;background-color:var(--sumi-0);background-image:repeating-linear-gradient(90deg,rgba(255,235,200,.015) 0,rgba(255,235,200,.015) 1px,transparent 1px,transparent 4px),repeating-linear-gradient(0deg,rgba(0,0,0,.15) 0,rgba(0,0,0,.15) 1px,transparent 1px,transparent 3px),radial-gradient(ellipse at 50% 40%,rgba(80,60,40,.4) 0%,transparent 70%),radial-gradient(ellipse at 20% 80%,rgba(0,0,0,.5) 0%,transparent 60%);z-index:100;flex-direction:column}
 #reader-view.active{display:flex}
-.reader-topbar{position:absolute;top:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;background:linear-gradient(180deg,rgba(24,19,13,.92),rgba(24,19,13,0));z-index:15;pointer-events:none}
+.reader-topbar{position:absolute;top:0;left:0;right:0;height:calc(52px + var(--safe-top));display:flex;align-items:center;justify-content:space-between;padding:var(--safe-top) calc(18px + var(--safe-right)) 0 calc(18px + var(--safe-left));background:linear-gradient(180deg,rgba(24,19,13,.92),rgba(24,19,13,0));z-index:15;pointer-events:none}
 .reader-topbar > *{pointer-events:auto}
-.reader-topbar .back-btn{display:inline-flex;align-items:center;gap:8px;background-color:rgba(244,234,210,.92);border:1px solid rgba(58,48,37,.9);color:var(--sumi-0);padding:7px 14px;font-family:var(--ui-serif);font-style:italic;font-size:12px;cursor:pointer;transition:all .2s ease}
+.reader-topbar .back-btn{display:inline-flex;align-items:center;gap:8px;background-color:rgba(244,234,210,.92);border:1px solid rgba(58,48,37,.9);color:var(--sumi-0);padding:7px 14px;font-family:var(--ui-serif);font-style:italic;font-size:12px;cursor:pointer;transition:all .2s ease;-webkit-tap-highlight-color:transparent}
 .reader-topbar .back-btn:hover{background-color:var(--sumi-1);color:var(--washi-0);border-color:var(--shu)}
 .reader-topbar .reader-title{font-family:var(--jp-serif);color:var(--washi-0);font-size:13px;letter-spacing:.14em;text-shadow:0 1px 3px rgba(0,0,0,.9);text-align:center;flex:1;padding:0 16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .reader-topbar-right{display:flex;gap:8px;align-items:center;margin-right:80px}
-.reader-topbar .reader-info-btn,.reader-topbar .reader-notes-btn,.reader-topbar .reader-dual-btn{width:34px;height:34px;border-radius:50%;background-color:rgba(244,234,210,.92);border:1px solid rgba(58,48,37,.9);color:var(--sumi-0);font-family:var(--jp-serif);font-size:14px;cursor:pointer;transition:all .2s ease;display:flex;align-items:center;justify-content:center}
+.reader-topbar .reader-info-btn,.reader-topbar .reader-notes-btn,.reader-topbar .reader-dual-btn{width:34px;height:34px;border-radius:50%;background-color:rgba(244,234,210,.92);border:1px solid rgba(58,48,37,.9);color:var(--sumi-0);font-family:var(--jp-serif);font-size:14px;cursor:pointer;transition:all .2s ease;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
 .reader-topbar .reader-info-btn:hover,.reader-topbar .reader-notes-btn:hover,.reader-topbar .reader-dual-btn:hover{background-color:var(--shu);color:var(--washi-0);border-color:var(--shu-dk)}
 .reader-topbar .reader-notes-btn.off{background-color:rgba(244,234,210,.4);color:rgba(24,19,13,.4);position:relative}
 .reader-topbar .reader-notes-btn.off::after{content:"";position:absolute;left:6px;right:6px;top:50%;height:1.5px;background:var(--shu);transform:rotate(-25deg);pointer-events:none}
 .reader-topbar .reader-dual-btn.active{background-color:var(--shu);color:var(--washi-0);border-color:var(--shu-dk)}
-#transform-area{flex:1;display:flex;justify-content:center;align-items:center;cursor:grab;transform-origin:0 0;transition:transform 0.05s ease-out;overflow:hidden;position:relative;padding:52px 0 70px}
+#transform-area{flex:1;display:flex;justify-content:center;align-items:center;cursor:grab;transform-origin:0 0;transition:transform 0.05s ease-out;overflow:hidden;position:relative;padding:calc(52px + var(--safe-top)) 0 calc(70px + var(--safe-bottom));touch-action:none}
 #transform-area.grabbing{cursor:grabbing}
 #pages-container{position:relative;display:flex;justify-content:center;align-items:center;gap:6px;line-height:0;--cs:1}
 #pages-container.single .page-slot .page-img{max-height:calc(100vh - 130px);max-width:96vw}
@@ -108,7 +119,7 @@ body::before{
 .notes-layer.has-open{z-index:50}
 .note{position:absolute;width:26px;height:26px;transform:translate(-50%,-50%) scale(var(--cs,1));transform-origin:center center;pointer-events:auto}
 .note.open{z-index:1}
-.note-dot{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#e04a3c,var(--shu) 60%,var(--shu-dk));color:#f4ead2;font-family:var(--jp-serif);font-size:12px;font-weight:700;line-height:1;border:1.5px solid rgba(255,240,220,.85);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:0 2px 6px rgba(0,0,0,.5),inset 0 0 0 1px rgba(0,0,0,.15);transition:transform .2s ease;animation:notePulse 2.6s ease-out infinite}
+.note-dot{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#e04a3c,var(--shu) 60%,var(--shu-dk));color:#f4ead2;font-family:var(--jp-serif);font-size:12px;font-weight:700;line-height:1;border:1.5px solid rgba(255,240,220,.85);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:0 2px 6px rgba(0,0,0,.5),inset 0 0 0 1px rgba(0,0,0,.15);transition:transform .2s ease;animation:notePulse 2.6s ease-out infinite;-webkit-tap-highlight-color:transparent}
 .note-dot:hover{transform:scale(1.15)}
 .note.open .note-dot{animation:none;box-shadow:0 3px 10px rgba(0,0,0,.7),inset 0 0 0 1px rgba(0,0,0,.15)}
 @keyframes notePulse{
@@ -122,12 +133,12 @@ body::before{
 .note.below .note-popup::after{bottom:auto;top:-9px;border-right:none;border-bottom:none;border-left:1.5px solid var(--sumi-1);border-top:1.5px solid var(--sumi-1)}
 .note-popup .note-title{font-family:var(--jp-serif);font-size:12px;font-weight:600;color:var(--shu-dk);letter-spacing:.1em;text-transform:uppercase;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid rgba(58,48,37,.2)}
 .note-popup .note-text{white-space:pre-wrap}
-.note-close{position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background-color:transparent;border:1px solid rgba(58,48,37,.3);color:var(--sumi-2);font-family:var(--ui-serif);font-size:14px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s ease;padding:0}
+.note-close{position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background-color:transparent;border:1px solid rgba(58,48,37,.3);color:var(--sumi-2);font-family:var(--ui-serif);font-size:14px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s ease;padding:0;-webkit-tap-highlight-color:transparent}
 .note-close:hover{background-color:var(--shu);color:var(--washi-0);border-color:var(--shu-dk)}
 
-.nav-controls{position:absolute;bottom:0;left:0;right:0;height:64px;display:flex;justify-content:center;gap:10px;align-items:center;background-color:var(--sumi-1);background-image:repeating-linear-gradient(90deg,rgba(255,235,200,.02) 0,rgba(255,235,200,.02) 1px,transparent 1px,transparent 3px),linear-gradient(180deg,rgba(60,48,32,.6),rgba(24,19,13,.9));border-top:1px solid rgba(168,137,74,.35);box-shadow:inset 0 1px 0 rgba(244,234,210,.08),0 -12px 40px rgba(0,0,0,.7);z-index:20;padding:0 18px}
+.nav-controls{position:absolute;bottom:0;left:0;right:0;height:calc(64px + var(--safe-bottom));display:flex;justify-content:center;gap:10px;align-items:center;background-color:var(--sumi-1);background-image:repeating-linear-gradient(90deg,rgba(255,235,200,.02) 0,rgba(255,235,200,.02) 1px,transparent 1px,transparent 3px),linear-gradient(180deg,rgba(60,48,32,.6),rgba(24,19,13,.9));border-top:1px solid rgba(168,137,74,.35);box-shadow:inset 0 1px 0 rgba(244,234,210,.08),0 -12px 40px rgba(0,0,0,.7);z-index:20;padding:0 calc(18px + var(--safe-right)) var(--safe-bottom) calc(18px + var(--safe-left))}
 .nav-controls::before{content:"";position:absolute;top:3px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(176,53,40,.7) 25%,rgba(168,137,74,.7) 50%,rgba(176,53,40,.7) 75%,transparent);opacity:.7}
-button.nav-btn{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:96px;padding:7px 12px;background-color:var(--washi-0);background-image:radial-gradient(ellipse at 50% 30%,rgba(160,130,90,.1) 0%,transparent 70%);border:1px solid rgba(58,48,37,.9);color:var(--sumi-0);font-family:var(--ui-serif);cursor:pointer;position:relative;transition:all .22s ease;box-shadow:inset 0 0 0 1px rgba(244,234,210,.6),0 2px 0 rgba(0,0,0,.3),0 4px 10px rgba(0,0,0,.5)}
+button.nav-btn{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:96px;padding:7px 12px;background-color:var(--washi-0);background-image:radial-gradient(ellipse at 50% 30%,rgba(160,130,90,.1) 0%,transparent 70%);border:1px solid rgba(58,48,37,.9);color:var(--sumi-0);font-family:var(--ui-serif);cursor:pointer;position:relative;transition:all .22s ease;box-shadow:inset 0 0 0 1px rgba(244,234,210,.6),0 2px 0 rgba(0,0,0,.3),0 4px 10px rgba(0,0,0,.5);-webkit-tap-highlight-color:transparent}
 button.nav-btn::after{content:"";position:absolute;inset:3px;border:1px solid rgba(58,48,37,.35);pointer-events:none;transition:all .22s ease}
 button.nav-btn:hover{background-color:var(--sumi-1);color:var(--washi-0);border-color:var(--shu);transform:translateY(-1px);box-shadow:inset 0 0 0 1px rgba(244,234,210,.15),0 2px 0 rgba(0,0,0,.4),0 6px 16px rgba(0,0,0,.6)}
 button.nav-btn:hover::after{border-color:rgba(176,53,40,.5)}
@@ -139,15 +150,16 @@ button.nav-btn .b-it{font-family:var(--ui-serif);font-style:italic;font-size:8.5
 button.nav-btn:hover .b-it{opacity:1}
 button.nav-btn.compact{flex-direction:row;min-width:44px;padding:9px 12px;font-size:14px;font-weight:600}
 .jump-group{display:flex;gap:6px;align-items:center;border-left:1px solid rgba(168,137,74,.3);padding-left:14px}
-#page-input{width:60px;background-color:var(--washi-0);border:1px solid rgba(58,48,37,.9);color:var(--sumi-0);padding:8px 4px;text-align:center;font-family:var(--ui-serif);font-style:italic;font-size:12px;font-variant-numeric:tabular-nums;transition:border-color .2s ease,box-shadow .2s ease}
+#page-input{width:60px;background-color:var(--washi-0);border:1px solid rgba(58,48,37,.9);color:var(--sumi-0);padding:8px 4px;text-align:center;font-family:var(--ui-serif);font-style:italic;font-size:12px;font-variant-numeric:tabular-nums;transition:border-color .2s ease,box-shadow .2s ease;-moz-appearance:textfield}
+#page-input::-webkit-outer-spin-button,#page-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 #page-input:focus{outline:none;border-color:var(--shu);box-shadow:0 0 0 2px rgba(176,53,40,.35)}
 #page-input::placeholder{color:var(--sumi-4);font-style:italic}
 .zoom-group{display:flex;gap:6px;align-items:center;border-left:1px solid rgba(168,137,74,.3);border-right:1px solid rgba(168,137,74,.3);padding:0 14px}
 #page-info,#zoom-info{font-family:var(--jp-serif);font-size:12px;min-width:64px;text-align:center;color:var(--washi-0);font-weight:500;letter-spacing:.14em;font-variant-numeric:tabular-nums;padding:8px 12px;background-color:rgba(24,19,13,.75);border:1px solid rgba(168,137,74,.35);text-shadow:0 1px 2px rgba(0,0,0,.7)}
 
-#info-panel{position:fixed;inset:0;background:rgba(24,19,13,.65);z-index:300;display:none;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(4px)}
+#info-panel{position:fixed;inset:0;background:rgba(24,19,13,.65);z-index:300;display:none;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
 #info-panel.show{display:flex}
-.info-card{max-width:480px;width:100%;background-color:var(--washi-0);background-image:repeating-linear-gradient(87deg,rgba(120,100,70,.05) 0,rgba(120,100,70,.05) 1px,transparent 1px,transparent 4px),radial-gradient(ellipse at 30% 30%,rgba(160,130,90,.11) 0%,transparent 55%);box-shadow:0 0 0 1.5px var(--line),0 0 0 6px var(--washi-0),0 0 0 7.5px var(--line),0 30px 70px rgba(0,0,0,.6);padding:36px 32px 28px;position:relative;max-height:80vh;overflow-y:auto}
+.info-card{max-width:480px;width:100%;background-color:var(--washi-0);background-image:repeating-linear-gradient(87deg,rgba(120,100,70,.05) 0,rgba(120,100,70,.05) 1px,transparent 1px,transparent 4px),radial-gradient(ellipse at 30% 30%,rgba(160,130,90,.11) 0%,transparent 55%);box-shadow:0 0 0 1.5px var(--line),0 0 0 6px var(--washi-0),0 0 0 7.5px var(--line),0 30px 70px rgba(0,0,0,.6);padding:36px 32px 28px;position:relative;max-height:80vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .info-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--shu) 25%,var(--kin) 50%,var(--shu) 75%,transparent);opacity:.85}
 .info-card h3{margin:0 0 6px;font-family:var(--jp-serif);font-size:18px;letter-spacing:.16em;color:var(--sumi-0)}
 .info-card .info-sub{font-style:italic;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--text-muted);margin:0 0 22px}
@@ -155,14 +167,14 @@ button.nav-btn.compact{flex-direction:row;min-width:44px;padding:9px 12px;font-s
 .info-card .credits{margin-top:22px;padding-top:16px;border-top:1px solid var(--sumi-3);font-size:12px;line-height:1.75;color:var(--text-muted);font-style:italic;text-align:center}
 .info-card .credits strong{display:block;font-style:normal;color:var(--sumi-0);letter-spacing:.06em;margin-bottom:4px}
 .info-card .credits .name{font-family:var(--jp-serif);font-size:16px;color:var(--shu-dk);letter-spacing:.08em}
-.info-close{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;background-color:transparent;border:1px solid var(--sumi-3);color:var(--sumi-2);font-family:var(--ui-serif);font-size:16px;cursor:pointer;transition:all .2s ease;display:flex;align-items:center;justify-content:center}
+.info-close{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;background-color:transparent;border:1px solid var(--sumi-3);color:var(--sumi-2);font-family:var(--ui-serif);font-size:16px;cursor:pointer;transition:all .2s ease;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
 .info-close:hover{background-color:var(--shu);color:var(--washi-0);border-color:var(--shu-dk)}
 
-#music-player{position:fixed;top:22px;right:22px;z-index:200;font-family:var(--ui-serif);transition:top .3s ease,right .3s ease,bottom .3s ease,left .3s ease}
+#music-player{position:fixed;top:calc(22px + var(--safe-top));right:calc(22px + var(--safe-right));z-index:200;font-family:var(--ui-serif);transition:top .3s ease,right .3s ease,bottom .3s ease,left .3s ease}
 #music-player.dragging{transition:none}
-#music-player.in-reader{top:auto;bottom:84px;right:22px}
+#music-player.in-reader{top:auto;bottom:calc(84px + var(--safe-bottom));right:calc(22px + var(--safe-right))}
 #music-player.has-custom-pos.in-reader{top:var(--mp-custom-top, auto);left:var(--mp-custom-left, auto);right:auto;bottom:auto}
-#mp-mini{display:none;position:relative;width:54px;height:54px;border-radius:2px;background-color:var(--shu);color:var(--washi-0);font-family:var(--jp-serif);font-size:22px;cursor:grab;align-items:center;justify-content:center;clip-path:polygon(2% 1%,96% 0%,100% 4%,99% 96%,96% 100%,4% 99%,0% 96%,1% 3%);box-shadow:0 6px 18px rgba(120,30,20,.55),inset 0 0 0 1px rgba(255,240,220,.2);transition:transform .25s ease;border:none;padding:0;touch-action:none}
+#mp-mini{display:none;position:relative;width:54px;height:54px;border-radius:2px;background-color:var(--shu);color:var(--washi-0);font-family:var(--jp-serif);font-size:22px;cursor:grab;align-items:center;justify-content:center;clip-path:polygon(2% 1%,96% 0%,100% 4%,99% 96%,96% 100%,4% 99%,0% 96%,1% 3%);box-shadow:0 6px 18px rgba(120,30,20,.55),inset 0 0 0 1px rgba(255,240,220,.2);transition:transform .25s ease;border:none;padding:0;touch-action:none;-webkit-tap-highlight-color:transparent}
 #mp-mini:active{cursor:grabbing}
 #mp-mini:hover{transform:translateY(-2px) rotate(-3deg) scale(1.04)}
 #mp-mini.playing::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:1.5px solid var(--shu);animation:pulse 1.8s ease-out infinite;pointer-events:none}
@@ -176,7 +188,7 @@ button.nav-btn.compact{flex-direction:row;min-width:44px;padding:9px 12px;font-s
 .mp-header .mp-drag-grip{display:inline-block;margin-right:8px;color:rgba(244,234,210,.3);font-size:11px;letter-spacing:-2px;line-height:1;vertical-align:middle;transition:color .2s ease}
 .mp-header:hover .mp-drag-grip{color:rgba(244,234,210,.7)}
 .mp-header .mp-controls-corner{display:flex;gap:6px}
-.mp-header .mp-collapse{width:28px;height:28px;border-radius:2px;border:1px solid rgba(168,137,74,.5);background-color:transparent;color:var(--washi-0);font-family:var(--ui-serif);font-size:15px;line-height:1;cursor:pointer;transition:all .22s ease;padding:0;display:flex;align-items:center;justify-content:center}
+.mp-header .mp-collapse{width:28px;height:28px;border-radius:2px;border:1px solid rgba(168,137,74,.5);background-color:transparent;color:var(--washi-0);font-family:var(--ui-serif);font-size:15px;line-height:1;cursor:pointer;transition:all .22s ease;padding:0;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
 .mp-header .mp-collapse:hover{background-color:var(--shu);border-color:var(--shu-lt)}
 #mp-sound.muted{opacity:.45}
 .mp-now{padding:14px 18px 8px}
@@ -189,12 +201,12 @@ button.nav-btn.compact{flex-direction:row;min-width:44px;padding:9px 12px;font-s
 .mp-time{font-style:italic;font-size:10px;color:var(--text-muted);font-variant-numeric:tabular-nums;min-width:34px;text-align:center}
 .mp-seek,.mp-vol{flex:1;-webkit-appearance:none;appearance:none;height:2px;background:var(--sumi-3);outline:none;cursor:pointer;opacity:.5;transition:opacity .2s ease}
 .mp-seek:hover,.mp-vol:hover{opacity:1}
-.mp-seek::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:11px;height:11px;border-radius:50%;background:var(--shu);border:1.5px solid var(--washi-0);cursor:pointer}
-.mp-seek::-moz-range-thumb{width:11px;height:11px;border-radius:50%;background:var(--shu);border:1.5px solid var(--washi-0);cursor:pointer}
-.mp-vol::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:10px;height:10px;border-radius:50%;background:var(--sumi-1);border:1.5px solid var(--washi-0);cursor:pointer}
-.mp-vol::-moz-range-thumb{width:10px;height:10px;border-radius:50%;background:var(--sumi-1);border:1.5px solid var(--washi-0);cursor:pointer}
+.mp-seek::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;border-radius:50%;background:var(--shu);border:1.5px solid var(--washi-0);cursor:pointer}
+.mp-seek::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--shu);border:1.5px solid var(--washi-0);cursor:pointer}
+.mp-vol::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;border-radius:50%;background:var(--sumi-1);border:1.5px solid var(--washi-0);cursor:pointer}
+.mp-vol::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--sumi-1);border:1.5px solid var(--washi-0);cursor:pointer}
 .mp-controls{display:flex;align-items:center;justify-content:center;gap:8px;padding:6px 14px 8px}
-.mp-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--sumi-2);background-color:transparent;color:var(--sumi-1);font-size:14px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s ease;padding:0}
+.mp-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--sumi-2);background-color:transparent;color:var(--sumi-1);font-size:14px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s ease;padding:0;-webkit-tap-highlight-color:transparent}
 .mp-btn:hover{background-color:var(--sumi-1);color:var(--washi-0);border-color:var(--shu);transform:translateY(-1px)}
 .mp-btn.active{background-color:var(--shu);color:var(--washi-0);border-color:var(--shu-dk)}
 .mp-btn.mp-play-btn{width:48px;height:48px;font-size:17px;background-color:var(--shu);color:var(--washi-0);border:1px solid var(--shu-dk);box-shadow:0 4px 0 var(--shu-dk),0 6px 14px rgba(120,30,20,.35);transition:all .15s ease}
@@ -206,21 +218,21 @@ button.nav-btn.compact{flex-direction:row;min-width:44px;padding:9px 12px;font-s
 .mp-search{padding:12px 18px 14px;border-top:1px solid var(--sumi-3);background-color:rgba(200,180,140,.1);position:relative}
 .mp-search::before{content:"";position:absolute;top:3px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--sumi-3),transparent);opacity:.5}
 .mp-search-row{display:flex;gap:8px}
-.mp-search-input{flex:1;background-color:var(--washi-0);border:1px solid var(--sumi-3);color:var(--sumi-0);padding:9px 12px;font-family:var(--ui-serif);font-style:italic;font-size:12.5px;transition:border-color .2s ease,box-shadow .2s ease}
+.mp-search-input{flex:1;background-color:var(--washi-0);border:1px solid var(--sumi-3);color:var(--sumi-0);padding:9px 12px;font-family:var(--ui-serif);font-style:italic;font-size:16px;transition:border-color .2s ease,box-shadow .2s ease}
 .mp-search-input::placeholder{color:var(--sumi-4)}
 .mp-search-input:focus{outline:none;border-color:var(--shu);box-shadow:0 0 0 2px rgba(176,53,40,.2)}
-.mp-search-btn{flex:none;width:42px;background-color:var(--sumi-1);border:1px solid var(--sumi-0);color:var(--washi-0);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s ease}
+.mp-search-btn{flex:none;width:42px;background-color:var(--sumi-1);border:1px solid var(--sumi-0);color:var(--washi-0);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s ease;-webkit-tap-highlight-color:transparent}
 .mp-search-btn:hover{background-color:var(--shu);border-color:var(--shu-dk)}
 .mp-search-btn:disabled{opacity:.4;cursor:wait}
 .mp-search-hint{font-style:italic;font-size:10px;color:var(--sumi-4);margin-top:8px;text-align:center;min-height:13px;line-height:1.4}
 .mp-search-hint.error{color:var(--shu-dk)}.mp-search-hint.ok{color:var(--shu)}.mp-search-hint.working{color:var(--kin-dk)}
 .mp-suggests{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px;justify-content:center}
-.mp-suggest{background-color:transparent;border:1px solid var(--sumi-3);color:var(--sumi-2);font-family:var(--ui-serif);font-style:italic;font-size:10px;padding:3px 10px;cursor:pointer;transition:all .18s ease}
+.mp-suggest{background-color:transparent;border:1px solid var(--sumi-3);color:var(--sumi-2);font-family:var(--ui-serif);font-style:italic;font-size:10px;padding:3px 10px;cursor:pointer;transition:all .18s ease;-webkit-tap-highlight-color:transparent}
 .mp-suggest:hover{background-color:var(--sumi-1);color:var(--washi-0);border-color:var(--sumi-0)}
 .mp-list-header{display:flex;align-items:center;justify-content:space-between;padding:9px 16px;background-color:var(--sumi-1);border-top:1px solid var(--sumi-0);border-bottom:1px solid rgba(168,137,74,.4);color:var(--washi-0);font-family:var(--jp-serif);font-size:9.5px;letter-spacing:.35em;text-indent:.35em;text-transform:uppercase}
-.mp-list-header .mp-back{background:transparent;border:none;color:var(--washi-3);font-style:italic;font-size:10.5px;letter-spacing:.16em;cursor:pointer;padding:2px 6px;transition:color .2s ease;text-indent:0}
+.mp-list-header .mp-back{background:transparent;border:none;color:var(--washi-3);font-style:italic;font-size:10.5px;letter-spacing:.16em;cursor:pointer;padding:2px 6px;transition:color .2s ease;text-indent:0;-webkit-tap-highlight-color:transparent}
 .mp-list-header .mp-back:hover{color:var(--shu-lt)}
-.mp-playlist{max-height:242px;overflow-y:auto;background-color:var(--washi-0)}
+.mp-playlist{max-height:242px;overflow-y:auto;background-color:var(--washi-0);-webkit-overflow-scrolling:touch}
 .mp-playlist::-webkit-scrollbar{width:6px}
 .mp-playlist::-webkit-scrollbar-track{background:var(--washi-2)}
 .mp-playlist::-webkit-scrollbar-thumb{background:var(--sumi-3);border-radius:0}
@@ -229,7 +241,7 @@ button.nav-btn.compact{flex-direction:row;min-width:44px;padding:9px 12px;font-s
 .mp-loading{padding:28px 18px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px}
 .mp-spinner{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--sumi-3);border-top-color:var(--shu);animation:spin 1s linear infinite}
 .mp-loading-text{font-style:italic;font-size:11px;color:var(--text-muted);letter-spacing:.12em}
-.mp-item{display:flex;align-items:center;gap:11px;padding:10px 14px 10px 12px;border-bottom:1px solid rgba(58,48,37,.14);cursor:pointer;transition:background-color .18s ease;position:relative;background-color:transparent}
+.mp-item{display:flex;align-items:center;gap:11px;padding:10px 14px 10px 12px;border-bottom:1px solid rgba(58,48,37,.14);cursor:pointer;transition:background-color .18s ease;position:relative;background-color:transparent;-webkit-tap-highlight-color:transparent}
 .mp-item:hover{background-color:rgba(200,180,140,.28)}
 .mp-item.current{background-color:rgba(176,53,40,.08)}
 .mp-item.current::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--shu)}
@@ -245,17 +257,20 @@ button.nav-btn.compact{flex-direction:row;min-width:44px;padding:9px 12px;font-s
 .mp-item-artist{font-style:italic;font-size:10.5px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:3px}
 .mp-item-dur{flex:none;font-style:italic;font-size:10px;color:var(--sumi-3);font-variant-numeric:tabular-nums}
 .mp-item-live{flex:none;font-family:var(--jp-serif);font-size:9px;color:var(--shu);font-weight:600;letter-spacing:.08em}
-.mp-item-add{flex:none;width:24px;height:24px;border:1px solid var(--sumi-3);background-color:transparent;color:var(--sumi-2);font-size:14px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .18s ease;padding:0}
+.mp-item-add{flex:none;width:24px;height:24px;border:1px solid var(--sumi-3);background-color:transparent;color:var(--sumi-2);font-size:14px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .18s ease;padding:0;-webkit-tap-highlight-color:transparent}
 .mp-item-add:hover{background-color:var(--shu);color:var(--washi-0);border-color:var(--shu-dk)}
-.mp-item-remove{flex:none;width:22px;height:22px;border:none;background:transparent;color:var(--sumi-4);font-size:16px;line-height:1;cursor:pointer;transition:all .18s ease;opacity:0;padding:0}
+.mp-item-remove{flex:none;width:22px;height:22px;border:none;background:transparent;color:var(--sumi-4);font-size:16px;line-height:1;cursor:pointer;transition:all .18s ease;opacity:0;padding:0;-webkit-tap-highlight-color:transparent}
 .mp-item:hover .mp-item-remove{opacity:1}
 .mp-item-remove:hover{color:var(--shu)}
 #audio-engine{position:fixed;left:-9999px;top:-9999px;width:1px;height:1px}
 
-#site-footer{position:relative;z-index:2;text-align:center;padding:22px 32px 34px;font-style:italic;font-size:11px;color:var(--sumi-4);letter-spacing:.06em;line-height:1.7;max-width:1240px;margin:0 auto}
+#site-footer{position:relative;z-index:2;text-align:center;padding:22px 32px calc(34px + var(--safe-bottom));font-style:italic;font-size:11px;color:var(--sumi-4);letter-spacing:.06em;line-height:1.7;max-width:1240px;margin:0 auto}
 #site-footer .footer-mark{display:block;font-family:var(--jp-serif);font-size:14px;letter-spacing:.42em;text-indent:.42em;color:var(--sumi-3);margin-bottom:8px}
 #site-footer .footer-mark::before,#site-footer .footer-mark::after{content:"◆";color:var(--shu);font-size:8px;vertical-align:middle;margin:0 12px;opacity:.7}
 
+/* ═══════════════════════════════════════════
+   TABLET (max 820px)
+   ═══════════════════════════════════════════ */
 @media (max-width:820px){
   #site-header{padding:20px 20px 16px}
   .brand-hanko{width:44px;height:44px;font-size:18px}
@@ -267,28 +282,172 @@ button.nav-btn.compact{flex-direction:row;min-width:44px;padding:9px 12px;font-s
   .volume-title{font-size:12px}
   .volume-subtitle{font-size:10px}
   .volume-meta{font-size:9px}
-  #music-player{top:14px;right:14px}
-  #mp-panel{width:calc(100vw - 28px);max-width:360px}
+  #music-player{top:calc(14px + var(--safe-top));right:calc(14px + var(--safe-right))}
+  #mp-panel{width:calc(100vw - 28px - var(--safe-left) - var(--safe-right));max-width:360px}
   .reader-topbar-right{margin-right:70px}
-  #music-player.in-reader{bottom:76px;right:14px}
+  #music-player.in-reader{bottom:calc(80px + var(--safe-bottom));right:calc(14px + var(--safe-right))}
 }
+
+/* ═══════════════════════════════════════════
+   SMARTPHONE (max 760px) — layout rifatto
+   ═══════════════════════════════════════════ */
 @media (max-width:760px){
-  .nav-controls{gap:6px;padding:0 10px;height:60px}
-  button.nav-btn{min-width:60px;padding:8px 9px}
+  /* ---- HEADER ---- */
+  #site-header{padding:16px 16px 12px}
+  .brand{gap:12px}
+  .brand-hanko{width:40px;height:40px;font-size:16px}
+  .brand-text .brand-jp{font-size:15px;letter-spacing:.16em}
+  .brand-text .brand-it{font-size:9px;letter-spacing:.22em;margin-top:2px}
+  .header-btn{padding:8px 12px;font-size:11px;min-height:40px}
+
+  /* ---- LIBRERIA ---- */
+  #library-view{padding:0 14px 60px}
+  .library-intro{margin:0 auto 30px;padding:0 6px}
+  .library-intro .jp-title{font-size:clamp(24px,7vw,32px)}
+  .library-intro .it-subtitle{font-size:10.5px;letter-spacing:.28em}
+  .library-intro .intro-desc{font-size:12.5px;line-height:1.65}
+  .library-intro .intro-divider{margin:16px auto 14px}
+  .section-label{margin:0 0 18px}
+  .section-label .lbl{font-size:10px;letter-spacing:.3em}
+  .volume-grid{grid-template-columns:1fr 1fr;gap:14px}
+  .volume-card{box-shadow:0 0 0 1px var(--line),0 0 0 4px var(--washi-0),0 0 0 5px var(--line),0 12px 26px rgba(60,40,20,.25)}
+  .volume-card:hover{transform:none;box-shadow:0 0 0 1px var(--line),0 0 0 4px var(--washi-0),0 0 0 5px var(--line),0 12px 26px rgba(60,40,20,.25)}
+  .volume-card:active{transform:scale(.98)}
+  .volume-info{padding:9px 10px 11px}
+  .volume-title{font-size:11.5px;line-height:1.3}
+  .volume-subtitle{font-size:9.5px;margin:0 0 6px}
+  .volume-meta{font-size:9px;margin-top:6px}
+  .volume-badge{top:8px;left:8px;font-size:10px;padding:3px 8px}
+  .volume-status{top:8px;right:8px;font-size:8.5px;padding:2px 7px;letter-spacing:.1em}
+
+  /* ---- READER TOPBAR ---- */
+  .reader-topbar{height:calc(48px + var(--safe-top));padding:var(--safe-top) 8px 0 8px}
+  .reader-topbar .back-btn{padding:6px 10px;font-size:11px;min-height:36px;min-width:36px;border-radius:50%;width:36px;height:36px;justify-content:center;padding:0}
+  .reader-topbar .back-btn span:not(:first-child){display:none}
+  .reader-topbar .back-btn{font-size:16px}
+  .reader-topbar .reader-title{font-size:11px;letter-spacing:.08em;padding:0 6px}
+  .reader-topbar-right{margin-right:0;gap:6px}
+  .reader-topbar .reader-info-btn,.reader-topbar .reader-notes-btn,.reader-topbar .reader-dual-btn{width:36px;height:36px;font-size:14px}
+
+  /* ---- TRANSFORM AREA ---- */
+  #transform-area{padding:calc(48px + var(--safe-top)) 0 calc(76px + var(--safe-bottom))}
+  #pages-container.single .page-slot .page-img{max-height:calc(100dvh - 140px);max-width:98vw}
+  #pages-container.dual .page-slot .page-img{max-height:calc(100dvh - 140px);max-width:49vw}
+
+  /* ---- NAV CONTROLS ---- */
+  .nav-controls{
+    height:calc(68px + var(--safe-bottom));
+    padding:0 6px var(--safe-bottom) 6px;
+    gap:5px;
+    flex-wrap:nowrap;
+  }
+  button.nav-btn{
+    min-width:44px;
+    min-height:44px;
+    padding:8px 6px;
+    gap:0;
+  }
   button.nav-btn .b-it{display:none}
+  button.nav-btn .b-jp{font-size:15px;letter-spacing:0}
+  button.nav-btn.compact{min-width:40px;min-height:40px;padding:8px;font-size:14px;font-weight:700}
+
+  /* Gruppo pagina: input piccolo + bottone "跳" */
+  .jump-group{
+    border-left:none;
+    padding-left:0;
+    gap:3px;
+    flex:none;
+  }
+  #page-input{
+    width:42px;
+    padding:8px 2px;
+    font-size:13px;
+    min-height:40px;
+    -moz-appearance:textfield;
+  }
+  #page-info,#zoom-info{
+    min-width:0;
+    padding:0 6px;
+    font-size:11px;
+    letter-spacing:.06em;
+    border:none;
+    background:none;
+    color:var(--washi-0);
+    text-shadow:0 1px 3px rgba(0,0,0,.9);
+    font-weight:600;
+  }
+  #page-info{font-size:12px;min-width:52px;white-space:nowrap}
+  #zoom-info{min-width:44px;font-size:11px}
+
+  /* Zoom group: nascondiamo i controlli zoom su mobile (si usa il pinch) */
+  .zoom-group{
+    border:none;
+    padding:0;
+    gap:4px;
+  }
+  .zoom-group button#nav-zoomout,
+  .zoom-group button#nav-zoomin,
+  .zoom-group button#nav-zoomreset,
+  .zoom-group #zoom-info{
+    display:none;
+  }
+
+  /* ---- MUSIC PLAYER ---- */
+  #music-player{top:calc(10px + var(--safe-top));right:calc(10px + var(--safe-right))}
+  #mp-mini{width:46px;height:46px;font-size:19px}
+  #mp-panel{
+    width:calc(100vw - 20px - var(--safe-left) - var(--safe-right));
+    max-width:420px;
+  }
+  #music-player.in-reader{bottom:calc(84px + var(--safe-bottom));right:calc(10px + var(--safe-right))}
+  .mp-search-input{font-size:16px} /* evita auto-zoom iOS */
+
+  /* ---- INFO PANEL ---- */
+  #info-panel{padding:0;align-items:flex-end}
+  .info-card{
+    max-width:100%;
+    width:100%;
+    max-height:85vh;
+    padding:32px 22px 32px;
+    border-radius:0;
+    padding-bottom:calc(32px + var(--safe-bottom));
+    border-top-left-radius:8px;
+    border-top-right-radius:8px;
+  }
+  .info-card h3{font-size:16px}
+  .info-card p{font-size:12.5px;line-height:1.7}
+
+  /* ---- NOTE su mobile: touch target più grandi ---- */
+  .note{width:32px;height:32px}
+  .note-dot{width:32px;height:32px;font-size:14px;border-width:2px}
+  .note-popup{
+    max-width:min(300px, calc(100vw - 40px));
+    font-size:13.5px;
+    padding:14px 32px 14px 16px;
+  }
+  .note-popup .note-title{font-size:11px}
+  .note-close{width:26px;height:26px;font-size:15px;top:5px;right:5px}
+
+  /* ---- FOOTER ---- */
+  #site-footer{padding:16px 18px calc(28px + var(--safe-bottom));font-size:10.5px}
+  #site-footer .footer-mark{font-size:13px}
+}
+
+/* ═══════════════════════════════════════════
+   SMARTPHONE PICCOLI (max 420px)
+   ═══════════════════════════════════════════ */
+@media (max-width:420px){
+  .volume-grid{gap:10px}
+  .volume-info{padding:8px 9px 10px}
+  .volume-title{font-size:11px}
+  .volume-subtitle{display:none}
+
+  /* Nav controls: più compatta ancora */
+  button.nav-btn{min-width:40px;min-height:40px;padding:6px 4px}
   button.nav-btn .b-jp{font-size:14px}
-  button.nav-btn.compact{min-width:38px;padding:8px 9px;font-size:13px}
-  .jump-group{padding-left:8px}
-  .zoom-group{padding:0 8px}
-  #page-info,#zoom-info{min-width:46px;font-size:11px;padding:7px 8px;letter-spacing:.08em}
-  #page-input{width:46px;font-size:11px}
-  .reader-topbar{padding:0 10px}
-  .reader-topbar .back-btn{padding:6px 10px;font-size:11px}
-  .reader-topbar .reader-title{font-size:11.5px}
-  .reader-topbar .reader-info-btn,.reader-topbar .reader-notes-btn,.reader-topbar .reader-dual-btn{width:30px;height:30px;font-size:12px}
-  .reader-topbar-right{margin-right:62px}
-  #pages-container.single .page-slot .page-img{max-height:calc(100vh - 120px)}
-  #pages-container.dual .page-slot .page-img{max-height:calc(100vh - 120px);max-width:48vw}
+  button.nav-btn.compact{min-width:36px;min-height:36px;padding:6px;font-size:13px}
+  #page-input{width:38px;font-size:12px;padding:6px 2px;min-height:36px}
+  #page-info{font-size:11px;min-width:46px}
 }
 </style>
 </head>
@@ -386,7 +545,7 @@ button.nav-btn.compact{flex-direction:row;min-width:44px;padding:9px 12px;font-s
 
 <div id="reader-view">
     <div class="reader-topbar">
-        <button class="back-btn" id="reader-back">← Libreria</button>
+        <button class="back-btn" id="reader-back" title="Torna alla libreria">←<span> Libreria</span></button>
         <div class="reader-title" id="reader-title">Volume</div>
         <div class="reader-topbar-right">
             <button class="reader-dual-btn" id="reader-dual-toggle" title="Modalità pagina singola">双</button>
@@ -427,7 +586,7 @@ button.nav-btn.compact{flex-direction:row;min-width:44px;padding:9px 12px;font-s
         <div id="info-content">
             <p>Questo è un progetto amatoriale di traduzione e impaginazione di manga. Ogni volume è stato tradotto e adattato con cura per i lettori italiani.</p>
             <p>Le scan originali non sono state modificate. Le traduzioni sono disponibili come <strong>note interattive</strong>: clicca sui pallini rossi numerati che appaiono sulle pagine per leggere il testo tradotto. Puoi nascondere tutte le note con il tasto <strong>注</strong> in alto a destra.</p>
-            <p>Il lettore supporta <strong>zoom</strong>, <strong>pan</strong>, navigazione da <strong>tastiera</strong> (← →), <strong>swipe</strong> su mobile, <strong>modalità doppia pagina</strong> (tasto <strong>双</strong>), e <strong>musica di sottofondo</strong> integrata. Il player musicale è <strong>trascinabile</strong>: afferralo per la barra del titolo (o per l'icona quando è ridotto) per spostarlo dove preferisci.</p>
+            <p>Il lettore supporta <strong>zoom</strong> (pizzica con due dita su mobile), <strong>pan</strong>, navigazione da <strong>tastiera</strong>, <strong>swipe</strong>, <strong>modalità doppia pagina</strong> (tasto <strong>双</strong>), e <strong>musica di sottofondo</strong> integrata.</p>
             <div class="credits">
                 <strong>Traduzione &amp; impaginazione</strong>
                 <span class="name">Michael Crippa</span>
@@ -444,9 +603,6 @@ button.nav-btn.compact{flex-direction:row;min-width:44px;padding:9px 12px;font-s
 <script>
 console.log('[manga-reader] script start');
 
-/* ============================================================
-   CONFIGURAZIONE — MODIFICA SOLO QUESTO BLOCCO
-   ============================================================ */
 const CONFIG = {
     githubRepo: null,
     translator: "Michael Crippa",
@@ -472,15 +628,11 @@ const CONFIG = {
                     { x: 4.5,  y: 3.5,  title: "Crediti", text: "Opera originale: Sansan SUN" },
                     { x: 4.5,  y: 9,    text: "Manga: Saho Tenamachi" },
                     { x: 4.5,  y: 13.5, text: "Character design originale: Momoko" },
-
                     { x: 93,   y: 5,    title: "Titolo · parte 1", text: "時々ボソッと\n→ «Ogni tanto, sottovoce...»" },
                     { x: 87,   y: 26,   title: "Titolo · parte 2", text: "ロシア語でデレる\n→ «...si scioglie in russo...»" },
                     { x: 12,   y: 51,   title: "Titolo · parte 3", text: "隣のアーリャさん\n→ «...la vicina Alya»" },
-
                     { x: 68.5, y: 42.5, title: "Volume", text: "Volume 1" },
-
                     { x: 24,   y: 80,   title: "Testo russo", text: "Иногда Аля внезапно кокетничает по-русски\n\n«A volte Alya improvvisamente civetta in russo»" },
-
                     { x: 90,   y: 93.5, title: "Rivista", text: "Shonen Magazine Comics" }
                 ],
                 2: [],
@@ -490,9 +642,7 @@ const CONFIG = {
     ]
 };
 
-/* ============================================================
-   SOUND ENGINE
-   ============================================================ */
+/* SOUND ENGINE */
 const SoundEngine = (() => {
     let ctx = null, enabled = true, master = null, lastPlay = 0;
     function init() {
@@ -599,9 +749,7 @@ document.addEventListener('click', (e) => {
     }, { once: true, capture: true });
 });
 
-/* ============================================================
-   PROTEZIONE CONTENUTI
-   ============================================================ */
+/* PROTEZIONE CONTENUTI */
 document.addEventListener('contextmenu', (e) => {
     const t = e.target;
     if (t.tagName === 'IMG' || (t.closest && t.closest('#transform-area'))) {
@@ -617,9 +765,7 @@ document.addEventListener('keydown', (e) => {
     if (e.ctrlKey && ['u','U','s','S'].includes(e.key)) { e.preventDefault(); return false; }
 }, true);
 
-/* ============================================================
-   UTILITY
-   ============================================================ */
+/* UTILITY */
 const $ = id => document.getElementById(id);
 function escapeHtml(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -630,9 +776,6 @@ function fetchWithTimeout(url, ms, opts = {}) {
     return fetch(url, { ...opts, signal: ctrl.signal }).finally(() => clearTimeout(t));
 }
 
-/* ============================================================
-   AUTO-DETECT REPO
-   ============================================================ */
 function detectRepo() {
     if (CONFIG.githubRepo) return CONFIG.githubRepo;
     const host = location.hostname;
@@ -648,9 +791,6 @@ const REPO = detectRepo();
 const BRANCH = 'main';
 console.log('[manga-reader] repo:', REPO);
 
-/* ============================================================
-   LIBRERIA
-   ============================================================ */
 function applyConfigToUI() {
     if (CONFIG.libraryTitle) $('lib-jp-title').textContent = CONFIG.libraryTitle;
     if (CONFIG.librarySubtitle) $('lib-it-title').textContent = CONFIG.librarySubtitle;
@@ -718,9 +858,6 @@ function renderVolumeGrid() {
     console.log('[manga-reader] griglia volumi renderizzata:', CONFIG.volumes.length);
 }
 
-/* ============================================================
-   RILEVAMENTO PAGINE
-   ============================================================ */
 const pageCache = {};
 
 async function listPagesFromGitHub(vol) {
@@ -779,9 +916,6 @@ async function getPagesForVolume(vol, onProgress) {
     return urls;
 }
 
-/* ============================================================
-   READER
-   ============================================================ */
 const readerView = $('reader-view');
 const libraryView = $('library-view');
 const siteHeader = $('site-header');
@@ -1069,7 +1203,6 @@ document.addEventListener('mouseup', () => {
     transformArea.classList.remove('grabbing');
 });
 
-/* Click sull'immagine: chiude solo le note, NON cambia pagina */
 transformArea.addEventListener('click', e => {
     if (scale > 1) return;
     if (e.target.closest && e.target.closest('.note')) return;
@@ -1078,28 +1211,113 @@ transformArea.addEventListener('click', e => {
     }
 });
 
+/* ═══════════════════════════════════════════
+   TOUCH: pinch-to-zoom + pan con 2 dita + swipe con 1 dito
+   ═══════════════════════════════════════════ */
 let touchStartX = 0, touchStartY = 0, touchTime = 0;
+let pinchStartDist = 0;
+let pinchStartScale = 1;
+let pinchStartMid = { x: 0, y: 0 };
+let pinchStartPointX = 0, pinchStartPointY = 0;
+let isPinching = false;
+
 transformArea.addEventListener('touchstart', e => {
-    if (scale > 1) return;
-    if (e.target.closest && e.target.closest('.note')) return;
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
-    touchTime = Date.now();
-}, { passive: true });
+    if (e.touches.length === 2) {
+        // Pinch mode
+        isPinching = true;
+        const t1 = e.touches[0], t2 = e.touches[1];
+        pinchStartDist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+        pinchStartScale = scale;
+        pinchStartMid = {
+            x: (t1.clientX + t2.clientX) / 2,
+            y: (t1.clientY + t2.clientY) / 2
+        };
+        pinchStartPointX = pointX;
+        pinchStartPointY = pointY;
+        e.preventDefault();
+        return;
+    }
+    if (e.touches.length === 1) {
+        if (scale > 1) {
+            // Pan mode: 1 dito mentre zoomato
+            panning = true;
+            startX = e.touches[0].clientX - pointX;
+            startY = e.touches[0].clientY - pointY;
+            transformArea.classList.add('grabbing');
+            return;
+        }
+        // Swipe mode (solo se non zoomato)
+        if (e.target.closest && e.target.closest('.note')) return;
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchTime = Date.now();
+    }
+}, { passive: false });
+
+transformArea.addEventListener('touchmove', e => {
+    if (e.touches.length === 2 && isPinching) {
+        e.preventDefault();
+        const t1 = e.touches[0], t2 = e.touches[1];
+        const dist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+        const midX = (t1.clientX + t2.clientX) / 2;
+        const midY = (t1.clientY + t2.clientY) / 2;
+
+        let newScale = pinchStartScale * (dist / pinchStartDist);
+        newScale = Math.max(1, Math.min(newScale, 5));
+
+        // Zoom centrato sul punto medio iniziale del pinch
+        const rect = transformArea.getBoundingClientRect();
+        const cx = pinchStartMid.x - rect.left;
+        const cy = pinchStartMid.y - rect.top;
+        const xs = (cx - pinchStartPointX) / pinchStartScale;
+        const ys = (cy - pinchStartPointY) / pinchStartScale;
+        scale = newScale;
+        pointX = cx - xs * scale;
+        pointY = cy - ys * scale;
+
+        // Applica anche uno spostamento del centro del pinch
+        pointX += (midX - pinchStartMid.x);
+        pointY += (midY - pinchStartMid.y);
+
+        if (scale === 1) { pointX = 0; pointY = 0; }
+        updateTransform();
+        return;
+    }
+    if (panning && e.touches.length === 1) {
+        e.preventDefault();
+        pointX = e.touches[0].clientX - startX;
+        pointY = e.touches[0].clientY - startY;
+        updateTransform();
+    }
+}, { passive: false });
+
 transformArea.addEventListener('touchend', e => {
-    if (scale > 1) return;
-    if (e.target.closest && e.target.closest('.note')) return;
-    const dx = e.changedTouches[0].clientX - touchStartX;
-    const dy = e.changedTouches[0].clientY - touchStartY;
-    const dt = Date.now() - touchTime;
-    if (Math.abs(dx) > 60 && Math.abs(dy) < 80 && dt < 700) {
-        if (dx < 0) nextPage(); else prevPage();
+    if (e.touches.length < 2) {
+        isPinching = false;
+    }
+    if (e.touches.length === 0) {
+        if (panning) {
+            panning = false;
+            transformArea.classList.remove('grabbing');
+            return;
+        }
+        if (isPinching) {
+            isPinching = false;
+            return;
+        }
+        // Swipe (solo se non zoomato e non era pinch)
+        if (scale > 1) return;
+        if (e.target.closest && e.target.closest('.note')) return;
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const dy = e.changedTouches[0].clientY - touchStartY;
+        const dt = Date.now() - touchTime;
+        if (Math.abs(dx) > 60 && Math.abs(dy) < 80 && dt < 700) {
+            if (dx < 0) nextPage(); else prevPage();
+        }
     }
 }, { passive: true });
 
-/* ============================================================
-   NOTE
-   ============================================================ */
+/* NOTE */
 function renderAllNotes() {
     document.querySelectorAll('.notes-layer').forEach(nl => {
         nl.innerHTML = '';
@@ -1205,9 +1423,7 @@ function toggleNotes() {
 }
 $('reader-notes-toggle').addEventListener('click', toggleNotes);
 
-/* ============================================================
-   TOGGLE DOPPIA PAGINA
-   ============================================================ */
+/* TOGGLE DOPPIA PAGINA */
 function updateDualToggleUI() {
     const btn = $('reader-dual-toggle');
     btn.classList.toggle('active', dualPage);
@@ -1225,9 +1441,7 @@ function toggleDualPage() {
 }
 $('reader-dual-toggle').addEventListener('click', toggleDualPage);
 
-/* ============================================================
-   INFO
-   ============================================================ */
+/* INFO */
 $('about-btn').addEventListener('click', () => $('info-panel').classList.add('show'));
 $('reader-info').addEventListener('click', () => $('info-panel').classList.add('show'));
 $('info-close').addEventListener('click', () => $('info-panel').classList.remove('show'));
@@ -1235,9 +1449,7 @@ $('info-panel').addEventListener('click', e => {
     if (e.target === $('info-panel')) $('info-panel').classList.remove('show');
 });
 
-/* ============================================================
-   MUSIC PLAYER
-   ============================================================ */
+/* MUSIC PLAYER */
 const audioEngine = $('audio-engine');
 let playlist = [], currentTrack = -1, shuffleOn = false, repeatMode = 0;
 let isSeeking = false, seekTimer = null, lastVolume = 70, muted = false;
@@ -1411,9 +1623,11 @@ $('mp-mute').addEventListener('click',()=>{audioEngine.muted=!audioEngine.muted;
 $('mp-vol').addEventListener('input',e=>{const v=parseInt(e.target.value);lastVolume=v;audioEngine.volume=v/100;audioEngine.muted=false;muted=false;$('mp-mute').textContent=v===0?'🔇':'🔊';});
 const seekEl=$('mp-seek');
 seekEl.addEventListener('mousedown',()=>isSeeking=true);
+seekEl.addEventListener('touchstart',()=>isSeeking=true,{passive:true});
 seekEl.addEventListener('input',()=>{isSeeking=true;const d=audioEngine.duration||0;if(d>0&&isFinite(d))$('mp-time-cur').textContent=formatTime((seekEl.value/100)*d);});
 seekEl.addEventListener('change',()=>{const d=audioEngine.duration||0;if(d>0&&isFinite(d))audioEngine.currentTime=(seekEl.value/100)*d;isSeeking=false;});
 seekEl.addEventListener('mouseup',()=>isSeeking=false);
+seekEl.addEventListener('touchend',()=>isSeeking=false);
 $('mp-search-btn').addEventListener('click',doSearch);
 $('mp-search-input').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();doSearch();}e.stopPropagation();});
 document.querySelectorAll('.mp-suggest').forEach(el=>{
@@ -1438,8 +1652,6 @@ $('mp-collapse').addEventListener('click', (e) => {
     $('mp-panel').style.display = 'none';
     $('mp-mini').style.display = 'flex';
 });
-
-/* Click sul mini: se non è stato trascinato, apre il pannello */
 $('mp-mini').addEventListener('click', (e) => {
     e.stopPropagation();
     if (musicPlayer.dataset.justDragged === '1') return;
@@ -1457,16 +1669,13 @@ $('mp-sound').addEventListener('click', (e) => {
 });
 audioEngine.volume=parseInt($('mp-vol').value)/100;
 
-/* ============================================================
-   DRAG DEL PLAYER — funziona sia su header (grande) sia su mini (piccolo)
-   ============================================================ */
+/* DRAG DEL PLAYER */
 (function makePlayerDraggable(){
     const player = document.getElementById('music-player');
     const header = document.getElementById('mp-header');
     const mini = document.getElementById('mp-mini');
     if (!player || !header) return;
 
-    // Grip visivo nell'header grande
     const grip = document.createElement('span');
     grip.className = 'mp-drag-grip';
     grip.textContent = '⋮⋮';
@@ -1483,7 +1692,7 @@ audioEngine.volume=parseInt($('mp-vol').value)/100;
 
     let dragging = false, offX = 0, offY = 0;
     let dragStartX = 0, dragStartY = 0, dragMoved = false;
-    let dragSource = null; // 'header' | 'mini'
+    let dragSource = null;
 
     function startDrag(clientX, clientY, source){
         const rect = player.getBoundingClientRect();
@@ -1508,7 +1717,7 @@ audioEngine.volume=parseInt($('mp-vol').value)/100;
         if (!dragMoved) {
             const dx = clientX - dragStartX;
             const dy = clientY - dragStartY;
-            if (Math.hypot(dx, dy) > 4) dragMoved = true;
+            if (Math.hypot(dx, dy) > 6) dragMoved = true;
         }
         const w = player.offsetWidth, h = player.offsetHeight;
         let x = clientX - offX;
@@ -1539,14 +1748,12 @@ audioEngine.volume=parseInt($('mp-vol').value)/100;
             player.style.setProperty('--mp-custom-left', rect.left + 'px');
             player.style.setProperty('--mp-custom-top', rect.top + 'px');
         }
-        // Se era una drag sul mini, blocca il click che segue
         if (source === 'mini' && wasDragged) {
             player.dataset.justDragged = '1';
-            setTimeout(() => { delete player.dataset.justDragged; }, 60);
+            setTimeout(() => { delete player.dataset.justDragged; }, 80);
         }
     }
 
-    // Drag sull'header grande
     header.addEventListener('mousedown', (e) => {
         if (e.target.closest('button')) return;
         e.preventDefault();
@@ -1558,10 +1765,8 @@ audioEngine.volume=parseInt($('mp-vol').value)/100;
         startDrag(t.clientX, t.clientY, 'header');
     }, { passive: true });
 
-    // Drag sul mini (icona piccola) — NON blocchiamo il click, lo gestiamo con justDragged
     if (mini) {
         mini.addEventListener('mousedown', (e) => {
-            // NON preventDefault: vogliamo che il click parta normalmente
             startDrag(e.clientX, e.clientY, 'mini');
         });
         mini.addEventListener('touchstart', (e) => {
@@ -1572,7 +1777,6 @@ audioEngine.volume=parseInt($('mp-vol').value)/100;
 
     document.addEventListener('mousemove', (e) => moveDrag(e.clientX, e.clientY));
     document.addEventListener('mouseup', endDrag);
-
     document.addEventListener('touchmove', (e) => {
         if (!dragging) return;
         const t = e.touches[0];
@@ -1580,7 +1784,6 @@ audioEngine.volume=parseInt($('mp-vol').value)/100;
     }, { passive: true });
     document.addEventListener('touchend', endDrag);
 
-    // Ripristina posizione salvata
     try {
         if (localStorage.getItem('mp-custom-pos') === '1') {
             const saved = JSON.parse(localStorage.getItem('mp-pos') || 'null');
@@ -1619,9 +1822,7 @@ audioEngine.volume=parseInt($('mp-vol').value)/100;
     });
 })();
 
-/* ============================================================
-   AVVIO
-   ============================================================ */
+/* AVVIO */
 function handleInitialHash() {
     const m = location.hash.match(/^#([^\/]+)(?:\/(\d+))?/);
     if (m && m[1]) {
