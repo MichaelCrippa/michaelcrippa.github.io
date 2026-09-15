@@ -108,8 +108,12 @@ body::before{
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* NOTE */
-.notes-layer{position:absolute;inset:0;pointer-events:none;z-index:3}
+.notes-layer{position:absolute;inset:0;pointer-events:none;z-index:3;transition:z-index .12s ease}
+/* La nota aperta porta in primo piano TUTTO il suo layer */
+.notes-layer.has-open{z-index:50}
 .note{position:absolute;width:26px;height:26px;transform:translate(-50%,-50%) scale(var(--cs,1));transform-origin:center center;pointer-events:auto}
+/* La nota aperta è sopra le altre note dello stesso layer */
+.note.open{z-index:1}
 .note-dot{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#e04a3c,var(--shu) 60%,var(--shu-dk));color:#f4ead2;font-family:var(--jp-serif);font-size:12px;font-weight:700;line-height:1;border:1.5px solid rgba(255,240,220,.85);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:0 2px 6px rgba(0,0,0,.5),inset 0 0 0 1px rgba(0,0,0,.15);transition:transform .2s ease;animation:notePulse 2.6s ease-out infinite}
 .note-dot:hover{transform:scale(1.15)}
 .note.open .note-dot{animation:none;box-shadow:0 3px 10px rgba(0,0,0,.7),inset 0 0 0 1px rgba(0,0,0,.15)}
@@ -470,45 +474,25 @@ const CONFIG = {
             status: "complete",
             pages: null,
 
-            /* ───────────────────────────────────────────────
-               NOTE INTERATTIVE
-               ───────────────────────────────────────────────
-               Struttura:
-                 <numero_pagina>: [
-                    { x: <%>, y: <%>, text: "...", title: "..." (opzionale) },
-                 ]
-            ─────────────────────────────────────────────── */
             notes: {
-    /* ═══════════════════════════════════════════════
-       PAGINA 1 — COPERTINA
-       ═══════════════════════════════════════════════ */
-    1: [
-        // ─── Crediti in alto a sinistra ───
-        { x: 4.5,  y: 3.5,  title: "Crediti", text: "Opera originale: Sansan SUN" },
-        { x: 4.5,  y: 9,    text: "Manga: Saho Tenamachi" },
-        { x: 4.5,  y: 13.5, text: "Character design originale: Momoko" },
+                1: [
+                    { x: 4.5,  y: 3.5,  title: "Crediti", text: "Opera originale: Sansan SUN" },
+                    { x: 4.5,  y: 9,    text: "Manga: Saho Tenamachi" },
+                    { x: 4.5,  y: 13.5, text: "Character design originale: Momoko" },
 
-        // ─── Titolo (in verticale, si legge da destra) ───
-        { x: 93,   y: 5,    title: "Titolo · parte 1", text: "時々ボソッと\n→ «Ogni tanto, sottovoce...»" },
-        { x: 87,   y: 26,   title: "Titolo · parte 2", text: "ロシア語でデレる\n→ «...si scioglie in russo...»" },
-        { x: 12,   y: 51,   title: "Titolo · parte 3", text: "隣のアーリャさん\n→ «...la vicina Alya»" },
+                    { x: 93,   y: 5,    title: "Titolo · parte 1", text: "時々ボソッと\n→ «Ogni tanto, sottovoce...»" },
+                    { x: 87,   y: 26,   title: "Titolo · parte 2", text: "ロシア語でデレる\n→ «...si scioglie in russo...»" },
+                    { x: 12,   y: 51,   title: "Titolo · parte 3", text: "隣のアーリャさん\n→ «...la vicina Alya»" },
 
-        // ─── Badge volume ───
-        { x: 68.5, y: 42.5, title: "Volume", text: "Volume 1" },
+                    { x: 68.5, y: 42.5, title: "Volume", text: "Volume 1" },
 
-        // ─── Testo russo in basso a sinistra ───
-        { x: 24,   y: 80,   title: "Testo russo", text: "Иногда Аля внезапно кокетничает по-русски\n\n«A volte Alya improvvisamente civetta in russo»" },
+                    { x: 24,   y: 80,   title: "Testo russo", text: "Иногда Аля внезапно кокетничает по-русски\n\n«A volte Alya improvvisamente civetta in russo»" },
 
-        // ─── Editore in basso a destra ───
-        { x: 90,   y: 93.5, title: "Rivista", text: "Shonen Magazine Comics" }
-    ],
-
-    /* ═══════════════════════════════════════════════
-       PAGINE SUCCESSIVE — da compilare man mano
-       ═══════════════════════════════════════════════ */
-    2: [],
-    3: []
-}
+                    { x: 90,   y: 93.5, title: "Rivista", text: "Shonen Magazine Comics" }
+                ],
+                2: [],
+                3: []
+            }
         }
     ]
 };
@@ -820,11 +804,10 @@ let currentIndex = 0;
 let scale = 1, pointX = 0, pointY = 0;
 let panning = false, startX = 0, startY = 0;
 let notesVisible = true;
-let dualPage = false;   // modalità doppia pagina
-let loadToken = 0;       // token per invalidare caricamenti vecchi
+let dualPage = false;
+let loadToken = 0;
 const preloadCache = new Set();
 
-// Carica preferenza da localStorage
 try {
     dualPage = localStorage.getItem('mr-dual-page') === '1';
 } catch(e){}
@@ -839,7 +822,6 @@ async function openVolume(volumeId) {
     siteHeader.style.display = 'none';
     siteFooter.style.display = 'none';
     $('reader-title').textContent = `${vol.series} · ${vol.volumeLabel || ('Vol. ' + vol.volume)}`;
-    // Aggiorna aspetto toggle doppia pagina
     updateDualToggleUI();
     const hashPage = getPageFromHash();
     currentVolume = vol;
@@ -871,7 +853,7 @@ function closeReader() {
     currentPages = [];
     currentIndex = 0;
     pagesContainer.innerHTML = '';
-    loadToken++; // invalida eventuali caricamenti in corso
+    loadToken++;
     if (location.hash) location.hash = '';
 }
 
@@ -889,10 +871,8 @@ function updateHash() {
     }
 }
 
-/* Determina quali pagine mostrare in base alla modalità */
 function getVisibleIndices() {
     if (!dualPage) return [currentIndex];
-    // Doppia pagina: la copertina (index 0) è singola
     if (currentIndex === 0) return [0];
     const idxs = [currentIndex];
     if (currentIndex + 1 < currentPages.length) idxs.push(currentIndex + 1);
@@ -911,7 +891,6 @@ async function displayPage() {
     if (!currentPages.length) return;
     const myToken = ++loadToken;
 
-    // Aggiorna UI navigazione
     $('page-info').textContent = `${currentIndex + 1} / ${currentPages.length}`;
     $('page-input').value = currentIndex + 1;
     $('page-input').max = currentPages.length;
@@ -919,14 +898,10 @@ async function displayPage() {
     updateHash();
 
     const indices = getVisibleIndices();
-
-    // Precarica tutte le immagini necessarie (senza toccare il DOM)
     await Promise.all(indices.map(i => preloadImage(currentPages[i])));
 
-    // Se nel frattempo l'utente ha cambiato pagina, esci
     if (myToken !== loadToken) return;
 
-    // Ora costruisci il DOM — le immagini sono in cache, quindi è istantaneo
     pagesContainer.className = (dualPage && indices.length > 1) ? 'dual' : 'single';
     pagesContainer.innerHTML = '';
 
@@ -953,18 +928,12 @@ async function displayPage() {
 
     pageLoading.classList.add('hidden');
 
-    // Applica lo stato di visibilità delle note
     document.querySelectorAll('.notes-layer').forEach(nl => {
         nl.style.display = notesVisible ? '' : 'none';
     });
 
-    // Renderizza le note per ciascuna pagina visibile
     renderAllNotes();
-
-    // Applica il counter-scale delle note
     updateNotesScale();
-
-    // Precarica pagine adiacenti (in background, senza bloccare)
     preloadAround();
 }
 
@@ -997,7 +966,6 @@ function preloadAround() {
 function nextPage() {
     if (currentIndex >= currentPages.length - 1) return;
     if (dualPage) {
-        // Da copertina (0) si va a 1, poi si salta di 2
         if (currentIndex === 0) currentIndex = 1;
         else currentIndex = Math.min(currentIndex + 2, currentPages.length - 1);
     } else {
@@ -1051,7 +1019,7 @@ function readerKeyHandler(e) {
     if (typing) return;
     if (e.key === 'Escape') {
         const openNote = document.querySelector('.note.open');
-        if (openNote) { openNote.classList.remove('open'); return; }
+        if (openNote) { closeNote(openNote); return; }
         closeReader();
     }
     else if (e.key === 'ArrowLeft') nextPage();
@@ -1112,7 +1080,7 @@ transformArea.addEventListener('click', e => {
     if (scale > 1) return;
     if (e.target.closest && e.target.closest('.note')) return;
     if (e.target.closest('#pages-container')) {
-        document.querySelectorAll('.note.open').forEach(n => n.classList.remove('open'));
+        closeAllNotes();
         nextPage();
     }
 });
@@ -1137,11 +1105,12 @@ transformArea.addEventListener('touchend', e => {
 }, { passive: true });
 
 /* ============================================================
-   NOTE
+   NOTE — con gestione z-index dinamico
    ============================================================ */
 function renderAllNotes() {
     document.querySelectorAll('.notes-layer').forEach(nl => {
         nl.innerHTML = '';
+        nl.classList.remove('has-open'); // reset stato
         const pageIdx = parseInt(nl.dataset.page);
         if (isNaN(pageIdx)) return;
         if (!currentVolume || !currentVolume.notes) return;
@@ -1169,6 +1138,25 @@ function renderAllNotes() {
     });
 }
 
+/* Chiude una singola nota e ripristina lo z-index del suo layer */
+function closeNote(note) {
+    if (!note) return;
+    note.classList.remove('open');
+    const layer = note.closest('.notes-layer');
+    if (layer) {
+        // Se non ci sono più note aperte in questo layer, togli has-open
+        if (!layer.querySelector('.note.open')) {
+            layer.classList.remove('has-open');
+        }
+    }
+}
+
+/* Chiude tutte le note e resetta tutti i layer */
+function closeAllNotes() {
+    document.querySelectorAll('.note.open').forEach(n => n.classList.remove('open'));
+    document.querySelectorAll('.notes-layer.has-open').forEach(l => l.classList.remove('has-open'));
+}
+
 function adjustNotePosition(note) {
     const dot = note.querySelector('.note-dot');
     if (!dot) return;
@@ -1177,20 +1165,19 @@ function adjustNotePosition(note) {
     else note.classList.remove('below');
 }
 
-// Delega click per le note (funziona su tutti i layer)
 document.addEventListener('click', (e) => {
     const closeBtn = e.target.closest('.note-close');
     const dotBtn = e.target.closest('.note-dot');
     const note = e.target.closest('.note');
     if (!note) {
         // Click fuori dalle note → chiudi tutte
-        document.querySelectorAll('.note.open').forEach(n => n.classList.remove('open'));
+        closeAllNotes();
         return;
     }
 
     if (closeBtn) {
         e.stopPropagation();
-        note.classList.remove('open');
+        closeNote(note);
         SoundEngine.play('ko');
         return;
     }
@@ -1198,14 +1185,21 @@ document.addEventListener('click', (e) => {
         e.stopPropagation();
         e.preventDefault();
         const wasOpen = note.classList.contains('open');
+        // Chiudi tutte le altre note e TUTTI i layer (tranne quello di questa nota)
+        const myLayer = note.closest('.notes-layer');
         document.querySelectorAll('.note.open').forEach(n => {
             if (n !== note) n.classList.remove('open');
         });
+        document.querySelectorAll('.notes-layer.has-open').forEach(l => {
+            if (l !== myLayer) l.classList.remove('has-open');
+        });
         if (wasOpen) {
-            note.classList.remove('open');
+            closeNote(note);
         } else {
             adjustNotePosition(note);
             note.classList.add('open');
+            // Porta in primo piano il layer che contiene questa nota
+            if (myLayer) myLayer.classList.add('has-open');
             SoundEngine.play('chin');
         }
     }
@@ -1213,6 +1207,8 @@ document.addEventListener('click', (e) => {
 
 function toggleNotes() {
     notesVisible = !notesVisible;
+    // Se stiamo nascondendo le note, chiudi quelle aperte
+    if (!notesVisible) closeAllNotes();
     document.querySelectorAll('.notes-layer').forEach(nl => {
         nl.style.display = notesVisible ? '' : 'none';
     });
@@ -1239,7 +1235,6 @@ function toggleDualPage() {
     } catch(e){}
     updateDualToggleUI();
     SoundEngine.play(dualPage ? 'chin' : 'don');
-    // Ridisegna la pagina (l'indice rimane lo stesso)
     displayPage();
 }
 $('reader-dual-toggle').addEventListener('click', toggleDualPage);
