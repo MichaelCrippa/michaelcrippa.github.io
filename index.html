@@ -633,20 +633,26 @@ const CONFIG = {
             pages: null,
 
             notes: {
-                1: [
-                    { x: 4.5,  y: 3.5,  title: "Crediti", text: "Opera originale: Sansan SUN" },
-                    { x: 4.5,  y: 9,    text: "Manga: Saho Tenamachi" },
-                    { x: 4.5,  y: 13.5, text: "Character design originale: Momoko" },
-                    { x: 93,   y: 5,    title: "Titolo · parte 1", text: "時々ボソッと\n→ «Ogni tanto, sottovoce...»" },
-                    { x: 87,   y: 26,   title: "Titolo · parte 2", text: "ロシア語でデレる\n→ «...si scioglie in russo...»" },
-                    { x: 12,   y: 51,   title: "Titolo · parte 3", text: "隣のアーリャさん\n→ «...la vicina Alya»" },
-                    { x: 68.5, y: 42.5, title: "Volume", text: "Volume 1" },
-                    { x: 24,   y: 80,   title: "Testo russo", text: "Иногда Аля внезапно кокетничает по-русски\n\n«A volte Alya improvvisamente civetta in russo»" },
-                    { x: 90,   y: 93.5, title: "Rivista", text: "Shonen Magazine Comics" }
-                ],
-                2: [],
-                3: []
-            }
+    1: [
+        /* ─── Crediti · alto a sinistra ─── */
+        { x: 4.5,  y: 3.5,  title: "原作 燦々SUN",
+          text: "Opera originale: Sansan SUN" },
+        { x: 4.5,  y: 9,    title: "漫画 手名町紗帆",
+          text: "Manga: Saho Tenamachi" },
+        { x: 4.5,  y: 13.5, title: "キャラクター原案 ももこ",
+          text: "Character design originale: Momoko" },
+
+        /* ─── Titolo principale · UNA sola nota per tutto il blocco ─── */
+        { x: 88,   y: 22,   title: "時々ボソッとロシア語でデレる隣のアーリャさん",
+          text: "Alya Sometimes Hides Her Feelings in Russian" },
+
+        /* ─── Testo in cirillico · basso a sinistra ─── */
+        { x: 24,   y: 80,   title: "Иногда Аля внезапно кокетничает по-русски",
+          text: "A volte Alya improvvisamente civetta in russo" },
+    ],
+    2: [],
+    3: []
+}
         }
     ]
 };
