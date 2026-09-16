@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="description" content="Lettore manga online — traduzioni amatoriali di Michael Crippa">
+<meta name="theme-color" content="#18130d">
+<title>漫画リーダー · Lettore</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="reader-page">
+
+<div id="reader-view" class="active">
+    <div class="reader-topbar">
+        <button class="back-btn" id="reader-back" title="Torna alla libreria">←<span> Libreria</span></button>
+        <div class="reader-title" id="reader-title">Volume</div>
+        <div class="reader-topbar-right">
+            <button class="reader-dual-btn" id="reader-dual-toggle" title="Modalità pagina singola">双</button>
+            <button class="reader-notes-btn" id="reader-notes-toggle" title="Nascondi note">注</button>
+            <button class="reader-info-btn" id="reader-info" title="Info">?︎</button>
+        </div>
+    </div>
+    <div id="transform-area">
+        <div id="pages-container" class="single"></div>
+        <div class="page-loading hidden" id="page-loading"><div class="spinner-jp"></div></div>
+    </div>
+    <div class="nav-controls">
+        <button class="nav-btn" id="nav-next" title="Pagina successiva (←)">
+            <span class="b-jp">⬅ 次へ</span><span class="b-it">Successiva</span>
+        </button>
+        <span id="page-info">1 / 1</span>
+        <button class="nav-btn" id="nav-prev" title="Pagina precedente (→)">
+            <span class="b-jp">前へ ➡</span><span class="b-it">Precedente</span>
+        </button>
+        <div class="jump-group">
+            <input type="number" id="page-input" min="1" placeholder="頁" title="Vai alla pagina">
+            <button class="nav-btn compact" id="nav-jump" title="Vai">跳</button>
+        </div>
+        <div class="zoom-group">
+            <button class="nav-btn compact" id="nav-zoomout" title="Rimpicciolisci">−</button>
+            <span id="zoom-info">100%</span>
+            <button class="nav-btn compact" id="nav-zoomin" title="Ingrandisci">＋</button>
+            <button class="nav-btn compact" id="nav-zoomreset" title="Reimposta">戻</button>
+        </div>
+    </div>
+</div>
+
+<div id="shared-ui"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
