@@ -2,10 +2,6 @@
    漫画リーダー · Manga Reader
    Un unico file JS che rileva da sé se siamo nella pagina
    libreria (index.html) o nel lettore (reader.html).
-
-   ✅ Funziona offline / file:// / doppio click
-   Le pagine dei volumi che dichiarano `pageCount` + `pagePattern`
-   vengono costruite direttamente, senza alcuna fetch().
    ═══════════════════════════════════════════════════════════ */
 console.log('[manga-reader] app start');
 
@@ -28,18 +24,10 @@ const CONFIG = {
             path: "alya/vol-01",
             cover: "alya/vol-01/cover.png",
             status: "complete",
-            pages: 188,
-
-            /* ─── DICHIARAZIONE PAGINE (offline-friendly) ───
-               Se queste due proprietà esistono, il reader costruisce
-               la lista direttamente senza fetch(). Funziona con
-               file://, offline, su GitHub Pages, ovunque.
-               Per un nuovo volume basta cambiare path + pageCount. */
-            pageCount: 188,
-            pagePattern: n => `alya/vol-01/page_${String(n).padStart(3, '0')}.png`,
+            pages: null,
 
             notes: {
-    1: [
+                1: [
         { x: 4.5,  y: 3.5,  title: "原作 燦々SUN", text: "Opera originale: Sansan SUN" },
         { x: 4.5,  y: 9,    title: "漫画 手名町紗帆", text: "Manga: Saho Tenamachi" },
         { x: 4.5,  y: 13.5, title: "キャラクター原案 ももこ", text: "Character design originale: Momoko" },
@@ -355,12 +343,10 @@ async function listPagesFromGitHub(vol) {
 
 async function listPagesFromProbe(vol, onProgress) {
     const patterns = [
-        n => `${vol.path}/page_${String(n).padStart(3,'0')}.png`,
-        n => `${vol.path}/page_${String(n).padStart(3,'0')}.jpg`,
-        n => `${vol.path}/page_${String(n).padStart(2,'0')}.png`,
-        n => `${vol.path}/page_${String(n).padStart(2,'0')}.jpg`,
         n => `${vol.path}/${String(n).padStart(3,'0')}.png`,
         n => `${vol.path}/${String(n).padStart(3,'0')}.jpg`,
+        n => `${vol.path}/${String(n).padStart(2,'0')}.png`,
+        n => `${vol.path}/${String(n).padStart(2,'0')}.jpg`,
         n => `${vol.path}/${n}.png`,
         n => `${vol.path}/${n}.jpg`
     ];
@@ -383,31 +369,11 @@ async function listPagesFromProbe(vol, onProgress) {
 
 async function getPagesForVolume(vol, onProgress) {
     if (pageCache[vol.id]) return pageCache[vol.id];
-
-    /* ─── PRIORITÀ 1: pagine dichiarate nel config ───
-       Niente fetch, funziona sempre: file://, offline, GitHub Pages. */
-    if (vol.pageCount && typeof vol.pagePattern === 'function') {
-        const urls = [];
-        for (let n = 1; n <= vol.pageCount; n++) {
-            urls.push(vol.pagePattern(n));
-        }
-        console.log('[manga-reader] pagine dichiarate nel config:', urls.length);
-        pageCache[vol.id] = urls;
-        return urls;
-    }
-
-    /* ─── PRIORITÀ 2: auto-discovery (richiede HTTP) ───
-       Solo per volumi senza pageCount. Non funziona su file://. */
-    const online = navigator.onLine && REPO;
     let urls;
-    if (online) {
-        try {
-            urls = await listPagesFromGitHub(vol);
-        } catch (e) {
-            console.warn('[manga-reader] GitHub API fallita, uso probe:', e.message);
-            urls = await listPagesFromProbe(vol, onProgress);
-        }
-    } else {
+    try {
+        urls = await listPagesFromGitHub(vol);
+    } catch (e) {
+        console.warn('[manga-reader] GitHub API fallita, uso probe:', e.message);
         urls = await listPagesFromProbe(vol, onProgress);
     }
     pageCache[vol.id] = urls;
@@ -944,15 +910,9 @@ function initReaderPage() {
     const volId = params.get('vol');
     const initialPage = parseInt(params.get('p')) || 1;
 
-    /* Fallback: se manca ?vol= nell'URL (es. apertura diretta di
-       reader.html), usiamo il primo volume disponibile. */
-    let vol = volId ? CONFIG.volumes.find(v => v.id === volId) : null;
-    if (!vol && CONFIG.volumes.length) {
-        vol = CONFIG.volumes[0];
-        console.warn('[manga-reader] vol non trovato nell\'URL, uso il primo volume:', vol.id);
-    }
+    const vol = CONFIG.volumes.find(v => v.id === volId);
     if (!vol) {
-        console.warn('[manga-reader] nessun volume disponibile, torno alla libreria');
+        console.warn('[manga-reader] volume non trovato, torno alla libreria');
         location.replace('index.html');
         return;
     }
@@ -976,16 +936,10 @@ function initReaderPage() {
     try { dualPage = localStorage.getItem('mr-dual-page') === '1'; } catch(e){}
 
     function updateURL() {
-        /* Su file:// non possiamo usare history.replaceState in modo
-           affidabile (può lanciare SecurityError in alcuni browser).
-           Lo facciamo solo se siamo su http/https. */
-        if (!/^https?:$/.test(location.protocol)) return;
-        try {
-            const p = new URLSearchParams(location.search);
-            p.set('vol', vol.id);
-            p.set('p', String(currentIndex + 1));
-            history.replaceState(null, '', '?' + p.toString());
-        } catch (e) { /* ignora */ }
+        const p = new URLSearchParams(location.search);
+        p.set('vol', vol.id);
+        p.set('p', String(currentIndex + 1));
+        history.replaceState(null, '', '?' + p.toString());
     }
 
     let _gestureTimer = null;
