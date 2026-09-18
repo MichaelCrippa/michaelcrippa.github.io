@@ -2,6 +2,10 @@
    漫画リーダー · Manga Reader
    Un unico file JS che rileva da sé se siamo nella pagina
    libreria (index.html) o nel lettore (reader.html).
+
+   ✅ Funziona offline / file:// / doppio click
+   Le pagine dei volumi che dichiarano `pageCount` + `pagePattern`
+   vengono costruite direttamente, senza alcuna fetch().
    ═══════════════════════════════════════════════════════════ */
 console.log('[manga-reader] app start');
 
@@ -24,55 +28,159 @@ const CONFIG = {
             path: "alya/vol-01",
             cover: "alya/vol-01/cover.png",
             status: "complete",
-            pages: null,
+            pages: 188,
+
+            /* ─── DICHIARAZIONE PAGINE (offline-friendly) ───
+               Se queste due proprietà esistono, il reader costruisce
+               la lista direttamente senza fetch(). Funziona con
+               file://, offline, su GitHub Pages, ovunque.
+               Per un nuovo volume basta cambiare path + pageCount. */
+            pageCount: 188,
+            pagePattern: n => `alya/vol-01/page_${String(n).padStart(3, '0')}.png`,
 
             notes: {
-                1: [
-                    { x: 4.5,  y: 3.5,  title: "原作 燦々SUN", text: "Opera originale: Sansan SUN" },
-                    { x: 4.5,  y: 9,    title: "漫画 手名町紗帆", text: "Manga: Saho Tenamachi" },
-                    { x: 4.5,  y: 13.5, title: "キャラクター原案 ももこ", text: "Character design originale: Momoko" },
-                    { x: 88,   y: 22,   title: "時々ボソッとロシア語でデレる隣のアーリャさん", text: "Alya Sometimes Hides Her Feelings in Russian" },
-                    { x: 24,   y: 80,   title: "Иногда Аля внезапно кокетничает по-русски", text: "A volte Alya improvvisamente civetta in russo" },
-                ],
-                2: [],
-                3: [
-                    { x: 18,   y: 15,   title: "時々ボソッとロシア語でデレる隣のアーリャさん", text: "Alya Sometimes Hides Her Feelings in Russian" },
-                    { x: 7.5,  y: 22,   title: "Иногда Аля внезапно кокетничает по-русски", text: "A volte Alya improvvisamente civetta in russo" },
-                ],
-                4: [
-                    { x: 50,   y: 11,   title: "Иногда Аля внезапно кокетничает по-русски", text: "A volte Alya improvvisamente civetta in russo" },
-                    { x: 50,   y: 21,   title: "目次", text: "Indice" },
-                    { x: 82,   y: 45,   title: "第1話 · 孤高のお姫様と怠惰な隣人", text: "Capitolo 1 — La principessa altezzosa e il pigro vicino di casa" },
-                    { x: 73,   y: 45,   title: "第2話 · 無料ガチャって逃すと無性に悔しくない？", text: "Capitolo 2 — Non è tremendamente frustrante lasciarsi sfuggire un gacha gratis?" },
-                    { x: 65,   y: 45,   title: "第3話 · 別にぼっちじゃないぞ？①", text: "Capitolo 3 — Mica sono un tipo solitario, sai? ①" },
-                    { x: 57,   y: 45,   title: "第4話 · 別にぼっちじゃないぞ？②", text: "Capitolo 4 — Mica sono un tipo solitario, sai? ②" },
-                    { x: 48,   y: 45,   title: "第5話 · 別にぼっちじゃないぞ？③", text: "Capitolo 5 — Mica sono un tipo solitario, sai? ③" },
-                    { x: 40,   y: 45,   title: "第6話 · お巡りさん、こいつです①", text: "Capitolo 6 — Signor poliziotto, è questa persona qui! ①" },
-                    { x: 32,   y: 45,   title: "第7話 · お巡りさん、こいつです②", text: "Capitolo 7 — Signor poliziotto, è questa persona qui! ②" },
-                    { x: 24,   y: 45,   title: "第8話 · 姉妹百合、嫌いじゃないです①", text: "Capitolo 8 — Lo yuri tra sorelle non mi dispiace ①" },
-                    { x: 16,   y: 45,   title: "第9話 · 姉妹百合、嫌いじゃないです②", text: "Capitolo 9 — Lo yuri tra sorelle non mi dispiace ②" }
-                ],
-                5: [
-                    { x: 17,   y: 9,    title: "第1話", text: "Capitolo 1" },
-                    { x: 78,   y: 14,   title: "私立征領学園", text: "Istituto Privato Seiryou" },
-                    { x: 85,   y: 44,   title: "日本最高峰の偏差値を誇る", text: "Vanta il punteggio di deviazione più alto del Giappone" },
-                    { x: 78,   y: 52,   title: "由緒正しき中高大一貫校", text: "Prestigioso istituto a ciclo unico: medie, superiori e università" },
-                    { x: 35,   y: 45,   title: "かつては貴族や華族の子女が通い", text: "Un tempo vi studiavano i figli di aristocratici e nobili" },
-                    { x: 15,   y: 48,   title: "卒業生は政財界で活躍する者も多い──", text: "Molti diplomati sono attivi nel mondo politico e finanziario──" },
-                    { x: 80,   y: 72,   title: "そんな傑物たちの中で", text: "E tra tali persone straordinarie" },
-                    { x: 20,   y: 80,   title: "一際輝く少女がいた…！", text: "C'era una ragazza che brillava più di tutte…!" }
-                ],
-                6: [
-                    { x: 91,   y: 8,    title: "第1話", text: "Capitolo 1" },
-                    { x: 83,   y: 20,   title: "孤高のお姫様と怠惰な隣人", text: "La principessa altezzosa e il pigro vicino di casa" }
-                ],
-                7: [
-                    { x: 67,   y: 33, text: "Sussurro della folla" },
-                    { x: 86,   y: 70,   title: "おいあれ", text: "Oh, ehi!" },
-                    { x: 71,   y: 84,   title: "うおお！九条さんだ！", text: "Whoa! È Kujou-san!" },
-                    { x: 55,   y: 69,   title: "え 誰？", text: "Eh? Chi è?" },
-                    { x: 33,   y: 82,   title: "知らないのかお前！", text: "Non la conosci?!" }
-                ],
+    1: [
+        { x: 4.5,  y: 3.5,  title: "原作 燦々SUN", text: "Opera originale: Sansan SUN" },
+        { x: 4.5,  y: 9,    title: "漫画 手名町紗帆", text: "Manga: Saho Tenamachi" },
+        { x: 4.5,  y: 13.5, title: "キャラクター原案 ももこ", text: "Character design originale: Momoko" },
+        { x: 88,   y: 22,   title: "時々ボソッとロシア語でデレる隣のアーリャさん", text: "Alya Sometimes Hides Her Feelings in Russian" },
+        { x: 24,   y: 80,   title: "Иногда Аля внезапно кокетничает по-русски", text: "A volte Alya improvvisamente civetta in russo" }
+    ],
+    2: [],
+    3: [
+        { x: 18,   y: 15,   title: "時々ボソッとロシア語でデレる隣のアーリャさん", text: "Alya Sometimes Hides Her Feelings in Russian" },
+        { x: 7.5,  y: 22,   title: "Иногда Аля внезапно кокетничает по-русски", text: "A volte Alya improvvisamente civetta in russo" }
+    ],
+    4: [
+        { x: 50,   y: 11,   title: "Иногда Аля внезапно кокетничает по-русски", text: "A volte Alya improvvisamente civetta in russo" },
+        { x: 50,   y: 21,   title: "目次", text: "Indice" },
+        { x: 82,   y: 45,   title: "第1話 · 孤高のお姫様と怠惰な隣人", text: "Capitolo 1 — La principessa altezzosa e il pigro vicino di casa" },
+        { x: 73,   y: 45,   title: "第2話 · 無料ガチャって逃すと無性に悔しくない？", text: "Capitolo 2 — Non è tremendamente frustrante lasciarsi sfuggire un gacha gratis?" },
+        { x: 65,   y: 45,   title: "第3話 · 別にぼっちじゃないぞ？①", text: "Capitolo 3 — Mica sono un tipo solitario, sai? ①" },
+        { x: 57,   y: 45,   title: "第4話 · 別にぼっちじゃないぞ？②", text: "Capitolo 4 — Mica sono un tipo solitario, sai? ②" },
+        { x: 48,   y: 45,   title: "第5話 · 別にぼっちじゃないぞ？③", text: "Capitolo 5 — Mica sono un tipo solitario, sai? ③" },
+        { x: 40,   y: 45,   title: "第6話 · お巡りさん、こいつです①", text: "Capitolo 6 — Signor poliziotto, è questa persona qui! ①" },
+        { x: 32,   y: 45,   title: "第7話 · お巡りさん、こいつです②", text: "Capitolo 7 — Signor poliziotto, è questa persona qui! ②" },
+        { x: 24,   y: 45,   title: "第8話 · 姉妹百合、嫌いじゃないです①", text: "Capitolo 8 — Lo yuri tra sorelle non mi dispiace ①" },
+        { x: 16,   y: 45,   title: "第9話 · 姉妹百合、嫌いじゃないです②", text: "Capitolo 9 — Lo yuri tra sorelle non mi dispiace ②" }
+    ],
+    5: [
+        { x: 17,   y: 9,    title: "第1話", text: "Capitolo 1" },
+        { x: 78,   y: 14,   title: "私立征領学園", text: "Istituto Privato Seiryou" },
+        { x: 85,   y: 44,   title: "日本最高峰の偏差値を誇る", text: "Vanta il punteggio di deviazione più alto del Giappone" },
+        { x: 78,   y: 52,   title: "由緒正しき中高大一貫校", text: "Prestigioso istituto a ciclo unico: medie, superiori e università" },
+        { x: 35,   y: 45,   title: "かつては貴族や華族の子女が通い", text: "Un tempo vi studiavano i figli di aristocratici e nobili" },
+        { x: 15,   y: 48,   title: "卒業生は政財界で活躍する者も多い──", text: "Molti diplomati sono attivi nel mondo politico e finanziario──" },
+        { x: 80,   y: 72,   title: "そんな傑物たちの中で", text: "E tra tali persone straordinarie" },
+        { x: 20,   y: 80,   title: "一際輝く少女がいた…！", text: "C'era una ragazza che brillava più di tutte…!" }
+    ],
+    6: [
+        { x: 91,   y: 8,    title: "第1話", text: "Capitolo 1" },
+        { x: 83,   y: 20,   title: "孤高のお姫様と怠惰な隣人", text: "La principessa altezzosa e il pigro vicino di casa" }
+    ],
+    7: [
+        { x: 86,   y: 70,   title: "おいあれ", text: "Oh, ehi!" },
+        { x: 71,   y: 84,   title: "うおお！九条さんだ！", text: "Whoa! È Kujou-san!" },
+        { x: 55,   y: 69,   title: "え 誰？", text: "Eh? Chi è?" },
+        { x: 33,   y: 82,   title: "知らないのかお前！", text: "Non la conosci?!" }
+    ],
+    8: [
+        { x: 75,   y: 12,   title: "アリサ・ミハイロヴナ・九条", text: "Alisa Mikhailovna Kujou" },
+        { x: 70,   y: 62,   title: "ロシア人のお父上と日本人のお母上を持つ", text: "Figlia di un padre russo e di una madre giapponese" },
+        { x: 48,   y: 72,   title: "奇跡の美少女だよ!!", text: "È una bellezza miracolosa!!" }
+    ],
+    9: [
+        { x: 76,   y: 11,   title: "去年、中学三年生で転入してきて以降", text: "L'anno scorso, da quando è arrivata trasferendosi in terza media" },
+        { x: 78,   y: 21,   title: "常に成績は学年一位！", text: "è sempre stata la prima della classe!" },
+        { x: 19,   y: 13,   title: "おまけにスポーツ万能で", text: "E per giunta è portata per qualsiasi sport" },
+        { x: 27,   y: 60,   title: "今年からは生徒会で会計を務める!!", text: "Da quest'anno ricopre il ruolo di tesoriere nel consiglio studentesco!!" },
+        { x: 78,   y: 77,   title: "…その完璧超人ぶりを見て人は言う", text: "…Vedendo la sua perfezione sovrumana, la gente dice" },
+        { x: 18,   y: 77,   title: "”孤高のお姫様”と…", text: "«La principessa altezzosa»…" }
+    ],
+    10: [
+        { x: 80,   y: 17,   title: "孤高って…確かに美人でとっつきにくそうだけど話してみると案外気さくなんじゃや…", text: "«Altezzosa»... è vero che è bella e sembra inavvicinabile, ma a parlarci è sorprendentemente alla mano..." },
+        { x: 14,   y: 17,   title: "おお…！", text: "Oooh...!" },
+        { x: 79,   y: 38,   title: "あれは女子人気トップの安藤先輩！", text: "Quello è Andou-senpai, il ragazzo più popolare tra le ragazze!" },
+        { x: 60,   y: 44,   title: "あの九条さんに挨拶するみたいだぞ！", text: "Sembra che stia salutando proprio Kujou-san!" },
+        { x: 27,   y: 63,   title: "やあ おはよう 気持ちのいい朝だね", text: "Ehi, buongiorno. È una bella mattina, vero?" },
+        { x: 32,   y: 78,   title: "…おはようございます", text: "...Buongiorno." }
+    ],
+    11: [
+        { x: 80,   y: 12,   title: "はじめましてだよね 僕は二年の安藤", text: "Più o meno è la prima volta che ci parliamo, vero? Io sono Andou, del secondo anno" },
+        { x: 38,   y: 12,   title: "前から話してみたくなってさ", text: "È da un po' che volevo parlarti" },
+        { x: 15,   y: 16,   title: "よかったら昼休み一緒に…", text: "Se ti va, durante la pausa pranzo possiamo..." },
+        { x: 27,   y: 40,   title: "結構です", text: "No, grazie" },
+        { x: 86,   y: 82,   title: "ええ…あのモテ男を一蹴かよ…", text: "Eh... ha respinto il rubacuori con una sola parola..." },
+        { x: 63,   y: 82,   title: "背筋が凍る…", text: "Mi si è gelata la schiena..." },
+        { x: 24,   y: 83,   title: "これは厳しい…", text: "Questa è dura..." }
+    ],
+    12: [
+        { x: 77,   y: 11,   title: "つ…つれないなあ じゃあせめて連絡先…", text: "C-Che freddezza... allora almeno il tuo contatto..." },
+        { x: 72,   y: 20,   title: "いやこの花だけでも…！", text: "No aspetta, almeno questo fiore...!" },
+        { x: 17,   y: 21,   title: "…もっと はっきり言った方が良いですか", text: "...Vuoi che te lo dica più chiaramente?" },
+        { x: 75,   y: 39,   title: "私", text: "Io..." },
+        { x: 25,   y: 52,   title: "あなたに興味ありませんので", text: "...non ho alcun interesse per te." },
+        { x: 15,   y: 78,   title: "…あと", text: "...E inoltre" }
+    ],
+    13: [
+        { x: 74,   y: 40,   title: "その服装、校則違反ですよ", text: "Quell'outfit è una violazione del regolamento scolastico" },
+        { x: 73,   y: 82,   title: "Противный / 気持ち悪い", text: "Disgustoso / Che schifo" }
+    ],
+    14: [
+        { x: 82,   y: 18,   title: ":…しょ", text: "Vabbè..." },
+        { x: 74,   y: 25,   title: "勝負アリ〜〜〜〜〜！！", text: "La sfida è aperta!" },
+        { x: 73,   y: 44,   title: "安藤先輩、チャレンジ失敗ですッ！", text: "Andou-senpai, tentativo fallito!" },
+        { x: 22,   y: 23,   title: "いい戦いだった！", text: "È stata una bella battaglia!" },
+        { x: 40,   y: 50,   title: "最後になんて言ったんだ？", text: "Cosa ha detto alla fine?" },
+        { x: 15,   y: 53,   title: "ロシア語だろわからんけど", text: "Sarà russo, non lo capisco" },
+        { x: 82,   y: 68,   title: "なるほど…まさに孤高のお姫様", text: "Capisco... proprio una principessa altezzosa" },
+        { x: 50,   y: 88,   title: "どんだけ理想高いんだ…", text: "Quanto sono alti i suoi ideali..." },
+        { x: 33,   y: 65,   title: "誰のものにもならないっていう安心感はあるよな", text: "C'è una sensazione di sicurezza nel fatto che non appartenga a nessuno" },
+        { x: 14,   y: 68,   title: "ほんとそれアイドルより全然アイドル", text: "Esatto, è più idol degli idol stessi" },
+        { x: 14,   y: 88,   title: "…でも", text: "...Ma" }
+    ],
+    15: [
+        { x: 33,   y: 16,   title: "あんな女の子が興味を持つとしたら", text: "Se una ragazza così si interessasse a qualcuno" },
+        { x: 27,   y: 22,   title: "いったいどんな男なんだろうな…", text: "Chissà che tipo di ragazzo sarebbe..." }
+    ],
+    16: [
+        { x: 88,   y: 18,    title: "1年B組", text: "Classe 1-B" },
+        { x: 72,   y: 9,    title: "おはよう久世くん", text: "Buongiorno, Kuze-kun" },
+        { x: 74,   y: 38,   title: "おおーい…", text: "Ehi, ehilà..." },
+        { x: 12,   y: 37,   title: "起きろ久世〜", text: "Svegliati, Kuze~" },
+        { x: 88,   y: 65,   title: "うグァッ！？", text: "Ugh!?" },
+        { x: 23,   y: 52,   title: "おはよう", text: "Buongiorno" },
+        { x: 15,   y: 82,   title: "またアニメ見て夜更かししてたの？", text: "Sei rimasto di nuovo sveglio tutta la notte a guardare anime?" }
+    ],
+	17: [
+        /* ═══ PANNELLO 1 — Presentazione di Kuze (RTL: dx → sx) ═══ */
+        { x: 88,   y: 12,   title: "久世政近",
+          text: "Kuze Masachika" },
+        { x: 27,   y: 15,   title: "学園一の怠惰な生徒でありながら",
+          text: "Nonostante sia lo studente più pigro dell'istituto" },
+        { x: 27,   y: 38,   title: "なぜか九条アリサを愛称で呼ぶ唯一の存在",
+          text: "Per qualche motivo, l'unico che chiama Alisa Kujou con un vezzeggiativo" },
+        { x: 79,   y: 32,   title: "おお…おはようアーリャ",
+          text: "Oh... buongiorno Alya" },
+        { x: 62,   y: 39,   title: "まそんなとこだ",
+          text: "Beh, più o meno è così" },
+
+        /* ═══ PANNELLO 2 — Alya lo sgrida (RTL: dx → sx) ═══ */
+        { x: 88,   y: 58,   title: "ただし彼女からの当たりはちゃんとキツい",
+          text: "Tuttavia, i modi con cui lei lo tratta sono piuttosto duri" },
+        { x: 43,   y: 52,   title: "本当にだらしないわね",
+          text: "Sei davvero uno sfaticato" },
+        { x: 13,   y: 60,   title: "いや〜オタ友との感想会が盛り上がりすぎてな",
+          text: "Eh... la sessione di commenti con gli amici otaku si è protratta troppo" },
+
+        /* ═══ PANNELLO 3 — Kuze si giustifica (RTL: dx → sx) ═══ */
+        { x: 88,   y: 73,   title: "気づいたら2時間も通話してた",
+          text: "Prima che me ne accorgessi, ho parlato al telefono per 2 ore" },
+        { x: 38,   y: 78,   title: "外めちゃ明るいっスね",
+          text: "Fuori è un sacco luminoso, eh" },
+        { x: 25,   y: 85,   title: "なるほど こうして馬鹿が出来上がるのね",
+          text: "Capisco, ecco come si diventa scemi" }
+    ],
             }
         }
     ]
@@ -247,10 +355,12 @@ async function listPagesFromGitHub(vol) {
 
 async function listPagesFromProbe(vol, onProgress) {
     const patterns = [
+        n => `${vol.path}/page_${String(n).padStart(3,'0')}.png`,
+        n => `${vol.path}/page_${String(n).padStart(3,'0')}.jpg`,
+        n => `${vol.path}/page_${String(n).padStart(2,'0')}.png`,
+        n => `${vol.path}/page_${String(n).padStart(2,'0')}.jpg`,
         n => `${vol.path}/${String(n).padStart(3,'0')}.png`,
         n => `${vol.path}/${String(n).padStart(3,'0')}.jpg`,
-        n => `${vol.path}/${String(n).padStart(2,'0')}.png`,
-        n => `${vol.path}/${String(n).padStart(2,'0')}.jpg`,
         n => `${vol.path}/${n}.png`,
         n => `${vol.path}/${n}.jpg`
     ];
@@ -273,11 +383,31 @@ async function listPagesFromProbe(vol, onProgress) {
 
 async function getPagesForVolume(vol, onProgress) {
     if (pageCache[vol.id]) return pageCache[vol.id];
+
+    /* ─── PRIORITÀ 1: pagine dichiarate nel config ───
+       Niente fetch, funziona sempre: file://, offline, GitHub Pages. */
+    if (vol.pageCount && typeof vol.pagePattern === 'function') {
+        const urls = [];
+        for (let n = 1; n <= vol.pageCount; n++) {
+            urls.push(vol.pagePattern(n));
+        }
+        console.log('[manga-reader] pagine dichiarate nel config:', urls.length);
+        pageCache[vol.id] = urls;
+        return urls;
+    }
+
+    /* ─── PRIORITÀ 2: auto-discovery (richiede HTTP) ───
+       Solo per volumi senza pageCount. Non funziona su file://. */
+    const online = navigator.onLine && REPO;
     let urls;
-    try {
-        urls = await listPagesFromGitHub(vol);
-    } catch (e) {
-        console.warn('[manga-reader] GitHub API fallita, uso probe:', e.message);
+    if (online) {
+        try {
+            urls = await listPagesFromGitHub(vol);
+        } catch (e) {
+            console.warn('[manga-reader] GitHub API fallita, uso probe:', e.message);
+            urls = await listPagesFromProbe(vol, onProgress);
+        }
+    } else {
         urls = await listPagesFromProbe(vol, onProgress);
     }
     pageCache[vol.id] = urls;
@@ -814,9 +944,15 @@ function initReaderPage() {
     const volId = params.get('vol');
     const initialPage = parseInt(params.get('p')) || 1;
 
-    const vol = CONFIG.volumes.find(v => v.id === volId);
+    /* Fallback: se manca ?vol= nell'URL (es. apertura diretta di
+       reader.html), usiamo il primo volume disponibile. */
+    let vol = volId ? CONFIG.volumes.find(v => v.id === volId) : null;
+    if (!vol && CONFIG.volumes.length) {
+        vol = CONFIG.volumes[0];
+        console.warn('[manga-reader] vol non trovato nell\'URL, uso il primo volume:', vol.id);
+    }
     if (!vol) {
-        console.warn('[manga-reader] volume non trovato, torno alla libreria');
+        console.warn('[manga-reader] nessun volume disponibile, torno alla libreria');
         location.replace('index.html');
         return;
     }
@@ -840,10 +976,16 @@ function initReaderPage() {
     try { dualPage = localStorage.getItem('mr-dual-page') === '1'; } catch(e){}
 
     function updateURL() {
-        const p = new URLSearchParams(location.search);
-        p.set('vol', vol.id);
-        p.set('p', String(currentIndex + 1));
-        history.replaceState(null, '', '?' + p.toString());
+        /* Su file:// non possiamo usare history.replaceState in modo
+           affidabile (può lanciare SecurityError in alcuni browser).
+           Lo facciamo solo se siamo su http/https. */
+        if (!/^https?:$/.test(location.protocol)) return;
+        try {
+            const p = new URLSearchParams(location.search);
+            p.set('vol', vol.id);
+            p.set('p', String(currentIndex + 1));
+            history.replaceState(null, '', '?' + p.toString());
+        } catch (e) { /* ignora */ }
     }
 
     let _gestureTimer = null;
