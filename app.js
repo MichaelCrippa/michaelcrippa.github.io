@@ -239,7 +239,7 @@ text: "...Preferisce che sia più chiara?" },
 13: [
 /* ═══ PANNELLO 1 — Alya distrugge la rosa e rimprovera Ando (RTL: dx → sx) ═══ */
 { x: 75, y: 45, title: "その服装 校則違反ですよ",
-text: "E quell'abbigliamento viola il regolamento scolastico." },
+text: "Quell'abbigliamento viola il regolamento scolastico." },
 /* ═══ PANNELLO 2 — Alya si allontana mormorando in russo (RTL: dx → sx) ═══ */
     { x: 70, y: 83, title: "Противный - 気持ち悪い",
       text: "Che viscido... - N.d.T.: Dal russo protivnyj, ripugnante o viscido" }
