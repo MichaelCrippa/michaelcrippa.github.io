@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#14090a" />
+<meta name="color-scheme" content="dark" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<title>Traduzioni di Michael Crippa · Manga</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='32' r='30' fill='%239b1c1c' stroke='%23d4af37' stroke-width='3'/><circle cx='32' cy='32' r='24' fill='none' stroke='%23d4af37' stroke-width='1' opacity='0.5'/><text x='32' y='44' text-anchor='middle' font-size='34' fill='%23d4af37' font-family='serif' font-weight='bold'>%E7%BF%BB</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Shippori+Mincho:wght@400;600;800&family=Noto+Serif+JP:wght@300;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="home-body">
+
+  <div class="intro-overlay" id="introOverlay" aria-hidden="true"></div>
+
+  <!-- Drago (desktop) + emblema (mobile): uno dei due si mostra via CSS -->
+  <div class="dragon-bg" id="dragonBg" aria-hidden="true"></div>
+  <div class="mobile-emblem" aria-hidden="true">
+    <div class="emblem-ring"></div>
+    <div class="emblem-kanji">龍</div>
+  </div>
+
+  <div class="bg-sun" aria-hidden="true"></div>
+  <div class="bg-pattern" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="crest" aria-hidden="true">
+          <svg viewBox="0 0 100 100" width="58" height="58">
+            <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="2"
+                    class="crest-ring crest-ring-outer"/>
+            <circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" stroke-width="1"
+                    class="crest-ring crest-ring-inner"/>
+            <text x="50" y="63" text-anchor="middle" font-size="42"
+                  font-family="'Shippori Mincho', serif" fill="currentColor"
+                  class="crest-kanji">翻</text>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1 class="site-title">
+            <span class="title-line"><span>Traduzioni di</span></span>
+            <span class="title-line accent"><span>Michael&nbsp;Crippa</span></span>
+          </h1>
+          <p class="site-sub">Imperial Manga Translations · 漫画翻訳 · 日本語 → Italiano</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="soundToggle" class="btn-ornate" title="Attiva/Disattiva suoni">音</button>
+      </div>
+    </div>
+    <div class="header-ribbon">
+      <span>⛩ &nbsp;Traduzioni di Michael Crippa&nbsp; ⛩</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="section-head reveal" data-reveal="head">
+        <span class="kanji-mark">巻</span>
+        <h2 class="section-title">Volumi disponibili</h2>
+        <span class="rule"></span>
+      </div>
+      <div class="carousel reveal" data-reveal="up" id="carousel">
+        <button class="carousel-btn prev" id="carouselPrev" aria-label="Precedente">‹</button>
+        <div class="carousel-viewport">
+          <div class="carousel-track" id="carouselTrack"></div>
+        </div>
+        <button class="carousel-btn next" id="carouselNext" aria-label="Successivo">›</button>
+        <div class="carousel-dots" id="carouselDots"></div>
+      </div>
+    </section>
+
+    <section class="catalog">
+      <div class="catalog-layout">
+        <aside class="sidebar reveal" data-reveal="left">
+          <div class="sidebar-head">
+            <span class="kanji-mark small">目録</span>
+            <h3>Catalogo</h3>
+          </div>
+          <ul class="filter-list" id="filterList">
+            <li data-filter="all" class="active"><span>全</span>Tutti</li>
+            <li data-filter="translated"><span>完</span>Tradotti</li>
+            <li data-filter="in-progress"><span>進</span>In corso</li>
+          </ul>
+          <div class="sidebar-note">
+            <div class="seal">印</div>
+            <p>Traduzioni di<br><strong>Michael Crippa</strong></p>
+            <p class="small">「原典に忠実に」<br><em>Fedeli all'originale</em></p>
+          </div>
+        </aside>
+
+        <div class="manga-grid" id="mangaGrid"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer reveal" data-reveal="up">
+    <div class="footer-ornament">❖ ❖ ❖</div>
+    <p>© <span id="year"></span> · <strong>Traduzioni di Michael Crippa</strong> · 全ての翻訳は原典に忠実に</p>
+  </footer>
+
+  <script src="js/sound.js"></script>
+  <script src="data/manga.js"></script>
+  <script src="js/home.js"></script>
+</body>
+</html>

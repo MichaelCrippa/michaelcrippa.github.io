@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+<meta name="theme-color" content="#0d0606" />
+<meta name="color-scheme" content="dark" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<title>Lettore · Traduzioni di Michael Crippa</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='32' r='30' fill='%239b1c1c' stroke='%23d4af37' stroke-width='3'/><circle cx='32' cy='32' r='24' fill='none' stroke='%23d4af37' stroke-width='1' opacity='0.5'/><text x='32' y='44' text-anchor='middle' font-size='34' fill='%23d4af37' font-family='serif' font-weight='bold'>%E7%BF%BB</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Shippori+Mincho:wght@400;600;800&family=Noto+Serif+JP:wght@300;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/reader.css">
+</head>
+<body class="reader-body intro">
+
+  <header class="reader-topbar">
+    <a href="index.html" class="btn-ornate back" title="Torna alla home">⛩ Home</a>
+
+    <div class="reader-title">
+      <h1 id="readerTitle">…</h1>
+      <p id="readerSub">Traduzioni di Michael Crippa</p>
+    </div>
+
+    <div class="reader-controls">
+      <button id="viewToggle" class="btn-ornate" title="Modalità pagina singola / doppia">
+        <span id="viewIcon">▯</span>
+      </button>
+      <div class="zoom-group">
+        <button id="zoomOut" class="btn-ornate" title="Riduci">−</button>
+        <span id="zoomLevel">100%</span>
+        <button id="zoomIn" class="btn-ornate" title="Ingrandisci">+</button>
+        <button id="zoomReset" class="btn-ornate" title="Reset zoom">⟲</button>
+      </div>
+      <button id="notesToggle" class="btn-ornate active" title="Mostra/Nascondi note">注</button>
+      <button id="fullscreenBtn" class="btn-ornate" title="Schermo intero">⛶</button>
+    </div>
+  </header>
+
+  <div class="reader-main">
+
+    <div class="side-rail left" aria-hidden="true">
+      <div class="rail-lantern"><span>読</span></div>
+      <div class="rail-text">翻訳</div>
+      <div class="rail-orn">❖</div>
+      <div class="rail-tsuba">印</div>
+    </div>
+
+    <div class="reader-stage" id="stage">
+      <div class="pages" id="pages"></div>
+    </div>
+
+    <div class="side-rail right" aria-hidden="true">
+      <div class="rail-lantern"><span>巻</span></div>
+      <div class="rail-text" id="railRightText">第一巻</div>
+      <div class="rail-orn">❖</div>
+      <div class="rail-tsuba">印</div>
+    </div>
+
+  </div>
+
+  <footer class="reader-bottombar">
+    <button id="nextPage" class="btn-ornate nav-btn" title="Pagina successiva (←)">
+      <span class="arrow">‹</span><span class="lbl">Successiva</span>
+    </button>
+
+    <div class="page-jump">
+      <input type="number" id="pageInput" min="1" value="1" aria-label="Numero pagina">
+      <span class="sep">/</span>
+      <span id="pageTotal">1</span>
+      <button id="goPage" class="btn-ornate small">Vai</button>
+    </div>
+
+    <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+
+    <button id="prevPage" class="btn-ornate nav-btn" title="Pagina precedente (→)">
+      <span class="lbl">Precedente</span><span class="arrow">›</span>
+    </button>
+  </footer>
+
+  <button class="page-pill" id="pagePill" type="button" aria-label="Mostra controlli">
+    <span id="pagePillText">1 / 1</span>
+  </button>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="js/sound.js"></script>
+  <script src="data/manga.js"></script>
+  <script src="js/reader.js"></script>
+</body>
+</html>
